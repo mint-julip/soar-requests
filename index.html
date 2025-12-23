@@ -8,7 +8,24 @@
 <!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-<style>
+<style
+  /* ---------- FLOATING LOGO ---------- */
+#floatingLogo {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+#floatingLogo img {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.25));
+}
+
 /* ---------- BACKGROUND ---------- */
 body {
   margin: 0;
@@ -194,7 +211,12 @@ input, select, textarea {
     <p><strong>Ticket #:</strong> <span id="otTicket"></span></p>
   </div>
 
+</div> <!-- end landingFrame -->
+
+  <div id="floatingLogo">
+  <img src="soar-logo.png" alt="SOAR TN Logo">
 </div>
+
 
 <script>
 function openService(){
