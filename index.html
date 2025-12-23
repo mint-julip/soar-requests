@@ -10,11 +10,12 @@
 <script>
 emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
 </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 
 <!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 /* ---------- BACKGROUND ---------- */
@@ -29,34 +30,6 @@ body {
 }
 
 @keyframes bgMove {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-
-/* ---------- SOAR TN BACKGROUND TEXT ---------- */
-#backgroundText {
-  position: fixed;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 120px;
-  font-weight: 900;
-  font-family: "Arial Black", sans-serif;
-  background: linear-gradient(
-    270deg,
-    red, orange, yellow, green, blue, indigo, violet
-  );
-  background-size: 800% 800%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: rainbowMove 10s linear infinite;
-  opacity: 0.25;
-  z-index: 0;
-  pointer-events: none;
-}
-
-@keyframes rainbowMove {
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
   100%{background-position:0% 50%}
@@ -113,7 +86,7 @@ button:hover { background:#005A9E; }
   background:#fff;
   padding:30px;
   width:90%;
-  max-width:550px;
+  max-width:600px;
   border-radius:12px;
 }
 
@@ -135,28 +108,12 @@ input, select, textarea {
   margin-top:30px;
 }
 
-/* ---------- FLOATING LOGO ---------- */
-  
-/* #floatingLogo {
-  display:flex;
-  justify-content:center;
-  margin-top:25px;
-  margin-bottom:40px;
-  position:relative;
-  z-index:1;
-}
-
-#floatingLogo img {
-  max-width:220px;
-  width:100%;
-  height:auto;
-  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.25));
-} */
-  #logoWrapper {
+/* ---------- LOGO + SOAR TN ---------- */
+#logoWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px; /* Space between text and logo */
+  gap: 15px;
   margin-top: 30px;
   margin-bottom: 40px;
   position: relative;
@@ -174,18 +131,21 @@ input, select, textarea {
   animation: rainbowMove 10s linear infinite;
 }
 
+@keyframes rainbowMove {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
 #centerLogo {
   max-width: 180px;
   width: 100%;
   height: auto;
   filter: drop-shadow(0 8px 12px rgba(0,0,0,0.25));
 }
-
 </style>
 </head>
 <body>
-
-<!-- <div id="backgroundText">SOAR TN</div> -->
 
 <div id="landingFrame">
   <h2>SOAR TN Requests</h2>
@@ -196,20 +156,39 @@ input, select, textarea {
   <button disabled>Review Requests</button>
 </div>
 
-<!-- <div id="floatingLogo">
-  <img src="soar-logo.png" alt="SOAR TN Logo">
-</div> -->
-  <div id="logoWrapper">
+<div id="logoWrapper">
   <span id="soarText">SOAR</span>
   <img src="soar-logo.png" alt="SOAR TN Logo" id="centerLogo">
   <span id="tnText">TN</span>
 </div>
 
+<!-- ---------- MODALS ---------- -->
 
-<!-- MODALS -->
+<!-- Maintenance Modal -->
+<div id="maintenanceModal" class="modal">
+  <div class="modal-content">
+    <h3>Maintenance Request</h3>
+    <input id="maintName" placeholder="Your Name">
+    <input id="maintEmail" placeholder="Your Email">
+    <select id="houseName">
+      <option value="">Select House</option>
+      <option>Alcoa</option><option>Wright</option><option>Cherokee</option>
+      <option>Emma</option><option>Lee</option><option>Cusick</option>
+      <option>Countryside</option><option>Ridge</option><option>Louisville</option>
+      <option>Raulston</option><option>Dell</option><option>May</option>
+      <option>Westside</option><option>Jett</option><option>Gladstone</option>
+      <option>Glascock</option><option>Merritt</option>
+    </select>
+    <textarea id="maintDesc" rows="4" placeholder="Describe the maintenance request"></textarea>
+    <button onclick="submitMaintenance()">Submit</button>
+    <button onclick="closeAll()">Cancel</button>
+  </div>
+</div>
+
+<!-- Service Request Modal -->
 <div id="serviceModal" class="modal">
   <div class="modal-content">
-    <h3 id="formTitle"></h3>
+    <h3 id="serviceTitle"></h3>
     <input id="name" placeholder="Your Name">
     <input id="email" placeholder="Your Email">
     <select id="department">
@@ -224,44 +203,13 @@ input, select, textarea {
       <option>HR</option>
       <option>Other</option>
     </select>
-    <textarea id="desc" placeholder="Describe the request"></textarea>
+    <textarea id="desc" rows="4" placeholder="Describe the request"></textarea>
     <button onclick="submitService()">Submit</button>
     <button onclick="closeAll()">Cancel</button>
   </div>
 </div>
-  <!-- Maintenance Modal -->
-<div id="maintenanceModal" class="modal">
-  <div class="modal-content">
-    <h3>Maintenance Request</h3>
-    <input id="maintName" placeholder="Your Name">
-    <input id="maintEmail" placeholder="Your Email">
-    <select id="houseName">
-      <option value="">Select House</option>
-      <option>Alcoa</option>
-      <option>Wright</option>
-      <option>Cherokee</option>
-      <option>Emma</option>
-      <option>Lee</option>
-      <option>Cusick</option>
-      <option>Countryside</option>
-      <option>Ridge</option>
-      <option>Louisville</option>
-      <option>Raulston</option>
-      <option>Dell</option>
-      <option>May</option>
-      <option>Westside</option>
-      <option>Jett</option>
-      <option>Gladstone</option>
-      <option>Glascock</option>
-      <option>Merritt</option>
-    </select>
-    <textarea id="maintDesc" rows="4" placeholder="Describe the maintenance request"></textarea>
-    <button onclick="submitMaintenance()">Submit</button>
-    <button onclick="closeAll()">Cancel</button>
-  </div>
-</div>
 
-
+<!-- OT Request Modal -->
 <div id="otModal" class="modal">
   <div class="modal-content">
     <h3>OT Request</h3>
@@ -305,40 +253,24 @@ let currentType = "";
 
 function openForm(type){
   currentType = type;
-  document.getElementById("formTitle").innerText = type.charAt(0).toUpperCase() + type.slice(1) + " Request";
-  if(type==="ot"){
-    document.getElementById("otModal").style.display="flex";
-  } else {
-    document.getElementById("serviceModal").style.display="flex";
-  }
+  if(type==="ot"){ document.getElementById("otModal").style.display="flex"; }
+  else if(type==="maintenance"){ document.getElementById("maintenanceModal").style.display="flex"; }
+  else{ document.getElementById("serviceModal").style.display="flex"; document.getElementById("serviceTitle").innerText=type.charAt(0).toUpperCase()+type.slice(1)+" Request"; }
 }
 
 function closeAll(){
   document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
 }
 
-function ticket(){
-  return "SOAR-" + Date.now();
+function ticket(){ return "SOAR-" + Date.now(); }
+
+function confetti(){
+  window.confetti({ particleCount:100, spread:70, origin:{y:0.6} });
 }
 
-function submitService(){
-  const dept = department.value;
-  emailjs.send(SERVICE_ID, SERVICE_TEMPLATE,{
-    ticket: ticket(),
-    requestor_name: name.value,
-    requestor_email: email.value,
-    request_type: currentType,
-    department: dept,
-    description: desc.value,
-    request_date: new Date().toLocaleDateString(),
-    to_email: "soarhr@soartn.org",
-    cc_email: deptEmails[dept]
-  }).then(()=>confetti(), e=>alert("Error: "+JSON.stringify(e)));
-  closeAll();
-}
-
-  function submitMaintenance(){
-  const ticketNum = "SOAR-" + Date.now();
+// ---- Maintenance Submission ----
+function submitMaintenance(){
+  const t = ticket();
   const nameVal = document.getElementById("maintName").value;
   const emailVal = document.getElementById("maintEmail").value;
   const houseVal = document.getElementById("houseName").value;
@@ -348,23 +280,20 @@ function submitService(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   doc.setFontSize(16);
-  doc.text("SOAR TN Maintenance Request", 20, 20);
+  doc.text("SOAR TN Maintenance Request",20,20);
   doc.setFontSize(12);
-  doc.text(`Ticket #: ${ticketNum}`, 20, 35);
-  doc.text(`Name: ${nameVal}`, 20, 45);
-  doc.text(`Email: ${emailVal}`, 20, 55);
-  doc.text(`House: ${houseVal}`, 20, 65);
-  doc.text("Description:", 20, 75);
-  
-  // Wrap text for description
-  const splitDesc = doc.splitTextToSize(descVal, 160);
-  doc.text(splitDesc, 20, 85);
+  doc.text(`Ticket #: ${t}`,20,35);
+  doc.text(`Name: ${nameVal}`,20,45);
+  doc.text(`Email: ${emailVal}`,20,55);
+  doc.text(`House: ${houseVal}`,20,65);
+  doc.text("Description:",20,75);
+  const splitDesc = doc.splitTextToSize(descVal,160);
+  doc.text(splitDesc,20,85);
+  doc.save(`MaintenanceRequest-${t}.pdf`);
 
-  doc.save(`MaintenanceRequest-${ticketNum}.pdf`);
-
-  // Send Email via EmailJS
+  // Send Email
   emailjs.send(SERVICE_ID, SERVICE_TEMPLATE,{
-    ticket: ticketNum,
+    ticket: t,
     requestor_name: nameVal,
     requestor_email: emailVal,
     request_type: "Maintenance",
@@ -378,35 +307,44 @@ function submitService(){
   closeAll();
 }
 
-function submitOT(){
+// ---- Service Submission ----
+function submitService(){
+  const dept = document.getElementById("department").value;
   const t = ticket();
-  emailjs.send(SERVICE_ID, OT_TEMPLATE,{
+  emailjs.send(SERVICE_ID, SERVICE_TEMPLATE,{
     ticket: t,
-    hm_name: hm.value,
-    hm_email: hmEmail.value,
-    employee_name: emp.value,
-    ot_date: otDate.value,
-    shift: shift.value,
-    hours: hours.value,
-    extra_days: extraDays.value,
-    contacts_exhausted: contacts.value,
-    reason: reason.value,
-    pd_name: pdName.value,
-    pd_email: pdEmail.value,
-    to_email: "nikkigoodwin@soartn.org,cherylhintz@soartn.org",
-    cc_email: pdEmail.value + ",soarhr@soartn.org",
-    approve_link: "APPROVE_LINK_HERE",
-    deny_link: "DENY_LINK_HERE"
+    requestor_name: document.getElementById("name").value,
+    requestor_email: document.getElementById("email").value,
+    request_type: currentType,
+    department: dept,
+    description: document.getElementById("desc").value,
+    request_date: new Date().toLocaleDateString(),
+    to_email: "soarhr@soartn.org",
+    cc_email: deptEmails[dept]
   }).then(()=>confetti(), e=>alert("Error: "+JSON.stringify(e)));
   closeAll();
 }
 
-function confetti(){
-  window.confetti({
-    particleCount:100,
-    spread:70,
-    origin:{y:0.6}
-  });
+// ---- OT Submission ----
+function submitOT(){
+  const t = ticket();
+  emailjs.send(SERVICE_ID, OT_TEMPLATE,{
+    ticket: t,
+    hm_name: document.getElementById("hm").value,
+    hm_email: document.getElementById("hmEmail").value,
+    employee_name: document.getElementById("emp").value,
+    ot_date: document.getElementById("otDate").value,
+    shift: document.getElementById("shift").value,
+    hours: document.getElementById("hours").value,
+    extra_days: document.getElementById("extraDays").value,
+    contacts_exhausted: document.getElementById("contacts").value,
+    reason: document.getElementById("reason").value,
+    pd_name: document.getElementById("pdName").value,
+    pd_email: document.getElementById("pdEmail").value,
+    to_email: "nikkigoodwin@soartn.org,cherylhintz@soartn.org",
+    cc_email: document.getElementById("pdEmail").value+",soarhr@soartn.org"
+  }).then(()=>confetti(), e=>alert("Error: "+JSON.stringify(e)));
+  closeAll();
 }
 </script>
 </body>
