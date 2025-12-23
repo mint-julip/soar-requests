@@ -5,205 +5,222 @@
 <title>SOAR TN Requests</title>
 
 <!-- EmailJS v4 -->
-<script src="https://cdn.jsdelivr.net/npm/emailjs@4/dist/email.min.js"></script>
-<script>
-emailjs.init("sLNm5JCzwihAuVon0");
-</script>
-
-<!-- jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+emailjs.init("YOUR_PUBLIC_KEY"); // 🔴 REQUIRED
+</script>
+
 <style>
 body{
-  margin:0;
-  font-family:Arial;
-  background:linear-gradient(-45deg,#eef3ff,#fdfbfb,#e0f7fa,#fce4ec);
-  background-size:400% 400%;
-  animation:bg 15s ease infinite;
+margin:0;font-family:Arial;background:linear-gradient(-45deg,#eef3ff,#e8fff2);
+background-size:400% 400%;animation:bg 15s infinite;
 }
-@keyframes bg{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-
-#header{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:20px;
-  margin:30px;
-}
-#header span{
-  font-size:48px;
-  font-weight:bold;
-  background:linear-gradient(270deg,red,orange,yellow,green,blue,indigo,violet);
-  background-size:800% 800%;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  animation:rainbow 10s linear infinite;
-}
-@keyframes rainbow{
-  0%{background-position:0%}
-  100%{background-position:100%}
-}
-#header img{width:140px}
+@keyframes bg{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
 
 #frame{
-  max-width:900px;
-  margin:40px auto;
-  padding:40px;
-  border:6px solid black;
-  border-radius:20px;
-  text-align:center;
+margin:80px auto;max-width:1000px;padding:50px;
+border:8px solid black;border-radius:25px;position:relative;
 }
+
+#logoRow{
+display:flex;align-items:center;justify-content:center;
+gap:20px;margin-bottom:20px;
+font-size:40px;font-weight:bold;
+}
+
+#logoRow img{height:80px}
 
 button{
-  padding:15px 25px;
-  margin:10px;
-  font-size:16px;
-  border-radius:8px;
-  border:none;
-  background:#0078D4;
-  color:#fff;
-  cursor:pointer;
+padding:15px 25px;margin:10px;font-size:16px;
+border:none;border-radius:8px;cursor:pointer;
+background:#0078D4;color:white;
 }
-button:hover{background:#005a9e}
+button:hover{background:#005A9E}
 
 .modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  justify-content:center;
-  align-items:center;
+display:none;position:fixed;inset:0;
+background:rgba(0,0,0,.6);
+align-items:center;justify-content:center;
 }
 .modal-content{
-  background:#fff;
-  padding:25px;
-  width:90%;
-  max-width:550px;
-  border-radius:10px;
+background:white;padding:25px;border-radius:10px;
+width:95%;max-width:550px;
 }
+
 input,select,textarea{
-  width:100%;
-  padding:10px;
-  margin-bottom:10px;
+width:100%;padding:10px;margin-bottom:10px;
 }
+
 </style>
 </head>
 
 <body>
 
-<div id="header">
-  <span>SOAR</span>
-  <img src="soar-logo.png">
-  <span>TN</span>
-</div>
-
 <div id="frame">
-  <button onclick="openModal('maintModal')">Maintenance</button>
-  <button onclick="downloadCSV()">Download Ticket Log</button>
+
+<div id="logoRow">
+<span>SOAR</span>
+<img src="logo.png">
+<span>TN</span>
 </div>
 
-<!-- MAINTENANCE MODAL -->
-<div id="maintModal" class="modal">
+<h2 style="text-align:center">Request Portal</h2>
+
+<div style="text-align:center">
+<button onclick="openModal('maintenance')">Maintenance</button>
+<button onclick="openModal('service')">Service</button>
+<button onclick="openModal('expense')">Expense</button>
+<button onclick="openModal('ot')">OT</button>
+</div>
+</div>
+
+<!-- MODALS -->
+
+<div id="maintenance" class="modal">
 <div class="modal-content">
 <h3>Maintenance Request</h3>
-
-<input id="mName" placeholder="Requested By">
-<input id="mEmail" placeholder="Your Email">
-<input id="mPhone" placeholder="Phone">
-
-<select id="mHouse">
-  <option>Lee House</option><option>Alcoa House</option>
-  <option>Cusick House</option><option>Countryside House</option>
-  <option>Cherokee House</option><option>Dell House</option>
-  <option>Gladstone House</option><option>Glascock House</option>
-  <option>Jett House</option><option>May House</option>
-  <option>Merritt House</option><option>Emma House</option>
-  <option>Wright House</option><option>Raulston House</option>
-  <option>Louisville House</option>
+<input id="m_name" placeholder="Requested By">
+<input id="m_email" placeholder="Your Email">
+<select id="m_house">
+<option>Lee House</option><option>Alcoa House</option>
+<option>Cusick House</option><option>Countryside House</option>
+<option>Cherokee House</option><option>Dell House</option>
+<option>Gladstone House</option><option>Glascock House</option>
+<option>Jett House</option><option>May House</option>
+<option>Merritt House</option><option>Emma House</option>
+<option>Wright House</option><option>Raulston House</option>
+<option>Louisville House</option>
 </select>
-
-<input type="date" id="mExpected">
-<textarea id="mDesc" rows="3" placeholder="Description of Work"></textarea>
-<textarea id="mMaterials" rows="3" placeholder="Materials Required"></textarea>
-
+<textarea id="m_desc" placeholder="Work Description"></textarea>
 <button onclick="submitMaintenance()">Submit</button>
 <button onclick="closeAll()">Cancel</button>
 </div>
 </div>
 
+<div id="service" class="modal">
+<div class="modal-content">
+<h3>Service Request</h3>
+<input id="s_name" placeholder="Name">
+<input id="s_email" placeholder="Email">
+<select id="s_dept">
+<option value="soarmedicaldepartment@soartn.org">Medical</option>
+<option value="programmanagers@soartn.org">Program</option>
+<option value="finance@soartn.org">Finance</option>
+<option value="soarhr@soartn.org">Compliance</option>
+<option value="soarhr@soartn.org">Payroll</option>
+<option value="soarhr@soartn.org">IT</option>
+<option value="soarhr@soartn.org">Recruiting</option>
+<option value="soarhr@soartn.org">HR</option>
+<option value="soarhr@soartn.org">Other</option>
+</select>
+<textarea id="s_desc"></textarea>
+<button onclick="submitService()">Submit</button>
+<button onclick="closeAll()">Cancel</button>
+</div>
+</div>
+
+<div id="expense" class="modal">
+<div class="modal-content">
+<h3>Expense Request</h3>
+<input id="e_name" placeholder="Name">
+<input id="e_email" placeholder="Email">
+<input id="e_amount" placeholder="Amount">
+<textarea id="e_desc"></textarea>
+<button onclick="submitExpense()">Submit</button>
+<button onclick="closeAll()">Cancel</button>
+</div>
+</div>
+
+<div id="ot" class="modal">
+<div class="modal-content">
+<h3>OT Request</h3>
+<input id="o_name" placeholder="House Manager">
+<input id="o_email" placeholder="HM Email">
+<input id="o_emp" placeholder="Employee">
+<input type="date" id="o_date">
+<textarea id="o_reason"></textarea>
+<button onclick="submitOT()">Submit</button>
+<button onclick="closeAll()">Cancel</button>
+</div>
+</div>
+
 <script>
-const SERVICE_ID="service_lk56r2m";
-const MAINT_TEMPLATE="template_vnfmovs";
+function ticket(){return "SOAR-"+Date.now()}
+function confettiGo(){confetti({particleCount:120,spread:90})}
+function openModal(id){document.getElementById(id).style.display="flex"}
+function closeAll(){document.querySelectorAll('.modal').forEach(m=>m.style.display="none")}
 
-function openModal(id){document.getElementById(id).style.display="flex";}
-function closeAll(){document.querySelectorAll('.modal').forEach(m=>m.style.display="none");}
-function confettiEffect(){confetti({particleCount:150,spread:80,origin:{y:.6}});}
-
-function saveTicket(t){
-  let tickets=JSON.parse(localStorage.getItem("tickets")||"[]");
-  tickets.push(t);
-  localStorage.setItem("tickets",JSON.stringify(tickets));
+function send(template,data){
+emailjs.send("service_soar",template,data)
+.then(()=>confettiGo())
+.catch(e=>alert(e.text))
 }
 
 function submitMaintenance(){
-  const ticket="SOAR-M-"+Date.now();
-  const date=new Date().toLocaleString();
-
-  saveTicket({ticket,type:"Maintenance",status:"Submitted",date});
-
-  const {jsPDF}=window.jspdf;
-  const d=new jsPDF();
-  d.text("SOAR TN Maintenance Request",20,20);
-  d.text(`Ticket: ${ticket}`,20,30);
-  d.text(`Requested By: ${mName.value}`,20,40);
-  d.text(`House: ${mHouse.value}`,20,50);
-  d.text(`Submitted: ${date}`,20,60);
-  d.text("Description:",20,70);
-  d.text(d.splitTextToSize(mDesc.value,170),20,80);
-  d.text("Materials Required:",20,110);
-  d.text(d.splitTextToSize(mMaterials.value,170),20,120);
-  d.text("---- Maintenance Use Only ----",20,150);
-  d.text("Assigned To:",20,160);
-  d.text("Cost of Materials:",20,170);
-  d.text("Time Arrived:",20,180);
-  d.text("Time Completed:",20,190);
-  d.text("Mileage:",20,200);
-  d.save(`Maintenance_${ticket}.pdf`);
-
-  emailjs.send(SERVICE_ID,MAINT_TEMPLATE,{
-    to_email:"soarhr@soartn.org",
-    cc_email:"cherylhintz@soartn.org, alishasanders@soartn.org, kobypresley@soartn.org",
-    reply_to:mEmail.value,
-    ticket,
-    request_type:"Maintenance Request",
-    requestor_name:mName.value,
-    requestor_email:mEmail.value,
-    details:`${mHouse.value} - ${mDesc.value}`,
-    date_submitted:date
-  }).then(()=>{
-    confettiEffect();
-    alert(`Submitted!\nTicket #: ${ticket}`);
-    closeAll();
-  });
+const t=ticket()
+send("template_maintenance",{
+ticket:t,
+from_name:m_name.value,
+from_email:m_email.value,
+to_email:"soarhr@soartn.org",
+cc_email:"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
+details:`House: ${m_house.value}\n${m_desc.value}`
+})
+generatePDF(t)
+closeAll()
 }
 
-function downloadCSV(){
-  const t=JSON.parse(localStorage.getItem("tickets")||"[]");
-  if(!t.length){alert("No tickets");return;}
-  let csv="Ticket,Type,Status,Date\n";
-  t.forEach(x=>csv+=`${x.ticket},${x.type},${x.status},${x.date}\n`);
-  const blob=new Blob([csv],{type:"text/csv"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="SOAR_Tickets.csv";
-  a.click();
+function submitService(){
+send("template_service",{
+ticket:ticket(),
+from_name:s_name.value,
+from_email:s_email.value,
+to_email:"soarhr@soartn.org",
+cc_email:s_dept.value,
+details:s_desc.value
+})
+closeAll()
+confettiGo()
+}
+
+function submitExpense(){
+send("template_expense",{
+ticket:ticket(),
+from_name:e_name.value,
+from_email:e_email.value,
+to_email:"finance@soartn.org",
+cc_email:"soarhr@soartn.org",
+details:`$${e_amount.value}\n${e_desc.value}`
+})
+closeAll()
+confettiGo()
+}
+
+function submitOT(){
+send("template_ot",{
+ticket:ticket(),
+from_name:o_name.value,
+from_email:o_email.value,
+to_email:"nikkigoodwin@soartn.org,cherylhintz@soartn.org",
+cc_email:"soarhr@soartn.org",
+details:`Employee: ${o_emp.value}\n${o_reason.value}`
+})
+closeAll()
+confettiGo()
+}
+
+function generatePDF(ticket){
+const {jsPDF}=window.jspdf
+const pdf=new jsPDF()
+pdf.text(`Maintenance Request\nTicket: ${ticket}`,10,10)
+pdf.save(`${ticket}.pdf`)
 }
 </script>
 
