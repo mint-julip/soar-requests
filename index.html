@@ -2,103 +2,144 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SOAR TN Requests</title>
+<title>SOAR TN Request Portal</title>
 
 <!-- EmailJS v4 -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+emailjs.init("YOUR_PUBLIC_KEY");
+</script>
 
 <!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-<!-- PDF -->
+<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-emailjs.init("YOUR_PUBLIC_KEY"); // 🔴 REQUIRED
-</script>
 
 <style>
 body{
-margin:0;font-family:Arial;background:linear-gradient(-45deg,#eef3ff,#e8fff2);
-background-size:400% 400%;animation:bg 15s infinite;
+  margin:0;
+  font-family:Arial,sans-serif;
+  min-height:100vh;
+  background:linear-gradient(-45deg,#eef3ff,#fdfbfb,#e0f7fa,#fce4ec);
+  background-size:400% 400%;
+  animation:bgMove 15s ease infinite;
+  overflow-x:hidden;
 }
-@keyframes bg{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
-
-#frame{
-margin:80px auto;max-width:1000px;padding:50px;
-border:8px solid black;border-radius:25px;position:relative;
-}
-
-#logoRow{
-display:flex;align-items:center;justify-content:center;
-gap:20px;margin-bottom:20px;
-font-size:40px;font-weight:bold;
+@keyframes bgMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
-#logoRow img{height:80px}
+#landingFrame{
+  max-width:900px;
+  margin:50px auto;
+  padding:40px;
+  border-radius:25px;
+  border:6px solid transparent;
+  border-image:linear-gradient(90deg,#00c853,#69f0ae,#00c853) 1;
+  text-align:center;
+  background:rgba(255,255,255,0.55);
+}
 
 button{
-padding:15px 25px;margin:10px;font-size:16px;
-border:none;border-radius:8px;cursor:pointer;
-background:#0078D4;color:white;
+  padding:14px 22px;
+  margin:10px;
+  font-size:16px;
+  border:none;
+  border-radius:8px;
+  background:#0078D4;
+  color:#fff;
+  cursor:pointer;
 }
 button:hover{background:#005A9E}
 
 .modal{
-display:none;position:fixed;inset:0;
-background:rgba(0,0,0,.6);
-align-items:center;justify-content:center;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  justify-content:center;
+  align-items:center;
+  z-index:100;
 }
 .modal-content{
-background:white;padding:25px;border-radius:10px;
-width:95%;max-width:550px;
+  background:#fff;
+  padding:25px;
+  border-radius:10px;
+  width:90%;
+  max-width:520px;
 }
-
 input,select,textarea{
-width:100%;padding:10px;margin-bottom:10px;
+  width:100%;
+  padding:10px;
+  margin-bottom:12px;
+  border-radius:6px;
+  border:1px solid #ccc;
 }
 
+#branding{
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:20px;
+}
+.brand-text{
+  font-size:48px;
+  font-weight:bold;
+  background:linear-gradient(270deg,red,orange,yellow,green,blue,indigo,violet);
+  background-size:800% 800%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:rainbowMove 8s linear infinite;
+}
+@keyframes rainbowMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+#logo{
+  width:80px;
+}
 </style>
 </head>
 
 <body>
 
-<div id="frame">
-
-<div id="logoRow">
-<span>SOAR</span>
-<img src="logo.png">
-<span>TN</span>
+<div id="landingFrame">
+  <h2>SOAR TN Request Portal</h2>
+  <button onclick="openModal('maintenance')">Maintenance</button>
+  <button onclick="openModal('service')">Service Request</button>
+  <button onclick="openModal('expense')">Expense Request</button>
+  <button onclick="openModal('ot')">OT Request</button>
 </div>
 
-<h2 style="text-align:center">Request Portal</h2>
-
-<div style="text-align:center">
-<button onclick="openModal('maintenance')">Maintenance</button>
-<button onclick="openModal('service')">Service</button>
-<button onclick="openModal('expense')">Expense</button>
-<button onclick="openModal('ot')">OT</button>
-</div>
+<div id="branding">
+  <div class="brand-text">SOAR</div>
+  <img src="logo.png" id="logo">
+  <div class="brand-text">TN</div>
 </div>
 
-<!-- MODALS -->
+<!-- ================= MODALS ================= -->
 
 <div id="maintenance" class="modal">
 <div class="modal-content">
 <h3>Maintenance Request</h3>
-<input id="m_name" placeholder="Requested By">
-<input id="m_email" placeholder="Your Email">
-<select id="m_house">
-<option>Lee House</option><option>Alcoa House</option>
-<option>Cusick House</option><option>Countryside House</option>
-<option>Cherokee House</option><option>Dell House</option>
-<option>Gladstone House</option><option>Glascock House</option>
-<option>Jett House</option><option>May House</option>
-<option>Merritt House</option><option>Emma House</option>
-<option>Wright House</option><option>Raulston House</option>
-<option>Louisville House</option>
+<input id="mName" placeholder="Requested By">
+<input id="mPhone" placeholder="Phone">
+<select id="mHouse">
+<option value="">Residential House</option>
+<option>Lee House</option><option>Alcoa House</option><option>Cusick House</option>
+<option>Countryside House</option><option>Cherokee House</option><option>Dell House</option>
+<option>Gladstone House</option><option>Glascock House</option><option>Jett House</option>
+<option>May House</option><option>Merritt House</option><option>Emma House</option>
+<option>Wright House</option><option>Raulston House</option><option>Louisville House</option>
 </select>
-<textarea id="m_desc" placeholder="Work Description"></textarea>
+<input type="date" id="mExpected">
+<textarea id="mDesc" placeholder="Description of Work"></textarea>
+<textarea id="mMaterials" placeholder="Materials Required"></textarea>
 <button onclick="submitMaintenance()">Submit</button>
 <button onclick="closeAll()">Cancel</button>
 </div>
@@ -107,20 +148,21 @@ width:100%;padding:10px;margin-bottom:10px;
 <div id="service" class="modal">
 <div class="modal-content">
 <h3>Service Request</h3>
-<input id="s_name" placeholder="Name">
-<input id="s_email" placeholder="Email">
-<select id="s_dept">
-<option value="soarmedicaldepartment@soartn.org">Medical</option>
-<option value="programmanagers@soartn.org">Program</option>
-<option value="finance@soartn.org">Finance</option>
-<option value="soarhr@soartn.org">Compliance</option>
-<option value="soarhr@soartn.org">Payroll</option>
-<option value="soarhr@soartn.org">IT</option>
-<option value="soarhr@soartn.org">Recruiting</option>
-<option value="soarhr@soartn.org">HR</option>
-<option value="soarhr@soartn.org">Other</option>
+<input id="sName" placeholder="Your Name">
+<input id="sEmail" placeholder="Your Email">
+<select id="sDept">
+<option value="">Department</option>
+<option value="medical">Medical</option>
+<option value="program">Program Directors</option>
+<option value="finance">Finance</option>
+<option value="compliance">Compliance</option>
+<option value="payroll">Payroll</option>
+<option value="it">IT</option>
+<option value="recruiting">Recruiting</option>
+<option value="hr">HR</option>
+<option value="other">Other</option>
 </select>
-<textarea id="s_desc"></textarea>
+<textarea id="sDesc" placeholder="Description"></textarea>
 <button onclick="submitService()">Submit</button>
 <button onclick="closeAll()">Cancel</button>
 </div>
@@ -129,10 +171,10 @@ width:100%;padding:10px;margin-bottom:10px;
 <div id="expense" class="modal">
 <div class="modal-content">
 <h3>Expense Request</h3>
-<input id="e_name" placeholder="Name">
-<input id="e_email" placeholder="Email">
-<input id="e_amount" placeholder="Amount">
-<textarea id="e_desc"></textarea>
+<input id="eName" placeholder="Your Name">
+<input id="eAmount" placeholder="Amount">
+<input id="eVendor" placeholder="Vendor">
+<textarea id="eDesc" placeholder="Expense Description"></textarea>
 <button onclick="submitExpense()">Submit</button>
 <button onclick="closeAll()">Cancel</button>
 </div>
@@ -141,86 +183,64 @@ width:100%;padding:10px;margin-bottom:10px;
 <div id="ot" class="modal">
 <div class="modal-content">
 <h3>OT Request</h3>
-<input id="o_name" placeholder="House Manager">
-<input id="o_email" placeholder="HM Email">
-<input id="o_emp" placeholder="Employee">
-<input type="date" id="o_date">
-<textarea id="o_reason"></textarea>
+<input id="otHM" placeholder="House Manager Name">
+<input id="otHMEmail" placeholder="House Manager Email">
+<input id="otEmp" placeholder="Employee Working OT">
+<input type="date" id="otDate">
+<input id="otHours" placeholder="Total Hours">
+<textarea id="otReason" placeholder="Reason for OT"></textarea>
 <button onclick="submitOT()">Submit</button>
 <button onclick="closeAll()">Cancel</button>
 </div>
 </div>
 
 <script>
+function openModal(id){document.getElementById(id).style.display='flex'}
+function closeAll(){document.querySelectorAll('.modal').forEach(m=>m.style.display='none')}
 function ticket(){return "SOAR-"+Date.now()}
-function confettiGo(){confetti({particleCount:120,spread:90})}
-function openModal(id){document.getElementById(id).style.display="flex"}
-function closeAll(){document.querySelectorAll('.modal').forEach(m=>m.style.display="none")}
+function confettiFire(){confetti({particleCount:150,spread:80,origin:{y:0.6}})}
 
-function send(template,data){
-emailjs.send("service_soar",template,data)
-.then(()=>confettiGo())
-.catch(e=>alert(e.text))
-}
+// ================= SUBMISSIONS =================
 
 function submitMaintenance(){
-const t=ticket()
-send("template_maintenance",{
+const t=ticket();
+emailjs.send("YOUR_SERVICE_ID","TEMPLATE_MAINTENANCE",{
 ticket:t,
-from_name:m_name.value,
-from_email:m_email.value,
+name:mName.value,
+house:mHouse.value,
+desc:mDesc.value,
 to_email:"soarhr@soartn.org",
-cc_email:"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
-details:`House: ${m_house.value}\n${m_desc.value}`
-})
-generatePDF(t)
-closeAll()
+cc_email:"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
+});
+generatePDF(t);
+confettiFire();closeAll();
 }
 
 function submitService(){
-send("template_service",{
-ticket:ticket(),
-from_name:s_name.value,
-from_email:s_email.value,
-to_email:"soarhr@soartn.org",
-cc_email:s_dept.value,
-details:s_desc.value
-})
-closeAll()
-confettiGo()
+const t=ticket();
+emailjs.send("YOUR_SERVICE_ID","TEMPLATE_SERVICE",{ticket:t});
+confettiFire();closeAll();
 }
 
 function submitExpense(){
-send("template_expense",{
-ticket:ticket(),
-from_name:e_name.value,
-from_email:e_email.value,
-to_email:"finance@soartn.org",
-cc_email:"soarhr@soartn.org",
-details:`$${e_amount.value}\n${e_desc.value}`
-})
-closeAll()
-confettiGo()
+const t=ticket();
+emailjs.send("YOUR_SERVICE_ID","TEMPLATE_EXPENSE",{ticket:t});
+confettiFire();closeAll();
 }
 
 function submitOT(){
-send("template_ot",{
-ticket:ticket(),
-from_name:o_name.value,
-from_email:o_email.value,
-to_email:"nikkigoodwin@soartn.org,cherylhintz@soartn.org",
-cc_email:"soarhr@soartn.org",
-details:`Employee: ${o_emp.value}\n${o_reason.value}`
-})
-closeAll()
-confettiGo()
+const t=ticket();
+emailjs.send("YOUR_SERVICE_ID","TEMPLATE_OT",{ticket:t});
+confettiFire();closeAll();
 }
 
+// ================= PDF =================
 function generatePDF(ticket){
-const {jsPDF}=window.jspdf
-const pdf=new jsPDF()
-pdf.text(`Maintenance Request\nTicket: ${ticket}`,10,10)
-pdf.save(`${ticket}.pdf`)
+const {jsPDF}=window.jspdf;
+const pdf=new jsPDF();
+pdf.text("SOAR TN Maintenance Request",20,20);
+pdf.text("Ticket: "+ticket,20,30);
+pdf.save(ticket+".pdf");
 }
 </script>
 
