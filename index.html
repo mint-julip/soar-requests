@@ -162,28 +162,37 @@ input, select, textarea {
   <span id="tnText">TN</span>
 </div>
 
-<!-- ---------- MODALS ---------- -->
-
 <!-- Maintenance Modal -->
 <div id="maintenanceModal" class="modal">
   <div class="modal-content">
     <h3>Maintenance Request</h3>
     <input id="maintName" placeholder="Your Name">
     <input id="maintEmail" placeholder="Your Email">
+    <label for="houseName"><strong>Residential House</strong></label>
     <select id="houseName">
       <option value="">Select House</option>
-      <option>Alcoa</option><option>Wright</option><option>Cherokee</option>
-      <option>Emma</option><option>Lee</option><option>Cusick</option>
-      <option>Countryside</option><option>Ridge</option><option>Louisville</option>
-      <option>Raulston</option><option>Dell</option><option>May</option>
-      <option>Westside</option><option>Jett</option><option>Gladstone</option>
-      <option>Glascock</option><option>Merritt</option>
+      <option>Lee House</option>
+      <option>Alcoa House</option>
+      <option>Cusick House</option>
+      <option>Countryside House</option>
+      <option>Cherokee House</option>
+      <option>Dell House</option>
+      <option>Gladstone House</option>
+      <option>Glascock House</option>
+      <option>Jett House</option>
+      <option>May House</option>
+      <option>Merritt House</option>
+      <option>Emma House</option>
+      <option>Wright House</option>
+      <option>Raulston House</option>
+      <option>Louisville House</option>
     </select>
     <textarea id="maintDesc" rows="4" placeholder="Describe the maintenance request"></textarea>
     <button onclick="submitMaintenance()">Submit</button>
     <button onclick="closeAll()">Cancel</button>
   </div>
 </div>
+
 
 <!-- Service Request Modal -->
 <div id="serviceModal" class="modal">
