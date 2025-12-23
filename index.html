@@ -2,168 +2,200 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SOAR TN | Requests</title>
+<title>SOAR TN Requests</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- EmailJS v4 -->
-<script src="https://cdn.jsdelivr.net/npm/emailjs@4/dist/email.min.js"></script>
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-/* ---------- PAGE BACKGROUND ---------- */
+/* ---------- BACKGROUND ---------- */
 body {
   margin: 0;
+  font-family: Arial, sans-serif;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #184d3a, #071b14);
-  font-family: "Segoe UI", Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
+  background: linear-gradient(-45deg,#eef3ff,#fdfbfb,#e0f7fa,#fce4ec);
+  background-size: 400% 400%;
+  animation: bgMove 15s ease infinite;
+  overflow-x: hidden;
 }
 
-/* ---------- OUTER FRAME ---------- */
-.frame {
-  position: relative;
-  padding: 40px;
-  width: 100%;
-  max-width: 750px;
-  border: 6px solid black;
-  background: transparent;
+@keyframes bgMove {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
-/* ---------- GREEN FLAME EDGE ---------- */
-.frame::before {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border-radius: 6px;
+/* ---------- SOAR TN BACKGROUND TEXT ---------- */
+#backgroundText {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 120px;
+  font-weight: 900;
+  font-family: "Arial Black", sans-serif;
   background: linear-gradient(
-    90deg,
-    transparent,
-    #00ff7f,
-    transparent
+    270deg,
+    red, orange, yellow, green, blue, indigo, violet
   );
-  background-size: 300% 300%;
-  animation: edgeFlame 4s linear infinite;
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  padding: 6px;
-  z-index: -1;
-}
-
-@keyframes edgeFlame {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
-}
-
-/* ---------- SOAR TN HEADER ---------- */
-.soar-title {
-  text-align: center;
-  font-size: 64px;
-  font-weight: 800;
-  letter-spacing: 4px;
-  margin-bottom: 40px;
-  background: linear-gradient(
-    90deg,
-    red, orange, yellow, green, blue, indigo, violet, red
-  );
-  background-size: 300% 300%;
+  background-size: 800% 800%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: rainbowMove 6s linear infinite;
+  animation: rainbowMove 10s linear infinite;
+  opacity: 0.25;
+  z-index: 0;
+  pointer-events: none;
 }
 
 @keyframes rainbowMove {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
-/* ---------- FORM ---------- */
-label {
-  display: block;
-  margin-top: 18px;
-  font-weight: 600;
+/* ---------- LANDING FRAME ---------- */
+#landingFrame {
+  margin: 80px auto;
+  max-width: 900px;
+  padding: 50px;
+  border-radius: 25px;
+  border: 8px solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(
+    0deg,
+    red, orange, yellow, green, blue, indigo, violet
+  );
+  animation: borderSpin 6s linear infinite;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  background: rgba(255,255,255,0.65);
 }
 
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-  border-radius: 6px;
-  border: none;
-  font-size: 15px;
+@keyframes borderSpin {
+  0%{border-image-source:linear-gradient(0deg,red,orange,yellow,green,blue,indigo,violet)}
+  50%{border-image-source:linear-gradient(180deg,red,orange,yellow,green,blue,indigo,violet)}
+  100%{border-image-source:linear-gradient(360deg,red,orange,yellow,green,blue,indigo,violet)}
 }
 
-textarea {
-  min-height: 90px;
-}
-
-/* ---------- BUTTON ---------- */
+/* ---------- BUTTONS ---------- */
 button {
-  margin-top: 30px;
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  font-weight: bold;
-  background: linear-gradient(90deg, #00ff7f, #00c96b);
+  padding: 15px 28px;
+  font-size: 18px;
+  margin: 15px;
+  border-radius: 10px;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  background:#0078D4;
+  color:#fff;
+  cursor:pointer;
 }
 
 button:hover {
-  filter: brightness(1.1);
+  background:#005A9E;
+}
+
+/* ---------- MODALS ---------- */
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  justify-content:center;
+  align-items:center;
+  z-index:100;
+}
+
+.modal-content {
+  background:#fff;
+  padding:30px;
+  width:90%;
+  max-width:500px;
+  border-radius:12px;
+}
+
+input, select, textarea {
+  width:100%;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+/* ---------- SUMMARY ---------- */
+.summary {
+  display:none;
+  background:#e6f0fa;
+  border:2px solid #0078D4;
+  border-radius:10px;
+  padding:20px;
+  margin-top:30px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="frame">
-  <div class="soar-title">SOAR TN</div>
+<div id="backgroundText">SOAR TN</div>
 
-  <label>Request Type</label>
-  <select id="requestType">
-    <option value="service">Service Request</option>
-    <option value="ot">Overtime Request</option>
-  </select>
+<div id="landingFrame">
+  <h2>SOAR TN Requests</h2>
 
-  <label>Employee Name</label>
-  <input type="text" id="employee">
+  <button onclick="openService()">Request Service</button>
+  <button onclick="openOT()">Request OT</button>
 
-  <label>Employee Email</label>
-  <input type="email" id="employeeEmail">
+  <!-- SERVICE REQUEST -->
+  <div id="serviceModal" class="modal">
+    <div class="modal-content">
+      <h3>Service Request</h3>
+      <input placeholder="Your Name">
+      <input placeholder="Your Email">
+      <select>
+        <option>Select Department</option>
+        <option>Medical</option>
+        <option>Program</option>
+        <option>Finance</option>
+        <option>Compliance</option>
+        <option>Payroll</option>
+        <option>Maintenance</option>
+        <option>IT</option>
+        <option>Admin Assist</option>
+        <option>HR / Other</option>
+      </select>
+      <textarea rows="4" placeholder="Describe the request"></textarea>
+      <button onclick="submitService()">Submit</button>
+      <button onclick="closeAll()">Cancel</button>
+    </div>
+  </div>
 
-  <label>Department</label>
-  <select id="department">
-    <option value="HR">HR</option>
-    <option value="IT">IT</option>
-    <option value="Finance">Finance</option>
-  </select>
+  <div id="srSummary" class="summary">
+    <h3>Service Request Submitted</h3>
+    <p><strong>Ticket #:</strong> <span id="srTicket"></span></p>
+  </div>
 
-  <label>Request Details</label>
-  <textarea id="details"></textarea>
+  <!-- OT REQUEST -->
+  <div id="otModal" class="modal">
+    <div class="modal-content">
+      <h3>OT Request</h3>
+      <input placeholder="House Manager Name">
+      <input placeholder="House Name">
+      <input placeholder="Employee Working OT">
+      <input type="date">
+      <input placeholder="OT Hours">
+      <input placeholder="Program Director Name">
+      <input placeholder="Program Director Email">
+      <button onclick="submitOT()">Submit</button>
+      <button onclick="closeAll()">Cancel</button>
+    </div>
+  </div>
 
-  <button onclick="submitRequest()">Submit Request</button>
+  <div id="otSummary" class="summary">
+    <h3>OT Request Submitted</h3>
+    <p><strong>Ticket #:</strong> <span id="otTicket"></span></p>
+  </div>
+
 </div>
 
 <script>
-emailjs.init("YOUR_PUBLIC_KEY");
-
-function generateTicket() {
-  return "SOAR-" + Math.floor(Math.random() * 1000000);
-}
-
-function submitRequest() {
-  const ticket = generateTicket();
-  alert("Submitted! Ticket: " + ticket);
-}
-</script>
-
-</body>
-</html>
-
+function openService(){
+  document.getElementById("serviceModal").
