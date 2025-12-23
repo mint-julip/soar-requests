@@ -198,4 +198,35 @@ input, select, textarea {
 
 <script>
 function openService(){
-  document.getElementById("serviceModal").
+  document.getElementById("serviceModal").style.display="flex";
+}
+
+function openOT(){
+  document.getElementById("otModal").style.display="flex";
+}
+
+function closeAll(){
+  document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
+}
+
+function ticket(){
+  return "SOAR-" + Math.floor(Math.random()*1000000);
+}
+
+function submitService(){
+  document.getElementById("serviceModal").style.display="none";
+  document.getElementById("srTicket").innerText = ticket();
+  document.getElementById("srSummary").style.display="block";
+  confetti();
+}
+
+function submitOT(){
+  document.getElementById("otModal").style.display="none";
+  document.getElementById("otTicket").innerText = ticket();
+  document.getElementById("otSummary").style.display="block";
+  confetti();
+}
+</script>
+
+</body>
+</html>
