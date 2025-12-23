@@ -134,7 +134,8 @@ input, select, textarea {
 }
 
 /* ---------- FLOATING LOGO ---------- */
-#floatingLogo {
+  
+/* #floatingLogo {
   display:flex;
   justify-content:center;
   margin-top:25px;
@@ -148,7 +149,36 @@ input, select, textarea {
   width:100%;
   height:auto;
   filter: drop-shadow(0 8px 12px rgba(0,0,0,0.25));
+} */
+  #logoWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* Space between text and logo */
+  margin-top: 30px;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
 }
+
+#soarText, #tnText {
+  font-size: 60px;
+  font-weight: bold;
+  font-family: "Arial Black", sans-serif;
+  background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 800% 800%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbowMove 10s linear infinite;
+}
+
+#centerLogo {
+  max-width: 180px;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.25));
+}
+
 </style>
 </head>
 <body>
@@ -164,9 +194,15 @@ input, select, textarea {
   <button disabled>Review Requests</button>
 </div>
 
-<div id="floatingLogo">
+<!-- <div id="floatingLogo">
   <img src="soar-logo.png" alt="SOAR TN Logo">
+</div> -->
+  <div id="logoWrapper">
+  <span id="soarText">SOAR</span>
+  <img src="soar-logo.png" alt="SOAR TN Logo" id="centerLogo">
+  <span id="tnText">TN</span>
 </div>
+
 
 <!-- MODALS -->
 <div id="serviceModal" class="modal">
