@@ -7,7 +7,7 @@
 <!-- EmailJS v4 -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-emailjs.init("YOUR_PUBLIC_KEY");
+emailjs.init("YOUR_PUBLIC_KEY"); // replace with your EmailJS public key
 </script>
 
 <!-- Confetti -->
@@ -17,7 +17,7 @@ emailjs.init("YOUR_PUBLIC_KEY");
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body{
+body {
   margin:0;
   font-family:Arial,sans-serif;
   min-height:100vh;
@@ -32,7 +32,7 @@ body{
   100%{background-position:0% 50%}
 }
 
-#landingFrame{
+#landingFrame {
   max-width:900px;
   margin:50px auto;
   padding:40px;
@@ -41,9 +41,11 @@ body{
   border-image:linear-gradient(90deg,#00c853,#69f0ae,#00c853) 1;
   text-align:center;
   background:rgba(255,255,255,0.55);
+  position:relative;
+  z-index:1;
 }
 
-button{
+button {
   padding:14px 22px;
   margin:10px;
   font-size:16px;
@@ -55,7 +57,7 @@ button{
 }
 button:hover{background:#005A9E}
 
-.modal{
+.modal {
   display:none;
   position:fixed;
   inset:0;
@@ -64,14 +66,14 @@ button:hover{background:#005A9E}
   align-items:center;
   z-index:100;
 }
-.modal-content{
+.modal-content {
   background:#fff;
   padding:25px;
   border-radius:10px;
   width:90%;
   max-width:520px;
 }
-input,select,textarea{
+input, select, textarea {
   width:100%;
   padding:10px;
   margin-bottom:12px;
@@ -79,14 +81,15 @@ input,select,textarea{
   border:1px solid #ccc;
 }
 
-#branding{
+/* Branding at bottom */
+#branding {
   margin-top:25px;
   display:flex;
   justify-content:center;
   align-items:center;
   gap:20px;
 }
-.brand-text{
+.brand-text {
   font-size:48px;
   font-weight:bold;
   background:linear-gradient(270deg,red,orange,yellow,green,blue,indigo,violet);
@@ -100,8 +103,9 @@ input,select,textarea{
   50%{background-position:100% 50%}
   100%{background-position:0% 50%}
 }
-#logo{
+#logo {
   width:80px;
+  height:auto;
 }
 </style>
 </head>
@@ -118,12 +122,13 @@ input,select,textarea{
 
 <div id="branding">
   <div class="brand-text">SOAR</div>
-  <img src="logo.png" id="logo">
+  <img src="logo.png" id="logo" alt="SOAR Logo">
   <div class="brand-text">TN</div>
 </div>
 
 <!-- ================= MODALS ================= -->
 
+<!-- Maintenance -->
 <div id="maintenance" class="modal">
 <div class="modal-content">
 <h3>Maintenance Request</h3>
@@ -145,6 +150,7 @@ input,select,textarea{
 </div>
 </div>
 
+<!-- Service Request -->
 <div id="service" class="modal">
 <div class="modal-content">
 <h3>Service Request</h3>
@@ -168,6 +174,7 @@ input,select,textarea{
 </div>
 </div>
 
+<!-- Expense Request -->
 <div id="expense" class="modal">
 <div class="modal-content">
 <h3>Expense Request</h3>
@@ -180,6 +187,7 @@ input,select,textarea{
 </div>
 </div>
 
+<!-- OT Request -->
 <div id="ot" class="modal">
 <div class="modal-content">
 <h3>OT Request</h3>
@@ -195,12 +203,17 @@ input,select,textarea{
 </div>
 
 <script>
+// Modal handling
 function openModal(id){document.getElementById(id).style.display='flex'}
 function closeAll(){document.querySelectorAll('.modal').forEach(m=>m.style.display='none')}
+
+// Ticket number generator
 function ticket(){return "SOAR-"+Date.now()}
+
+// Confetti
 function confettiFire(){confetti({particleCount:150,spread:80,origin:{y:0.6}})}
 
-// ================= SUBMISSIONS =================
+// ================== SUBMISSIONS ==================
 
 function submitMaintenance(){
 const t=ticket();
@@ -209,29 +222,34 @@ ticket:t,
 name:mName.value,
 house:mHouse.value,
 desc:mDesc.value,
+materials:mMaterials.value,
 to_email:"soarhr@soartn.org",
 cc_email:"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
 });
 generatePDF(t);
 confettiFire();closeAll();
+alert("Maintenance request submitted! Ticket #: "+t);
 }
 
 function submitService(){
 const t=ticket();
 emailjs.send("YOUR_SERVICE_ID","TEMPLATE_SERVICE",{ticket:t});
 confettiFire();closeAll();
+alert("Service request submitted! Ticket #: "+t);
 }
 
 function submitExpense(){
 const t=ticket();
 emailjs.send("YOUR_SERVICE_ID","TEMPLATE_EXPENSE",{ticket:t});
 confettiFire();closeAll();
+alert("Expense request submitted! Ticket #: "+t);
 }
 
 function submitOT(){
 const t=ticket();
 emailjs.send("YOUR_SERVICE_ID","TEMPLATE_OT",{ticket:t});
 confettiFire();closeAll();
+alert("OT request submitted! Ticket #: "+t);
 }
 
 // ================= PDF =================
@@ -240,6 +258,12 @@ const {jsPDF}=window.jspdf;
 const pdf=new jsPDF();
 pdf.text("SOAR TN Maintenance Request",20,20);
 pdf.text("Ticket: "+ticket,20,30);
+pdf.text("Requested By: "+mName.value,20,40);
+pdf.text("House: "+mHouse.value,20,50);
+pdf.text("Phone: "+mPhone.value,20,60);
+pdf.text("Expected Date: "+mExpected.value,20,70);
+pdf.text("Description: "+mDesc.value,20,80);
+pdf.text("Materials: "+mMaterials.value,20,90);
 pdf.save(ticket+".pdf");
 }
 </script>
