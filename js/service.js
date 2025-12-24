@@ -46,6 +46,19 @@ function submitService() {
     HR: "soarhr@soartn.org",
     Other: "soarhr@soartn.org"
   };
+  fetch("https://script.google.com/macros/s/AKfycbzRG3YLD2oy0ufohUxMBOETMrGEuBAtIwDxfGDuj9gxY23zojZymXhJsRPTy46Nmwa-4w/exec", {
+  method: "POST",
+  body: JSON.stringify({
+    ticket: ticket,
+    type: "Service",
+    name: name,
+    email: email,
+    department: dept,
+    description: desc,
+    status: "Submitted"
+  })
+});
+
 
   // ✅ DEFINE toEmail BEFORE using it
   const toEmail = deptEmails[dept] || "soarhr@soartn.org";
@@ -72,4 +85,5 @@ function submitService() {
     console.error("EmailJS error:", err);
     alert("Failed to send request. Check console.");
   });
+  
 }
