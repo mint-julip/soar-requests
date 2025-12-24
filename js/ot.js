@@ -26,7 +26,7 @@ function submitOT() {
   }
 
   // EmailJS: send to CEO & COO, CC HR
-  emailjs.send("service_soartn", "template_ot_request", {
+  emailjs.send("service_lk56r2m", "template_78v4e8s", {
     ticket,
     hm,
     hmEmail,
