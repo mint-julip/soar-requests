@@ -18,7 +18,7 @@ const houses = [
   "Lee House","Alcoa House","Cusick House","Countryside House",
   "Cherokee House","Dell House","Gladstone House","Glascock House",
   "Jett House","May House","Merritt House","Emma House",
-  "Wright House","Raulston House","Louisville House"
+  "Wright House","Raulston House","Louisville House","SOAR OFFICE"
 ];
 
 // Populate dropdown (call once on page load)
@@ -81,7 +81,7 @@ function submitMaintenance() {
   const timestamp = new Date().toLocaleString();
 
   // EmailJS
-  emailjs.send("service_soartn", "template_maintenance_request", {
+  emailjs.send("service_lk56r2m", "template_vnfmovs", {
     ticket,
     requestedBy,
     house,
