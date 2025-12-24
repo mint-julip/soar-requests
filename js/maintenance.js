@@ -91,7 +91,8 @@ function submitMaintenance() {
     workDescription,
     materialsRequired,
     to_email: "soarhr@soartn.org",
-    cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
+    // cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
+    cc_email: "toosandra@gmail.com"
   }).then(() => {
     launchConfetti();
     alert(`Maintenance request submitted! Ticket #: ${ticket}`);
