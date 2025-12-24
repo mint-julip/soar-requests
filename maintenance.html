@@ -153,70 +153,47 @@ window.emailjs = emailjs;
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
   }
 
-  function submitMaintenance() {
-    const ticket = generateTicket();
-    const requester = document.getElementById("requester").value.trim();
-    const contact = document.getElementById("contact").value.trim();
-    const house = document.getElementById("house").value;
-    const expectedDate = document.getElementById("expectedDate").value;
-    const description = document.getElementById("description").value.trim();
-    const materials = document.getElementById("materials").value.trim();
-    const dateSubmitted = new Date().toLocaleString();
+<script type="module">
+function submitMaintenance() {
+  const ticket = "SOAR-" + Date.now();
+  const requester = document.getElementById("requester").value.trim();
+  const contact = document.getElementById("contact").value.trim();
+  const house = document.getElementById("house").value;
+  const description = document.getElementById("description").value.trim();
+  const materials = document.getElementById("materials").value.trim();
+  const dateSubmitted = new Date().toLocaleString();
 
-    if (!requester || !contact || !house || !description) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-
-    // EmailJS send
-    emailjs.send("service_lk56r2m", "template_vnfmovs", {
-      ticket: ticket,
-      requester: requester,
-      contact: contact,
-      house: house,
-      expectedDate: expectedDate,
-      description: description,
-      materials: materials,
-      dateSubmitted: dateSubmitted,
-      to_email: "toosandra@gmail.com",
-      cc_email: "sandysmith@soartn.org"
-    }).then(() => {
-      launchConfetti();
-      document.getElementById("ticketNum").textContent = ticket;
-      document.getElementById("successMsg").style.display = "block";
-
-      // Optional: log to Google Sheet
-      const logData = {
-        ticket,
-        type: "Maintenance",
-        requester,
-        contact,
-        house,
-        expectedDate,
-        description,
-        materials,
-        status: "Submitted"
-      };
-
-      fetch("https://script.google.com/macros/s/AKfycbzRG3YLD2oy0ufohUxMBOETMrGEuBAtIwDxfGDuj9gxY23zojZymXhJsRPTy46Nmwa-4w/exec", {
-        method: "POST",
-        body: JSON.stringify(logData)
-      }).then(resp => console.log("Logged to Sheet:", resp))
-        .catch(err => console.error("Sheet logging error:", err));
-
-      // Reset form
-      document.getElementById("requester").value = "";
-      document.getElementById("contact").value = "";
-      document.getElementById("house").value = "";
-      document.getElementById("expectedDate").value = "";
-      document.getElementById("description").value = "";
-      document.getElementById("materials").value = "";
-    }).catch(err => {
-      console.error("EmailJS error:", err);
-      alert("Failed to send request. Check console.");
-    });
+  if (!requester || !contact || !house || !description) {
+    alert("Please fill in all required fields.");
+    return;
   }
+
+  emailjs.send("service_lk56r2m", "template_vnfmovs", {
+    ticket,
+    requester,
+    contact,
+    house,
+    description,
+    materials,
+    dateSubmitted,
+    to_email: "toosandra@gmail.com",
+    cc_email: "sandysmith@soartn.org"
+  }).then(() => {
+    alert(`Request submitted! Ticket #: ${ticket}`);
+    // Optionally reset form fields
+    document.getElementById("requester").value = "";
+    document.getElementById("contact").value = "";
+    document.getElementById("house").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("materials").value = "";
+  }).catch(err => {
+    console.error("EmailJS error:", err);
+    alert("Failed to send request. Check console.");
+  });
+}
+window.submitMaintenance = submitMaintenance; // Needed if button onclick is inline
 </script>
+
 
 </body>
 </html>
