@@ -42,7 +42,7 @@ function submitService() {
   }
 
   // Send EmailJS email
-  emailjs.send("service_soartn", "template_service_request", {
+  emailjs.send("service_lk56r2m", "template_au6bbjp", {
     ticket,
     name: srName,
     email: srEmail,
