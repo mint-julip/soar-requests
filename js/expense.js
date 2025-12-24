@@ -11,7 +11,7 @@ function submitExpense() {
     cc_email: "soarhr@soartn.org"
   };
 
-  emailjs.send("service_soartn", "template_expense_request", params)
+  emailjs.send("service_lk56r2m", "template_v09ilue", params)
     .then(() => {
       alert("Expense Request Submitted. Ticket " + ticket);
       confetti();
