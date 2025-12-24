@@ -267,6 +267,37 @@ pdf.text("Materials: "+mMaterials.value,20,90);
 pdf.save(ticket+".pdf");
 }
 </script>
+  <script>
+    // submit OT request
+function submitOTRequest() {
+  const ticket = "OT-" + Date.now();
+
+  const params = {
+    ticket: ticket,
+    hm: document.getElementById("hm").value,
+    house: document.getElementById("house").value,
+    emp: document.getElementById("employee").value,
+    date: document.getElementById("ot_date").value,
+    hours: document.getElementById("hours").value,
+    reason: document.getElementById("reason").value,
+
+    approve_link: `https://YOURUSERNAME.github.io/YOURREPO/ot-approval.html?ticket=${ticket}&decision=approved`,
+    deny_link: `https://YOURUSERNAME.github.io/YOURREPO/ot-approval.html?ticket=${ticket}&decision=denied`
+  };
+
+  emailjs.send(
+    "service_soartn",
+    "template_ot_request",
+    params
+  ).then(() => {
+    alert("OT Request submitted. Ticket: " + ticket);
+    confetti();
+  }).catch(err => {
+    console.error("OT Error:", err);
+  });
+}
+</script>
+
 
 </body>
 </html>
