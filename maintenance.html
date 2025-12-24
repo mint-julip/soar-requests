@@ -6,10 +6,15 @@
 
 <!-- EmailJS SDK -->
 <script type="module">
-  import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-  emailjs.init("sLNm5JCzwihAuVon0"); // Your public key
-  window.emailjs = emailjs; // Make globally accessible if using inline JS
+import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+
+// Initialize with your public key
+emailjs.init("sLNm5JCzwihAuVon0");
+
+// Make globally accessible if needed for inline JS calls
+window.emailjs = emailjs;
 </script>
+
 
 <!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
