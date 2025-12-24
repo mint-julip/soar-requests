@@ -1,6 +1,9 @@
-import * as emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+// import * as emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
 
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/library/d/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/1"; // replace with your Apps Script URL
+
+// maintenance.js
+import { emailjs } from './index.html'; // window.emailjs is available globally
 
 function generateTicket() {
   return "SOAR-" + Date.now();
@@ -10,7 +13,7 @@ function launchConfetti() {
   confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 }
 
-window.submitMaintenance = function () {
+export function submitMaintenance() {
   const ticket = generateTicket();
   const requester = document.getElementById("requester").value.trim();
   const contact = document.getElementById("contact").value.trim();
@@ -25,8 +28,10 @@ window.submitMaintenance = function () {
     return;
   }
 
-  // Send email
-  emailjs.send("service_lk56r2m", "template_vnfmovs", {
+  const serviceID = "service_lk56r2m"; // Replace with your EmailJS service ID
+  const templateID = "template_vnfmovs"; // Replace with your EmailJS template ID
+
+  emailjs.send(serviceID, templateID, {
     ticket,
     requester,
     contact,
@@ -35,16 +40,26 @@ window.submitMaintenance = function () {
     description,
     materials,
     dateSubmitted,
-    to_email: "toosandra@gmail.com", // department email
-    cc_email: "sandysmith@soartn.org" //"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org" // CC multiple
-  })
-  .then(() => {
+    to_email: "toosandra@gmail.com",
+    cc_email: "sandysmith@soartn.org"
+  }).then(() => {
     launchConfetti();
     document.getElementById("ticketNum").textContent = ticket;
     document.getElementById("successMsg").style.display = "block";
 
     // Log to Google Sheet
-    const logData = { ticket, type: "Maintenance", requester, contact, house, expectedDate, description, materials, status: "Submitted" };
+    const logData = {
+      ticket,
+      type: "Maintenance",
+      requester,
+      contact,
+      house,
+      expectedDate,
+      description,
+      materials,
+      status: "Submitted"
+    };
+
     fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
       body: JSON.stringify(logData)
@@ -59,10 +74,12 @@ window.submitMaintenance = function () {
     document.getElementById("description").value = "";
     document.getElementById("materials").value = "";
 
-  })
-  .catch(err => {
+  }).catch(err => {
     console.error("EmailJS error:", err);
     alert("Failed to send request. Check console.");
   });
-};
+}
+
+// Expose globally for onclick
+window.submitMaintenance = submitMaintenance;
 
