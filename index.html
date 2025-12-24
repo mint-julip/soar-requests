@@ -1,23 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>SOAR TN Requests</title>
-  <link rel="stylesheet" href="css/styles.css">
+<meta charset="UTF-8">
+<title>SOAR TN Requests</title>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  (function(){
+    emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
+  })();
+</script>
+
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(-45deg,#eef3ff,#fdfbfb,#e0f7fa,#fce4ec);
+    background-size: 400% 400%;
+    animation: bgMove 15s ease infinite;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  @keyframes bgMove {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+
+  #landingFrame {
+    margin: 50px auto;
+    padding: 40px;
+    border-radius: 25px;
+    border: 8px solid black;
+    text-align: center;
+    position: relative;
+    background: rgba(255,255,255,0.8);
+  }
+
+  #soarLogo {
+    width: 120px;
+    margin-bottom: 20px;
+  }
+
+  #soarText {
+    font-size: 48px;
+    font-weight: bold;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #soarText span {
+    margin: 0 10px;
+  }
+
+  button {
+    padding: 15px 25px;
+    font-size: 18px;
+    margin: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #0078D4;
+    color: #fff;
+    cursor: pointer;
+  }
+  button:hover { background: #005A9E; }
+
+</style>
 </head>
+
 <body>
 
-<div class="frame">
-  <h2>SOAR TN Request Portal</h2>
+<div id="landingFrame">
+  <img id="soarLogo" src="logo.png" alt="SOAR Logo">
+  <div id="soarText">
+    <span>SOAR</span>
+    <span>TN</span>
+  </div>
 
-  <button onclick="location.href='service.html'">Service Request</button>
-  <button onclick="location.href='maintenance.html'">Maintenance</button>
-  <button onclick="location.href='expense.html'">Expense</button>
-  <button onclick="location.href='ot-request.html'">OT Request</button>
-
-  <img src="/logo.png" class="logo">
+  <h2>Request Options</h2>
+  <button onclick="openService()">Service Request</button>
+  <button onclick="openOT()">OT Request</button>
+  <button onclick="openMaintenance()">Maintenance</button>
+  <button onclick="openExpense()">Expense Request</button>
+  <button onclick="openReview()">Review Requests</button>
 </div>
 
-<div id="backgroundText">SOAR&nbsp;&nbsp;TN</div>
+<!-- Modals will be loaded via JS files: service.js, ot.js, maintenance.js, expense.js -->
+<script src="service.js"></script>
+<script src="ot.js"></script>
+<script src="maintenance.js"></script>
+<script src="expense.js"></script>
 
 </body>
 </html>
