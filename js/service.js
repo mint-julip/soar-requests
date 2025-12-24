@@ -1,59 +1,60 @@
-// Generate a simple ticket number
-function generateTicket(prefix) {
-  const timestamp = Date.now();
-  return `${prefix}-${timestamp}`;
+
+// Generate unique ticket number
+function generateTicket() {
+  return "SOAR-" + Date.now();
 }
 
 // Launch confetti
 function launchConfetti() {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 }
-  });
+  confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 }
 
-// Map department emails
-const deptEmails = {
-  Medical: "soarmedicaldepartment@soartn.org",
-  "Program Directors": "programmanagers@soartn.org",
-  Finance: "finance@soartn.org",
-  Compliance: "soarhr@soartn.org",
-  Payroll: "soarhr@soartn.org",
-  IT: "soarhr@soartn.org",
-  Recruiting: "soarhr@soartn.org",
-  HR: "soarhr@soartn.org",
-  Other: "soarhr@soartn.org",
-  "Admin Assist": "alishasanders@soartn.org"
-};
-
-// Form submission
+// Submit Service Request
 function submitService() {
-  const ticket = generateTicket("SR");
+  const ticket = generateTicket();
 
-  const srName = document.getElementById("srName").value;
-  const srEmail = document.getElementById("srEmail").value;
-  const srDept = document.getElementById("srDept").value;
-  const srDesc = document.getElementById("srDesc").value;
+  const name = document.getElementById("srName").value.trim();
+  const email = document.getElementById("srEmail").value.trim();
+  const dept = document.getElementById("srDept").value;
+  const desc = document.getElementById("srDesc").value.trim();
+  const date = new Date().toLocaleString();
 
-  if (!srName || !srEmail || !srDept || !srDesc) {
-    alert("Please complete all fields.");
+  if (!name || !email || !dept || !desc) {
+    alert("Please fill in all fields.");
     return;
   }
 
-  // Send EmailJS email
+  // Map departments to email addresses
+  const deptEmails = {
+    Medical: "soarmedicaldepartment@soartn.org",
+    "Program": "programmanagers@soartn.org",
+    Finance: "finance@soartn.org",
+    Compliance: "soarhr@soartn.org",
+    Payroll: "soarhr@soartn.org",
+    IT: "soarhr@soartn.org",
+    Recruiting: "soarhr@soartn.org",
+    HR: "soarhr@soartn.org",
+    Other: "soarhr@soartn.org"
+  };
+
+  const toEmail = deptEmails[dept] || "soarhr@soartn.org";
+
+  // EmailJS send
   emailjs.send("service_lk56r2m", "template_au6bbjp", {
-   ticket: ticket,
-  requester: document.getElementById("srName").value,
-  email: document.getElementById("srEmail").value,
-  department: document.getElementById("srDept").value,
-  description: document.getElementById("srDesc").value,
-  date: new Date().toLocaleString()
+    ticket: ticket,
+    requester: name,
+    email: email,
+    department: dept,
+    description: desc,
+    date: date,
+    to_email: toEmail,       // Department email
+    cc_email: "soarhr@soartn.org" // Always CC HR
   }).then(() => {
     launchConfetti();
-    alert(`Service request submitted! Ticket #: ${ticket}`);
+    document.getElementById("ticketNum").textContent = ticket;
+    document.getElementById("successMsg").style.display = "block";
 
-    // Log to Google Sheet via Apps Script
+        // Log to Google Sheet via Apps Script
     const logData = {
       ticket,
       type: "Service",
@@ -72,4 +73,15 @@ function submitService() {
     console.error("EmailJS error:", err);
     alert("Error sending Service Request. Check console.");
   });
+
+    // Clear form after successful submission
+    document.getElementById("srName").value = "";
+    document.getElementById("srEmail").value = "";
+    document.getElementById("srDept").value = "";
+    document.getElementById("srDesc").value = "";
+  }).catch(err => {
+    console.error("EmailJS error:", err);
+    alert("Failed to send request. Check console.");
+  });
 }
+
