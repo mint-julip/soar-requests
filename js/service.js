@@ -1,39 +1,66 @@
+// Generate a simple ticket number
+function generateTicket(prefix) {
+  const timestamp = Date.now();
+  return `${prefix}-${timestamp}`;
+}
+
+// Launch confetti
+function launchConfetti() {
+  confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: { y: 0.6 }
+  });
+}
+
+// Map department emails
+const deptEmails = {
+  Medical: "soarmedicaldepartment@soartn.org",
+  "Program Directors": "programmanagers@soartn.org",
+  Finance: "finance@soartn.org",
+  Compliance: "soarhr@soartn.org",
+  Payroll: "soarhr@soartn.org",
+  IT: "soarhr@soartn.org",
+  Recruiting: "soarhr@soartn.org",
+  HR: "soarhr@soartn.org",
+  Other: "soarhr@soartn.org",
+  "Admin Assist": "alishasanders@soartn.org"
+};
+
+// Form submission
 function submitService() {
   const ticket = generateTicket("SR");
 
-  // Prepare email data
-  const deptMap = {
-    Medical: "soarmedicaldepartment@soartn.org",
-    "Program Directors": "programmanagers@soartn.org",
-    Finance: "finance@soartn.org",
-    Compliance: "soarhr@soartn.org",
-    Payroll: "soarhr@soartn.org",
-    IT: "soarhr@soartn.org",
-    Recruiting: "soarhr@soartn.org",
-    HR: "soarhr@soartn.org",
-    Other: "soarhr@soartn.org"
-  };
+  const srName = document.getElementById("srName").value;
+  const srEmail = document.getElementById("srEmail").value;
+  const srDept = document.getElementById("srDept").value;
+  const srDesc = document.getElementById("srDesc").value;
 
-  // Send email with EmailJS
+  if (!srName || !srEmail || !srDept || !srDesc) {
+    alert("Please complete all fields.");
+    return;
+  }
+
+  // Send EmailJS email
   emailjs.send("service_soartn", "template_service_request", {
     ticket,
-    name: srName.value,
-    email: srEmail.value,
-    department: srDept.value,
-    description: srDesc.value,
+    name: srName,
+    email: srEmail,
+    department: srDept,
+    description: srDesc,
     to_email: "soarhr@soartn.org",
-    cc_email: deptMap[srDept.value]
+    cc_email: deptEmails[srDept]
   }).then(() => {
     launchConfetti();
-    alert(`Submitted. Ticket ${ticket}`);
+    alert(`Service request submitted! Ticket #: ${ticket}`);
 
-    // ✅ Call Google Apps Script Web App to log request
+    // Log to Google Sheet via Apps Script
     const logData = {
       ticket,
       type: "Service",
-      name: srName.value,
-      email: srEmail.value,
-      department: srDept.value,
+      name: srName,
+      email: srEmail,
+      department: srDept,
       status: "Submitted"
     };
 
@@ -42,5 +69,8 @@ function submitService() {
       body: JSON.stringify(logData)
     }).then(resp => console.log("Logged to Sheet:", resp))
       .catch(err => console.error("Sheet logging error:", err));
+  }).catch(err => {
+    console.error("EmailJS error:", err);
+    alert("Error sending Service Request. Check console.");
   });
 }
