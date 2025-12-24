@@ -1,22 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Service Request</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/emailjs@4/dist/email.min.js"></script>
+<meta charset="UTF-8">
+<title>SOAR TN Requests</title>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  (function(){
+    emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
+  })();
+</script>
+
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #eef3ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  #requestForm {
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  input, select, textarea, button {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  button {
+    background: #0078D4;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover { background: #005A9E; }
+  .success {
+    background: #e6f0fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 10px;
+    display: none;
+  }
+</style>
 </head>
 <body>
 
-<div class="frame">
+<div id="requestForm">
   <h2>Service Request</h2>
-
-  <input id="name" placeholder="Your Name">
-  <input id="email" placeholder="Your Email">
-
-  <select id="department">
+  <input id="srName" placeholder="Your Name">
+  <input id="srEmail" placeholder="Your Email">
+  <select id="srDept">
     <option value="">Select Department</option>
     <option value="Medical">Medical</option>
-    <option value="Program Directors">Program Directors</option>
+    <option value="Program">Program Director</option>
     <option value="Finance">Finance</option>
     <option value="Compliance">Compliance</option>
     <option value="Payroll">Payroll</option>
@@ -25,15 +73,15 @@
     <option value="HR">HR</option>
     <option value="Other">Other</option>
   </select>
+  <textarea id="srDesc" placeholder="Describe the request"></textarea>
+  <button type="button" onclick="submitService()">Submit</button>
 
-  <textarea id="description" placeholder="Describe your request"></textarea>
-<button type="button" onclick="submitService()">Submit</button>
-
-  <!-- <button onclick="submitService()">Submit</button> -->
+  <div id="successMsg" class="success">
+    <strong>Request Submitted!</strong><br>
+    Ticket #: <span id="ticketNum"></span>
+  </div>
 </div>
 
-<script src="js/emailjs-init.js"></script>
-<script src="js/service.js"></script>
+<script src="service.js"></script>
 </body>
 </html>
-
