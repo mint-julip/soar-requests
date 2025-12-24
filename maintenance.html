@@ -2,225 +2,191 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SOAR TN Maintenance Request</title>
-
-<!-- EmailJS v4 SDK -->
-<script type="module" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<title>Maintenance Request | SOAR TN</title>
 
 <!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+<!-- Inline CSS for simplicity -->
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(-45deg, #eef3ff, #fdfbfb, #e0f7fa, #fce4ec);
-    background-size: 400% 400%;
-    animation: bgMove 15s ease infinite;
-    overflow-x: hidden;
-  }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(-45deg,#eef3ff,#fdfbfb,#e0f7fa,#fce4ec);
+  background-size: 400% 400%;
+  animation: bgMove 15s ease infinite;
+}
+@keyframes bgMove {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-  @keyframes bgMove {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
-  }
+#landingFrame {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 40px;
+  border-radius: 25px;
+  border: 6px solid black;
+  position: relative;
+  text-align: center;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
 
-  #landingFrame {
-    margin: 50px auto;
-    max-width: 900px;
-    padding: 40px;
-    border-radius: 25px;
-    border: 8px solid black;
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    background: rgba(255,255,255,0.9);
-  }
+h2 { margin-bottom: 25px; }
 
-  h2 { margin-top: 0; }
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
 
-  input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
+button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: #0078D4;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+}
 
-  button {
-    padding: 12px 20px;
-    font-size: 16px;
-    margin: 5px;
-    border-radius: 8px;
-    border: none;
-    background: #0078D4;
-    color: #fff;
-    cursor: pointer;
-  }
+button:hover { background-color: #005A9E; }
 
-  button:hover { background: #005A9E; }
+#successMsg {
+  display: none;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e6f0fa;
+  border: 2px solid #0078D4;
+  border-radius: 8px;
+  font-weight: bold;
+}
 
-  .summary {
-    display: none;
-    background: #e6f0fa;
-    border: 2px solid #0078D4;
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 20px;
-  }
+#soarLogo { max-width: 150px; margin-top: 20px; }
 
-  #logo-container {
-    text-align: center;
-    margin-top: 20px;
-  }
-
-  #logo-container img {
-    max-width: 120px;
-    vertical-align: middle;
-  }
-
-  #soar-text {
-    font-size: 48px;
-    font-weight: bold;
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 15px;
-    margin-right: 15px;
-    background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: rainbowMove 10s linear infinite;
-  }
-
-  @keyframes rainbowMove {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
-  }
+#soarText {
+  font-size: 60px;
+  font-weight: bold;
+  background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 10px;
+}
 </style>
 </head>
-
 <body>
 
 <div id="landingFrame">
-  <h2>Maintenance Request</h2>
+  <h2>Maintenance Request Form</h2>
 
   <input id="requester" placeholder="Requested By">
   <input id="contact" placeholder="Contact Info / Phone">
   <select id="resHouse">
-    <option value="">Residential House</option>
-    <option>Lee House</option>
-    <option>Alcoa House</option>
-    <option>Cusick House</option>
-    <option>Countryside House</option>
-    <option>Cherokee House</option>
-    <option>Dell House</option>
-    <option>Gladstone House</option>
-    <option>Glascock House</option>
-    <option>Jett House</option>
-    <option>May House</option>
-    <option>Merritt House</option>
-    <option>Emma House</option>
-    <option>Wright House</option>
-    <option>Raulston House</option>
-    <option>Louisville House</option>
+    <option value="">Select Residential House</option>
+    <option>"SOAR Main Office"<option>
+    <option value="Lee House">Lee House</option>
+    <option value="Alcoa House">Alcoa House</option>
+    <option value="Cusick House">Cusick House</option>
+    <option value="Countryside House">Countryside House</option>
+    <option value="Cherokee House">Cherokee House</option>
+    <option value="Dell House">Dell House</option>
+    <option value="Gladstone House">Gladstone House</option>
+    <option value="Glascock House">Glascock House</option>
+    <option value="Jett House">Jett House</option>
+    <option value="May House">May House</option>
+    <option value="Merritt House">Merritt House</option>
+    <option value="Emma House">Emma House</option>
+    <option value="Wright House">Wright House</option>
+    <option value="Raulston House">Raulston House</option>
+    <option value="Louisville House">Louisville House</option>
   </select>
-  <textarea id="description" rows="4" placeholder="Description of Work to be Performed"></textarea>
-  <textarea id="materials" rows="2" placeholder="Materials Required"></textarea>
-  <input id="expectedDate" type="date" placeholder="Expected Date of Completion">
+  <textarea id="description" rows="4" placeholder="Description of Work"></textarea>
 
   <button onclick="submitMaintenance()">Submit Request</button>
 
-  <div id="successMsg" class="summary">
-    <h3>Maintenance Request Submitted!</h3>
-    <p>Ticket #: <span id="ticketNum"></span></p>
-    <p>A confirmation email has been sent.</p>
+  <div id="successMsg">
+    Maintenance request submitted!<br>
+    Ticket #: <span id="ticketNum"></span>
   </div>
+
+  <img id="soarLogo" src="logo.png" alt="SOAR Logo">
+  <div id="soarText">SOAR TN</div>
 </div>
 
-<div id="logo-container">
-  <span id="soar-text">SOAR</span>
-  <img src="logo.png" alt="SOAR Logo">
-  <span id="soar-text">TN</span>
-</div>
-
+<!-- EmailJS v4 SDK -->
 <script type="module">
-import emailjs from "https://cdn.emailjs.com/dist/email.min.js";
+  import emailjs from "https://cdn.emailjs.com/dist/email.min.mjs";
+  window.emailjs = emailjs;
+  emailjs.init("sLNm5JCzwihAuVon0"); // Replace with your EmailJS public key
 
-emailjs.init("sLNm5JCzwihAuVon0"); // <-- replace with your EmailJS public key
-
-function generateTicket() {
-  return "SOAR-" + Date.now();
-}
-
-function launchConfetti() {
-  confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-}
-
-function submitMaintenance() {
-  const ticket = generateTicket();
-
-  const requester = document.getElementById("requester").value.trim();
-  const contact = document.getElementById("contact").value.trim();
-  const resHouse = document.getElementById("resHouse").value;
-  const description = document.getElementById("description").value.trim();
-  const materials = document.getElementById("materials").value.trim();
-  const expectedDate = document.getElementById("expectedDate").value;
-  const submittedDate = new Date().toLocaleString();
-
-  if (!requester || !contact || !resHouse || !description) {
-    alert("Please fill in all required fields.");
-    return;
+  function generateTicket() {
+    return "SOAR-" + Date.now();
   }
 
-  // EmailJS send
-  emailjs.send("service_lk56r2m", "template_vnfmovs", {
-    ticket,
-    requester,
-    contact,
-    resHouse,
-    description,
-    materials,
-    expectedDate,
-    submittedDate,
-    to_email: "maintenance@soartn.org",
-    cc_email: "toosandra@gmail.com" // for testing, replace w- cheryl, koby, alisha
-  }).then(() => {
-    launchConfetti();
-    document.getElementById("ticketNum").textContent = ticket;
-    document.getElementById("successMsg").style.display = "block";
+  function launchConfetti() {
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+  }
 
-    // Reset form
-    document.getElementById("requester").value = "";
-    document.getElementById("contact").value = "";
-    document.getElementById("resHouse").value = "";
-    document.getElementById("description").value = "";
-    document.getElementById("materials").value = "";
-    document.getElementById("expectedDate").value = "";
+  function submitMaintenance() {
+    const ticket = generateTicket();
+    const requester = document.getElementById("requester").value.trim();
+    const contact = document.getElementById("contact").value.trim();
+    const resHouse = document.getElementById("resHouse").value;
+    const description = document.getElementById("description").value.trim();
+    const date = new Date().toLocaleString();
 
-    // Log to Google Sheet
-    fetch("https://script.google.com/macros/library/d/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/1", {
-      method: "POST",
-      body: JSON.stringify({
-        ticket,
-        requester,
-        contact,
-        resHouse,
-        description,
-        materials,
-        expectedDate,
-        submittedDate,
-        status: "Submitted"
+    if (!requester || !contact || !resHouse || !description) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    // Send Email via EmailJS
+    emailjs.send("service_lk56r2m", "template_vnfmovs", {
+      ticket,
+      requester,
+      contact,
+      resHouse,
+      description,
+      submitted_date: date,
+      to_email: "sandysmith@soartn.org",
+      // cc_email: "cherylhintz@soartn.org, alishasanders@soartn.org, kobypresley@soartn.org"
+    })
+    .then(() => {
+      launchConfetti();
+      document.getElementById("ticketNum").textContent = ticket;
+      document.getElementById("successMsg").style.display = "block";
+
+      // Log to Google Sheet
+      fetch("https://script.google.com/macros/s/AKfycbzRG3YLD2oy0ufohUxMBOETMrGEuBAtIwDxfGDuj9gxY23zojZymXhJsRPTy46Nmwa-4w/exec", {
+        method: "POST",
+        body: JSON.stringify({
+          ticket,
+          requester,
+          contact,
+          resHouse,
+          description,
+          date,
+          status: "Submitted"
+        })
       })
-    }).then(resp => console.log("Logged to Sheet:", resp))
+      .then(resp => console.log("Logged to Sheet:", resp))
       .catch(err => console.error("Sheet logging error:", err));
-  }).catch(err => {
-    console.error("EmailJS error:", err);
-    alert("Failed to send request. Check console.");
-  });
-}
-</script>
 
+      // Clear form
+      document.getElementById("requester").value = "";
+      document.getElementById("contact").value = "";
+      document.getElementById("resHouse").value = "";
+      document.getElementById("description").value = "";
+
+    })
+    .catch(err => {
+      console.error("EmailJS error:", err);
+      alert("Failed to send request. Check console.");
+    });
+  }
+</script>
 </body>
 </html>
+
