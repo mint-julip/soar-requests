@@ -141,7 +141,7 @@
 
 <div id="logo-container">
   <span id="soar-text">SOAR</span>
-  <img src="soar_logo.png" alt="SOAR Logo">
+  <img src="logo.png" alt="SOAR Logo">
   <span id="soar-text">TN</span>
 </div>
 
@@ -175,7 +175,7 @@ function submitMaintenance() {
   }
 
   // EmailJS send
-  emailjs.send("service_lk56r2m", "template_maintenance", {
+  emailjs.send("service_lk56r2m", "template_vnfmovs", {
     ticket,
     requester,
     contact,
@@ -185,7 +185,7 @@ function submitMaintenance() {
     expectedDate,
     submittedDate,
     to_email: "maintenance@soartn.org",
-    cc_email: "cherylhintz@soartn.org, alishasanders@soartn.org, kobypresley@soartn.org"
+    cc_email: "toosandra@gmail.com" // for testing, replace w- cheryl, koby, alisha
   }).then(() => {
     launchConfetti();
     document.getElementById("ticketNum").textContent = ticket;
