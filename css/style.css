@@ -1,1 +1,58 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(-45deg,#eef3ff,#fdfbfb,#e0f7fa,#fce4ec);
+  background-size: 400% 400%;
+  animation: bgMove 15s ease infinite;
+}
+
+@keyframes bgMove {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.frame {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 40px;
+  border-radius: 25px;
+  border: 8px solid black;
+  background: white;
+  text-align: center;
+  position: relative;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 15px;
+}
+
+.logo-container img {
+  width: 120px;
+}
+
+button {
+  padding: 15px 25px;
+  font-size: 16px;
+  margin: 10px;
+  border-radius: 8px;
+  border: none;
+  background:#0078D4;
+  color:white;
+  cursor:pointer;
+}
+
+button:hover {
+  background:#005A9E;
+}
+
+input, select, textarea {
+  width:100%;
+  padding:10px;
+  margin-bottom:15px;
+}
 
