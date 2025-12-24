@@ -116,10 +116,17 @@ button:hover { background-color: #005A9E; }
 </div>
 
 <!-- EmailJS v4 SDK -->
-<script type="module">
+<!-- <script type="module">
   import emailjs from "https://cdn.emailjs.com/dist/email.min.mjs";
   window.emailjs = emailjs;
-  emailjs.init("sLNm5JCzwihAuVon0"); // Replace with your EmailJS public key
+  emailjs.init("sLNm5JCzwihAuVon0"); // Replace with your EmailJS public key -->
+  <!-- EmailJS SDK -->
+  
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  emailjs.init("sLNm5JCzwihAuVon0"); // Replace with your public key
+</script>
+
 
   function generateTicket() {
     return "SOAR-" + Date.now();
