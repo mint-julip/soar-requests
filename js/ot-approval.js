@@ -4,10 +4,10 @@ const decision = params.get("decision");
 
 const template =
   decision === "approved"
-    ? "template_ot_approved"
-    : "template_ot_denied";
+    ? "template_f5t0nig"
+    : "template_zyx9oic";
 
-emailjs.send("service_soartn", template, {
+emailjs.send("service_lk56r2m", template, {
   ticket,
   status: decision.toUpperCase()
 })
