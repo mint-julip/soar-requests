@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Maintenance Request</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/emailjs@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<div class="frame">
+  <h2>Maintenance Request</h2>
+
+  <input id="name" placeholder="Requested By">
+  <input id="contact" placeholder="Phone or Email">
+
+  <select id="house">
+    <option>Lee House</option>
+    <option>Alcoa House</option>
+    <option>Cusick House</option>
+    <option>Countryside House</option>
+    <option>Cherokee House</option>
+    <option>Dell House</option>
+    <option>Gladstone House</option>
+    <option>Glascock House</option>
+    <option>Jett House</option>
+    <option>May House</option>
+    <option>Merritt House</option>
+    <option>Emma House</option>
+    <option>Wright House</option>
+    <option>Raulston House</option>
+    <option>Louisville House</option>
+  </select>
+
+  <textarea id="work" placeholder="Description of work"></textarea>
+  <input id="expected" type="date">
+
+  <button onclick="submitMaintenance()">Submit</button>
+</div>
+
+<script src="js/emailjs-init.js"></script>
+<script src="js/maintenance.js"></script>
+</body>
+</html>
 
