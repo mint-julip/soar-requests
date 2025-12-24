@@ -4,13 +4,6 @@
 <meta charset="UTF-8">
 <title>SOAR TN Maintenance Request</title>
 
-<!-- EmailJS v4 (module) -->
-<script type="module">
-  import * as emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-  emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS Public Key
-  window.emailjs = emailjs; // make globally accessible
-</script>
-
 <!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -18,16 +11,16 @@
   body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg,#eef3ff,#fdfbfb,#e0f7fa,#fce4ec);
+    background: linear-gradient(135deg, #eef3ff, #fdfbfb, #e0f7fa, #fce4ec);
     background-size: 400% 400%;
     animation: bgMove 15s ease infinite;
     overflow-x: hidden;
   }
 
   @keyframes bgMove {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
+    0% { background-position:0% 50%; }
+    50% { background-position:100% 50%; }
+    100% { background-position:0% 50%; }
   }
 
   #landingFrame {
@@ -35,28 +28,21 @@
     max-width: 700px;
     padding: 40px;
     border-radius: 25px;
-    border: 6px solid #000;
-    background: rgba(255,255,255,0.95);
+    border: 6px solid black;
+    background: rgba(255,255,255,0.9);
     text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   }
 
-  h2 {
-    margin-bottom: 20px;
-    font-size: 28px;
-    color: #0078D4;
-  }
+  h2 { margin-bottom: 20px; }
 
   input, select, textarea {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     margin-bottom: 15px;
-    border-radius: 6px;
+    border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 16px;
   }
-
-  textarea { resize: vertical; }
 
   button {
     padding: 12px 25px;
@@ -67,7 +53,6 @@
     background: #0078D4;
     color: #fff;
     cursor: pointer;
-    transition: background 0.3s;
   }
 
   button:hover { background: #005A9E; }
@@ -100,24 +85,23 @@
   }
 
   @keyframes rainbowMove {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
+    0% { background-position:0% 50%; }
+    50% { background-position:100% 50%; }
+    100% { background-position:0% 50%; }
   }
 </style>
 </head>
-
 <body>
+
 <div id="landingFrame">
   <h2>Maintenance Request Form</h2>
 
-  <input id="requester" placeholder="Requested By">
-  <input id="contact" placeholder="Contact Info / Phone">
+  <input id="requester" placeholder="Requested By" required>
+  <input id="contact" placeholder="Contact Info / Phone" required>
 
-  <select id="house">
+  <select id="house" required>
     <option value="">Select Residential House</option>
     <option>Lee House</option>
-    <option>Main Office</option>
     <option>Alcoa House</option>
     <option>Cusick House</option>
     <option>Countryside House</option>
@@ -135,8 +119,9 @@
   </select>
 
   <input id="expectedDate" type="date" placeholder="Expected Completion Date">
-  <textarea id="description" rows="4" placeholder="Description of Work"></textarea>
-  <textarea id="materials" rows="3" placeholder="Materials Required"></textarea>
+  <textarea id="description" rows="4" placeholder="Description of Work" required></textarea>
+  <textarea id="materials" rows="3" placeholder="Materials Required (for PDF only)"></textarea>
+
   <button onclick="submitMaintenance()">Submit Request</button>
 
   <div class="successMsg" id="successMsg">
@@ -148,7 +133,16 @@
 <img id="logo" src="logo.png" alt="SOAR TN Logo">
 <div id="soarText">SOAR TN</div>
 
-<!-- Include maintenance.js -->
+<!-- EmailJS v4 Module -->
+<script type="module">
+  import * as emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+  emailjs.init('sLNm5JCzwihAuVon0'); // Replace with your EmailJS public key
+  window.emailjs = emailjs; // Make globally accessible
+</script>
+
+<!-- Maintenance JS -->
 <script type="module" src="maintenance.js"></script>
+
 </body>
 </html>
+
