@@ -6,7 +6,7 @@
 
   <!-- EmailJS SDK v4 -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script type="text/javascript">
+  <script>
     (function(){
       emailjs.init("sLNm5JCzwihAuVon0"); // Replace with your EmailJS public key
     })();
@@ -17,59 +17,76 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/style.css">
-  
 </head>
 <body>
   <div class="maintenance-page">
 
-    <!-- Logo and SOAR TN bottom text -->
+      <!-- Logo and SOAR TN bottom text -->
     <div class="logo-container">
       <img src="logo.png" alt="SOAR TN Logo" class="logo">
       <h1 class="soar-text">SOAR <span class="tn-text">TN</span></h1>
     </div>
 
     <!-- Form container -->
-    <div class="form-container">
-      <h2>Maintenance Request</h2>
+    <div class="form-card">
+      <h2 class="form-title">Maintenance Request</h2>
 
-      <label for="mName">Requested By</label>
-      <input id="mName" placeholder="Your Name" required>
+      <div class="form-group">
+        <label for="mName">Requested By</label>
+        <input id="mName" placeholder="Your Name" required>
+      </div>
 
-      <label for="mEmail">Email</label>
-      <input id="mEmail" type="email" placeholder="Your Email" required>
+      <div class="form-group">
+        <label for="mEmail">Email</label>
+        <input id="mEmail" type="email" placeholder="Your Email" required>
+      </div>
 
-      <label for="mPhone">Phone</label>
-      <input id="mPhone" placeholder="Contact Phone">
+      <div class="form-group">
+        <label for="mPhone">Phone</label>
+        <input id="mPhone" placeholder="Contact Phone">
+      </div>
 
-      <label for="mHouse">Residential House</label>
-      <select id="mHouse" required>
-        <option value="">Select House</option>
-        <option>Lee House</option>
-        <option>Alcoa House</option>
-        <option>Cusick House</option>
-        <option>Countryside House</option>
-        <option>Cherokee House</option>
-        <option>Dell House</option>
-        <option>Gladstone House</option>
-        <option>Glascock House</option>
-        <option>Jett House</option>
-        <option>May House</option>
-        <option>Merritt House</option>
-        <option>Emma House</option>
-        <option>Wright House</option>
-        <option>Raulston House</option>
-        <option>Louisville House</option>
-      </select>
+      <div class="form-group">
+        <label for="mHouse">Residential House</label>
+        <select id="mHouse" required>
+          <option value="">Select House</option>
+          <option>Lee House</option>
+          <option>Alcoa House</option>
+          <option>Cusick House</option>
+          <option>Countryside House</option>
+          <option>Cherokee House</option>
+          <option>Dell House</option>
+          <option>Gladstone House</option>
+          <option>Glascock House</option>
+          <option>Jett House</option>
+          <option>May House</option>
+          <option>Merritt House</option>
+          <option>Emma House</option>
+          <option>Wright House</option>
+          <option>Raulston House</option>
+          <option>Louisville House</option>
+        </select>
+      </div>
 
-      <label for="mDesc">Description of Work</label>
-      <textarea id="mDesc" rows="4" placeholder="Describe the work to be performed" required></textarea>
+      <div class="form-group">
+        <label for="mDesc">Description of Work</label>
+        <textarea id="mDesc" rows="4" placeholder="Describe the work to be performed" required></textarea>
+      </div>
 
-      <label for="mExpected">Expected Completion Date</label>
-      <input id="mExpected" type="date">
+      <div class="form-group">
+        <label for="mExpected">Expected Completion Date</label>
+        <input id="mExpected" type="date">
+      </div>
 
-      <button onclick="submitMaintenance()">Submit Maintenance Request</button>
+      <button class="submit-btn" onclick="submitMaintenance()">Submit Maintenance Request</button>
     </div>
   </div>
+
+  <!-- JS -->
+  <script src="js/maintenance.js"></script>
+</body>
+</html>
+
 
   <!-- Include JS -->
   <script src="js/maintenance.js"></script>
