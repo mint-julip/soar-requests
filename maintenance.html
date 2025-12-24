@@ -2,139 +2,153 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Maintenance Request</title>
+<title>SOAR TN Maintenance Request</title>
 
-<!-- EmailJS SDK v4 -->
+<!-- EmailJS v4 SDK -->
 <script type="module" src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  emailjs.init("sLNm5JCzwihAuVon0"); // Replace with your EmailJS User ID
-</script>
 
 <!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f0f4f8;
-  margin: 0;
-  padding: 0;
-}
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(-45deg, #eef3ff, #fdfbfb, #e0f7fa, #fce4ec);
+    background-size: 400% 400%;
+    animation: bgMove 15s ease infinite;
+    overflow-x: hidden;
+  }
 
-.maintenance-page {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
-}
+  @keyframes bgMove {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+  }
 
-.form-card {
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
+  #landingFrame {
+    margin: 50px auto;
+    max-width: 900px;
+    padding: 40px;
+    border-radius: 25px;
+    border: 8px solid black;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    background: rgba(255,255,255,0.9);
+  }
 
-.form-card h2 {
-  text-align: center;
-  margin-bottom: 25px;
-}
+  h2 { margin-top: 0; }
 
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
+  input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
 
-textarea {
-  resize: vertical;
-}
+  button {
+    padding: 12px 20px;
+    font-size: 16px;
+    margin: 5px;
+    border-radius: 8px;
+    border: none;
+    background: #0078D4;
+    color: #fff;
+    cursor: pointer;
+  }
 
-button.submit-btn {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: none;
-  background: #0078D4;
-  color: white;
-  cursor: pointer;
-}
+  button:hover { background: #005A9E; }
 
-button.submit-btn:hover {
-  background: #005A9E;
-}
+  .summary {
+    display: none;
+    background: #e6f0fa;
+    border: 2px solid #0078D4;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+  }
 
-.logo-container {
-  text-align: center;
-  margin-top: 30px;
-}
+  #logo-container {
+    text-align: center;
+    margin-top: 20px;
+  }
 
-.logo-container .logo {
-  max-width: 180px;
-  display: block;
-  margin: 0 auto 10px;
-}
+  #logo-container img {
+    max-width: 120px;
+    vertical-align: middle;
+  }
 
-.soar-text {
-  font-size: 36px;
-  font-weight: bold;
-  background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+  #soar-text {
+    font-size: 48px;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 15px;
+    margin-right: 15px;
+    background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbowMove 10s linear infinite;
+  }
+
+  @keyframes rainbowMove {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+  }
 </style>
 </head>
+
 <body>
 
-<div class="maintenance-page">
+<div id="landingFrame">
+  <h2>Maintenance Request</h2>
 
-  <!-- Maintenance Form -->
-  <div class="form-card">
-    <h2>Maintenance Request Form</h2>
+  <input id="requester" placeholder="Requested By">
+  <input id="contact" placeholder="Contact Info / Phone">
+  <select id="resHouse">
+    <option value="">Residential House</option>
+    <option>Lee House</option>
+    <option>Alcoa House</option>
+    <option>Cusick House</option>
+    <option>Countryside House</option>
+    <option>Cherokee House</option>
+    <option>Dell House</option>
+    <option>Gladstone House</option>
+    <option>Glascock House</option>
+    <option>Jett House</option>
+    <option>May House</option>
+    <option>Merritt House</option>
+    <option>Emma House</option>
+    <option>Wright House</option>
+    <option>Raulston House</option>
+    <option>Louisville House</option>
+  </select>
+  <textarea id="description" rows="4" placeholder="Description of Work to be Performed"></textarea>
+  <textarea id="materials" rows="2" placeholder="Materials Required"></textarea>
+  <input id="expectedDate" type="date" placeholder="Expected Date of Completion">
 
-    <input id="requester" placeholder="Requested By">
-    <input id="contact" placeholder="Contact Info / Phone">
-    <select id="resHouse">
-      <option value="">Select Residential House</option>
-      <option>Lee House</option>
-      <option>Alcoa House</option>
-      <option>Cusick House</option>
-      <option>Countryside House</option>
-      <option>Cherokee House</option>
-      <option>Dell House</option>
-      <option>Gladstone House</option>
-      <option>Glascock House</option>
-      <option>Jett House</option>
-      <option>May House</option>
-      <option>Merritt House</option>
-      <option>Emma House</option>
-      <option>Wright House</option>
-      <option>Raulston House</option>
-      <option>Louisville House</option>
-      <optio>Soar Main Office</optio>
-    </select>
+  <button onclick="submitMaintenance()">Submit Request</button>
 
-    <input id="dateSubmitted" type="text" value="" readonly>
-    <input id="expectedDate" type="date" placeholder="Expected Date of Completion">
-    <textarea id="description" rows="4" placeholder="Description of Work to be Performed"></textarea>
-    <textarea id="materials" rows="3" placeholder="Materials Required"></textarea>
-
-    <button class="submit-btn" onclick="submitMaintenance()">Submit Maintenance Request</button>
-  </div>
-
-  <!-- Logo + SOAR TN -->
-  <div class="logo-container">
-    <img src="logo.png" alt="SOAR TN Logo" class="logo">
-    <h1 class="soar-text">SOAR TN</h1>
+  <div id="successMsg" class="summary">
+    <h3>Maintenance Request Submitted!</h3>
+    <p>Ticket #: <span id="ticketNum"></span></p>
+    <p>A confirmation email has been sent.</p>
   </div>
 </div>
 
-<script>
-// Set date submitted automatically
-document.getElementById("dateSubmitted").value = new Date().toLocaleString();
+<div id="logo-container">
+  <span id="soar-text">SOAR</span>
+  <img src="soar_logo.png" alt="SOAR Logo">
+  <span id="soar-text">TN</span>
+</div>
+
+<script type="module">
+import emailjs from "https://cdn.emailjs.com/dist/email.min.js";
+
+emailjs.init("sLNm5JCzwihAuVon0"); // <-- replace with your EmailJS public key
 
 function generateTicket() {
   return "SOAR-" + Date.now();
@@ -150,10 +164,10 @@ function submitMaintenance() {
   const requester = document.getElementById("requester").value.trim();
   const contact = document.getElementById("contact").value.trim();
   const resHouse = document.getElementById("resHouse").value;
-  const dateSubmitted = document.getElementById("dateSubmitted").value;
-  const expectedDate = document.getElementById("expectedDate").value;
   const description = document.getElementById("description").value.trim();
   const materials = document.getElementById("materials").value.trim();
+  const expectedDate = document.getElementById("expectedDate").value;
+  const submittedDate = new Date().toLocaleString();
 
   if (!requester || !contact || !resHouse || !description) {
     alert("Please fill in all required fields.");
@@ -161,43 +175,46 @@ function submitMaintenance() {
   }
 
   // EmailJS send
-  emailjs.send("service_lk56r2m", "template_au6bbjp", {
-    ticket: ticket,
-    requester: requester,
-    contact: contact,
-    resHouse: resHouse,
-    dateSubmitted: dateSubmitted,
-    expectedDate: expectedDate,
-    description: description,
-    materials: materials,
-    to_email: "soarhr@soartn.org",
-    cc_email: "toosandra@gmail.com" //testing email, replace with cheryl, alisha and koby
+  emailjs.send("service_lk56r2m", "template_maintenance", {
+    ticket,
+    requester,
+    contact,
+    resHouse,
+    description,
+    materials,
+    expectedDate,
+    submittedDate,
+    to_email: "maintenance@soartn.org",
+    cc_email: "cherylhintz@soartn.org, alishasanders@soartn.org, kobypresley@soartn.org"
   }).then(() => {
     launchConfetti();
-    alert("Maintenance Request Submitted!\nTicket #: " + ticket);
+    document.getElementById("ticketNum").textContent = ticket;
+    document.getElementById("successMsg").style.display = "block";
 
-    // Clear form
+    // Reset form
     document.getElementById("requester").value = "";
     document.getElementById("contact").value = "";
     document.getElementById("resHouse").value = "";
-    document.getElementById("expectedDate").value = "";
     document.getElementById("description").value = "";
     document.getElementById("materials").value = "";
-
-    // Optionally redirect back to landing page
-    // window.location.href = "index.html";
+    document.getElementById("expectedDate").value = "";
 
     // Log to Google Sheet
-    const logData = {
-      ticket, requester, contact, resHouse, dateSubmitted, expectedDate, description, materials
-    };
-
     fetch("https://script.google.com/macros/library/d/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/1", {
       method: "POST",
-      body: JSON.stringify(logData)
+      body: JSON.stringify({
+        ticket,
+        requester,
+        contact,
+        resHouse,
+        description,
+        materials,
+        expectedDate,
+        submittedDate,
+        status: "Submitted"
+      })
     }).then(resp => console.log("Logged to Sheet:", resp))
       .catch(err => console.error("Sheet logging error:", err));
-
   }).catch(err => {
     console.error("EmailJS error:", err);
     alert("Failed to send request. Check console.");
@@ -207,4 +224,3 @@ function submitMaintenance() {
 
 </body>
 </html>
-
