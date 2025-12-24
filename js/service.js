@@ -46,7 +46,7 @@ function submitService() {
     HR: "soarhr@soartn.org",
     Other: "soarhr@soartn.org"
   };
-  fetch("https://script.google.com/macros/s/AKfycbygC4FTOpgZMlLaTgX5WhMRDRqI0d3hcuWsDHLoqECejAEHa-Chf8oOXfl5V7YWF4A8rg/exec", {
+  fetch("https://script.google.com/macros/library/d/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/1", {
   method: "POST",
   body: JSON.stringify({
     ticket: ticket,
