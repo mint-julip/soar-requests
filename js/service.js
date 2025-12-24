@@ -37,7 +37,7 @@ function submitService() {
       status: "Submitted"
     };
 
-    fetch("YOUR_SCRIPT_URL_HERE", {
+    fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
       method: "POST",
       body: JSON.stringify(logData)
     }).then(resp => console.log("Logged to Sheet:", resp))
