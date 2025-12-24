@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Maintenance Request</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/emailjs@4/dist/email.min.js"></script>
-</head>
-<body>
-
-<div class="frame">
+<div class="form-container">
   <h2>Maintenance Request</h2>
 
-  <input id="name" placeholder="Requested By">
-  <input id="contact" placeholder="Phone or Email">
+  <label>Requested By</label>
+  <input id="mName" placeholder="Your Name">
 
-  <select id="house">
+  <label>Email</label>
+  <input id="mEmail" type="email" placeholder="Your Email">
+
+  <label>Phone</label>
+  <input id="mPhone" placeholder="Contact Phone">
+
+  <label>Residential House</label>
+  <select id="mHouse">
+    <option value="">Select House</option>
     <option>Lee House</option>
     <option>Alcoa House</option>
     <option>Cusick House</option>
@@ -25,28 +24,17 @@
     <option>Jett House</option>
     <option>May House</option>
     <option>Merritt House</option>
-    <option>SOAR HQ</option>
     <option>Emma House</option>
     <option>Wright House</option>
     <option>Raulston House</option>
     <option>Louisville House</option>
   </select>
 
-  <textarea id="work" placeholder="Description of work"></textarea>
-  <input id="expected" type="date">
+  <label>Description of Work</label>
+  <textarea id="mDesc" rows="4"></textarea>
 
-  <button onclick="submitMaintenance()">Submit</button>
+  <label>Expected Completion Date</label>
+  <input id="mExpected" type="date">
+
+  <button onclick="submitMaintenance()">Submit Maintenance Request</button>
 </div>
-
-<!-- EmailJS SDK (new version) -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-<!-- EmailJS init -->
-<script src="js/emailjs-init.js"></script>
-
-<!-- Maintenance logic -->
-<script src="js/maintenance.js"></script>
-
-</body>
-</html>
-
