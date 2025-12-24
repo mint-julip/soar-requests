@@ -54,42 +54,36 @@ function submitService() {
   };
 
   emailjs.send("service_lk56r2m", "template_au6bbjp", emailParams)
-    .then(() => {
-      launchConfetti();
+  .then(() => {
+    launchConfetti();
+    document.getElementById("ticketNum").textContent = ticket;
+    document.getElementById("successMsg").style.display = "block";
 
-      // Show success message
-      document.getElementById("ticketNum").textContent = ticket;
-      document.getElementById("successMsg").style.display = "block";
+    const logData = {
+      ticket,
+      type: "Service Request",
+      name,
+      email,
+      department: dept,
+      description: desc,
+      status: "Submitted",
+      submitted: date
+    };
 
-      // Log to Google Sheets
-      const logData = {
-        ticket: ticket,
-        type: "Service Request",
-        name: name,
-        email: email,
-        department: dept,
-        description: desc,
-        status: "Submitted",
-        submitted: date
-      };
-
-      fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(logData)
-      })
-      .then(() => console.log("Logged to Google Sheet"))
-      .catch(err => console.error("Sheet logging error:", err));
-
-      // Clear form AFTER success
-      document.getElementById("srName").value = "";
-      document.getElementById("srEmail").value = "";
-      document.getElementById("srDept").value = "";
-      document.getElementById("srDesc").value = "";
-    })
-    .catch(err => {
-      console.error("EmailJS error:", err);
-      alert("Failed to send Service Request. Please try again.");
+    fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(logData)
     });
-}
 
+    // clear form
+    document.getElementById("srName").value = "";
+    document.getElementById("srEmail").value = "";
+    document.getElementById("srDept").value = "";
+    document.getElementById("srDesc").value = "";
+  })
+  .catch(err => {
+    console.error("EmailJS error:", err);
+    alert("Failed to send Service Request.");
+  });
+}
