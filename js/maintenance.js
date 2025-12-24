@@ -14,12 +14,15 @@ function launchConfetti() {
 }
 
 // Map houses (for dropdown)
+// maintenance.js
 const houses = [
-  "Lee House","Alcoa House","Cusick House","Countryside House",
-  "Cherokee House","Dell House","Gladstone House","Glascock House",
-  "Jett House","May House","Merritt House","Emma House",
-  "Wright House","Raulston House","Louisville House","SOAR OFFICE"
+  "Lee House", "Alcoa House", "Cusick House", "Countryside House", "Cherokee House",
+  "Dell House", "Gladstone House", "Glascock House", "Jett House", "May House",
+  "Merritt House", "Emma House", "Wright House", "Raulston House", "Louisville House"
 ];
+
+// Use `houses` directly later without redeclaring
+
 
 // Populate dropdown (call once on page load)
 function populateHouseDropdown() {
