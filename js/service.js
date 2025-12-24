@@ -60,7 +60,7 @@ function submitService() {
   requester_email: email,      // ✅ MATCHES TEMPLATE
   department: dept,
   description: desc,
-  submitted_date: date,        // ✅ MATCHES TEMPLATE
+  submitted_date: new Date().toLocaleString(),        // ✅ MATCHES TEMPLATE
   to_email: toEmail,
   cc_email: "soarhr@soartn.org"
 }
