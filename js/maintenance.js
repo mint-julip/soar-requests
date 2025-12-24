@@ -1,136 +1,68 @@
-// Generate ticket
-function generateTicket(prefix) {
-  const timestamp = Date.now();
-  return `${prefix}-${timestamp}`;
+import * as emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/library/d/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/1"; // replace with your Apps Script URL
+
+function generateTicket() {
+  return "SOAR-" + Date.now();
 }
 
-// Confetti
 function launchConfetti() {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 }
-  });
+  confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 }
 
-// Map houses (for dropdown)
-// maintenance.js
-const houses = [
-  "Lee House", "Alcoa House", "Cusick House", "Countryside House", "Cherokee House",
-  "Dell House", "Gladstone House", "Glascock House", "Jett House", "May House",
-  "Merritt House", "Emma House", "Wright House", "Raulston House", "Louisville House"
-];
+window.submitMaintenance = function () {
+  const ticket = generateTicket();
+  const requester = document.getElementById("requester").value.trim();
+  const contact = document.getElementById("contact").value.trim();
+  const house = document.getElementById("house").value;
+  const expectedDate = document.getElementById("expectedDate").value;
+  const description = document.getElementById("description").value.trim();
+  const materials = document.getElementById("materials").value.trim();
+  const dateSubmitted = new Date().toLocaleString();
 
-// Use `houses` directly later without redeclaring
-
-
-// Populate dropdown (call once on page load)
-function populateHouseDropdown() {
-  const houseSelect = document.getElementById("maintenanceHouse");
-  houses.forEach(house => {
-    const option = document.createElement("option");
-    option.value = house;
-    option.textContent = house;
-    houseSelect.appendChild(option);
-  });
-}
-
-// Generate PDF
-function generateMaintenancePDF(data) {
-  const doc = new jsPDF();
-  doc.setFontSize(16);
-  doc.text("SOAR TN - Maintenance Request", 20, 20);
-
-  doc.setFontSize(11);
-  doc.text(`Ticket: ${data.ticket}`, 20, 35);
-  doc.text(`Requested By: ${data.requestedBy}`, 20, 45);
-  doc.text(`House: ${data.house}`, 20, 55);
-  doc.text(`Contact Info: ${data.contact}`, 20, 65);
-  doc.text(`Submission Date: ${data.timestamp}`, 20, 75);
-  doc.text(`Expected Completion: ${data.expectedDate}`, 20, 85);
-  doc.text("Work Description:", 20, 95);
-  doc.text(data.workDescription, 20, 105, { maxWidth: 170 });
-  doc.text("Materials Required:", 20, 125);
-  doc.text(data.materialsRequired, 20, 135, { maxWidth: 170 });
-  doc.text("Cost of Materials:", 20, 155);
-  doc.text(data.costMaterials || "", 20, 165);
-  doc.text("Assigned To:", 20, 185);
-  doc.text("Date Completed:", 20, 195);
-  doc.text("Time Arrived:", 20, 205);
-  doc.text("Time Completed:", 20, 215);
-  doc.text("Mileage:", 20, 225);
-  doc.text("Comments / Notes:", 20, 235);
-  doc.text(data.comments || "", 20, 245);
-
-  doc.save(`${data.ticket}.pdf`);
-}
-
-// Submit Maintenance Form
-function submitMaintenance() {
-  const ticket = generateTicket("MT");
-
-  const requestedBy = document.getElementById("maintenanceRequestedBy").value;
-  const house = document.getElementById("maintenanceHouse").value;
-  const contact = document.getElementById("maintenanceContact").value;
-  const expectedDate = document.getElementById("maintenanceExpectedDate").value;
-  const workDescription = document.getElementById("maintenanceWork").value;
-  const materialsRequired = document.getElementById("maintenanceMaterials").value;
-
-  if (!requestedBy || !house || !contact || !workDescription) {
-    alert("Please complete all required fields.");
+  if (!requester || !contact || !house || !description) {
+    alert("Please fill in all required fields.");
     return;
   }
 
-  const timestamp = new Date().toLocaleString();
-
-  // EmailJS
+  // Send email
   emailjs.send("service_lk56r2m", "template_vnfmovs", {
     ticket,
-    requestedBy,
-    house,
+    requester,
     contact,
-    timestamp,
+    house,
     expectedDate,
-    workDescription,
-    materialsRequired,
-    to_email: "soarhr@soartn.org",
-    // cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
-    cc_email: "toosandra@gmail.com"
-  }).then(() => {
+    description,
+    materials,
+    dateSubmitted,
+    to_email: "toosandra@gmail.com", // department email
+    cc_email: "sandysmith@soartn.org" //"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org" // CC multiple
+  })
+  .then(() => {
     launchConfetti();
-    alert(`Maintenance request submitted! Ticket #: ${ticket}`);
+    document.getElementById("ticketNum").textContent = ticket;
+    document.getElementById("successMsg").style.display = "block";
 
     // Log to Google Sheet
-    const logData = {
-      ticket,
-      type: "Maintenance",
-      name: requestedBy,
-      email: contact,
-      department: "Maintenance",
-      status: "Submitted"
-    };
-
-    fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
+    const logData = { ticket, type: "Maintenance", requester, contact, house, expectedDate, description, materials, status: "Submitted" };
+    fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
       body: JSON.stringify(logData)
     }).then(resp => console.log("Logged to Sheet:", resp))
       .catch(err => console.error("Sheet logging error:", err));
 
-    // Generate PDF
-    generateMaintenancePDF({
-      ticket,
-      requestedBy,
-      house,
-      contact,
-      timestamp,
-      expectedDate,
-      workDescription,
-      materialsRequired,
-      costMaterials: "", comments: ""
-    });
+    // Reset form
+    document.getElementById("requester").value = "";
+    document.getElementById("contact").value = "";
+    document.getElementById("house").value = "";
+    document.getElementById("expectedDate").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("materials").value = "";
 
-  }).catch(err => {
+  })
+  .catch(err => {
     console.error("EmailJS error:", err);
-    alert("Error sending Maintenance Request. Check console.");
+    alert("Failed to send request. Check console.");
   });
-}
+};
+
