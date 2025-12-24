@@ -5,7 +5,7 @@
 <title>SOAR TN Maintenance Request</title>
 
 <!-- EmailJS SDK -->
-<script type="module">
+<script> type="module"
 import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
 
 // Initialize with your public key
@@ -153,7 +153,7 @@ window.emailjs = emailjs;
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
   }
 
-<script type="module">
+// <script type="module">
 function submitMaintenance() {
   const ticket = "SOAR-" + Date.now();
   const requester = document.getElementById("requester").value.trim();
