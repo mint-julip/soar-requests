@@ -1,7 +1,7 @@
 function submitService() {
-  const ticket = "SR-" + Date.now();
+  const ticket = generateTicket("SR");
 
-  const deptEmails = {
+  const deptMap = {
     Medical: "soarmedicaldepartment@soartn.org",
     "Program Directors": "programmanagers@soartn.org",
     Finance: "finance@soartn.org",
@@ -13,23 +13,17 @@ function submitService() {
     Other: "soarhr@soartn.org"
   };
 
-  const dept = department.value;
-
-  const params = {
+  emailjs.send("service_soartn", "template_service_request", {
     ticket,
-    name: name.value,
-    email: email.value,
-    department: dept,
-    description: description.value,
-    cc_email: deptEmails[dept],
-    to_email: "soarhr@soartn.org"
-  };
-
-  emailjs.send("service_soartn", "template_service_request", params)
-    .then(() => {
-      alert("Service Request Submitted. Ticket " + ticket);
-      confetti();
-    })
-    .catch(err => console.error(err));
+    name: srName.value,
+    email: srEmail.value,
+    department: srDept.value,
+    description: srDesc.value,
+    to_email: "soarhr@soartn.org",
+    cc_email: deptMap[srDept.value]
+  }).then(() => {
+    launchConfetti();
+    alert(`Submitted. Ticket ${ticket}`);
+  });
 }
 
