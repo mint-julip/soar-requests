@@ -1,1 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Service Request</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/emailjs@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<div class="frame">
+  <h2>Service Request</h2>
+
+  <input id="name" placeholder="Your Name">
+  <input id="email" placeholder="Your Email">
+
+  <select id="department">
+    <option value="">Select Department</option>
+    <option value="Medical">Medical</option>
+    <option value="Program Directors">Program Directors</option>
+    <option value="Finance">Finance</option>
+    <option value="Compliance">Compliance</option>
+    <option value="Payroll">Payroll</option>
+    <option value="IT">IT</option>
+    <option value="Recruiting">Recruiting</option>
+    <option value="HR">HR</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <textarea id="description" placeholder="Describe your request"></textarea>
+
+  <button onclick="submitService()">Submit</button>
+</div>
+
+<script src="js/emailjs-init.js"></script>
+<script src="js/service.js"></script>
+</body>
+</html>
 
