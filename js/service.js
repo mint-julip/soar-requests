@@ -43,13 +43,12 @@ function submitService() {
 
   // Send EmailJS email
   emailjs.send("service_lk56r2m", "template_au6bbjp", {
-    ticket,
-    name: srName,
-    email: srEmail,
-    department: srDept,
-    description: srDesc,
-    to_email: "soarhr@soartn.org",
-    cc_email: deptEmails[srDept]
+   ticket: ticket,
+  requester: document.getElementById("srName").value,
+  email: document.getElementById("srEmail").value,
+  department: document.getElementById("srDept").value,
+  description: document.getElementById("srDesc").value,
+  date: new Date().toLocaleString()
   }).then(() => {
     launchConfetti();
     alert(`Service request submitted! Ticket #: ${ticket}`);
