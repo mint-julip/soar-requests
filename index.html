@@ -79,12 +79,11 @@
 
 <body>
 
-<div id="landingFrame">
-  <img id="soarLogo" src="/logo.png" alt="SOAR Logo">
-  <div id="soarText">
-    <span>SOAR</span>
-    <span>TN</span>
-  </div>
+<!-- Floating Logo -->
+<div id="floatingLogo">
+  <img src="/logo.png" alt="SOAR TN Logo">
+</div>
+
 
   <h2>Request Options</h2>
   <button onclick="openService()">Service Request</button>
@@ -93,6 +92,8 @@
   <button onclick="openExpense()">Expense Request</button>
   <button onclick="openReview()">Review Requests</button>
 </div>
+
+  
 
 <!-- Modals will be loaded via JS files: service.js, ot.js, maintenance.js, expense.js -->
 <script src="js/service.js"></script>
