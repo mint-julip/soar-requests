@@ -5,9 +5,10 @@
 <title>SOAR TN Maintenance Request</title>
 
 <!-- EmailJS SDK -->
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  emailjs.init("sLNm5JCzwihAuVon0"); // Replace with your EmailJS public key
+<script type="module">
+  import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+  emailjs.init("sLNm5JCzwihAuVon0"); // Your public key
+  window.emailjs = emailjs; // Make globally accessible if using inline JS
 </script>
 
 <!-- Confetti -->
