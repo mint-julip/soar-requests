@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OT Approval</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<h2 id="status">Processing...</h2>
+
+<script>
+emailjs.init("YOUR_PUBLIC_KEY");
+
+const urlParams = new URLSearchParams(window.location.search);
+const ticket = urlParams.get("ticket");
+const decision = urlParams.get("decision");
+
+const template = decision === "approved"
+  ? "template_ot_approved"
+  : "template_ot_denied";
+
+const params = {
+  ticket: ticket,
+  status: decision.toUpperCase()
+};
+
+emailjs.send(
+  "service_soartn",
+  template,
+  params
+).then(() => {
+  document.getElementById("status").innerText =
+    `OT Request ${decision.toUpperCase()} – Ticket ${ticket}`;
+}).catch(err => {
+  document.getElementById("status").innerText =
+    "Error processing request.";
+  console.error(err);
+});
+</script>
+
+</body>
+</html>
