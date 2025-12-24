@@ -5,6 +5,8 @@ function generateTicket() {
   return "SOAR-" + Date.now();
 }
 
+const ticket = generateTicket();
+
 // ============================
 // Confetti
 // ============================
