@@ -1,40 +1,77 @@
-<div class="form-container">
-  <h2>Maintenance Request</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SOAR TN Maintenance Request</title>
 
-  <label>Requested By</label>
-  <input id="mName" placeholder="Your Name">
+  <!-- EmailJS SDK v4 -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function(){
+      emailjs.init("sLNm5JCzwihAuVon0"); // Replace with your EmailJS public key
+    })();
+  </script>
 
-  <label>Email</label>
-  <input id="mEmail" type="email" placeholder="Your Email">
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <label>Phone</label>
-  <input id="mPhone" placeholder="Contact Phone">
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  
+</head>
+<body>
+  <div class="maintenance-page">
 
-  <label>Residential House</label>
-  <select id="mHouse">
-    <option value="">Select House</option>
-    <option>Lee House</option>
-    <option>Alcoa House</option>
-    <option>Cusick House</option>
-    <option>Countryside House</option>
-    <option>Cherokee House</option>
-    <option>Dell House</option>
-    <option>Gladstone House</option>
-    <option>Glascock House</option>
-    <option>Jett House</option>
-    <option>May House</option>
-    <option>Merritt House</option>
-    <option>Emma House</option>
-    <option>Wright House</option>
-    <option>Raulston House</option>
-    <option>Louisville House</option>
-  </select>
+    <!-- Logo and SOAR TN bottom text -->
+    <div class="logo-container">
+      <img src="logo.png" alt="SOAR TN Logo" class="logo">
+      <h1 class="soar-text">SOAR <span class="tn-text">TN</span></h1>
+    </div>
 
-  <label>Description of Work</label>
-  <textarea id="mDesc" rows="4"></textarea>
+    <!-- Form container -->
+    <div class="form-container">
+      <h2>Maintenance Request</h2>
 
-  <label>Expected Completion Date</label>
-  <input id="mExpected" type="date">
+      <label for="mName">Requested By</label>
+      <input id="mName" placeholder="Your Name" required>
 
-  <button onclick="submitMaintenance()">Submit Maintenance Request</button>
-</div>
+      <label for="mEmail">Email</label>
+      <input id="mEmail" type="email" placeholder="Your Email" required>
+
+      <label for="mPhone">Phone</label>
+      <input id="mPhone" placeholder="Contact Phone">
+
+      <label for="mHouse">Residential House</label>
+      <select id="mHouse" required>
+        <option value="">Select House</option>
+        <option>Lee House</option>
+        <option>Alcoa House</option>
+        <option>Cusick House</option>
+        <option>Countryside House</option>
+        <option>Cherokee House</option>
+        <option>Dell House</option>
+        <option>Gladstone House</option>
+        <option>Glascock House</option>
+        <option>Jett House</option>
+        <option>May House</option>
+        <option>Merritt House</option>
+        <option>Emma House</option>
+        <option>Wright House</option>
+        <option>Raulston House</option>
+        <option>Louisville House</option>
+      </select>
+
+      <label for="mDesc">Description of Work</label>
+      <textarea id="mDesc" rows="4" placeholder="Describe the work to be performed" required></textarea>
+
+      <label for="mExpected">Expected Completion Date</label>
+      <input id="mExpected" type="date">
+
+      <button onclick="submitMaintenance()">Submit Maintenance Request</button>
+    </div>
+  </div>
+
+  <!-- Include JS -->
+  <script src="js/maintenance.js"></script>
+</body>
+</html>
