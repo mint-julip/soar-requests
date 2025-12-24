@@ -52,19 +52,17 @@ function submitService() {
   // ============================
   // Send Email via EmailJS
   // ============================
-  emailjs.send(
-    "service_lk56r2m",          // ✅ YOUR service ID
-    "template_au6bbjp",         // ✅ YOUR template ID
-    {
-      ticket: ticket,
-      requester: name,
-      requester_email: email,
-      department: dept,
-      description: desc,
-      submitted_date: submittedDate,
-      to_email: departmentEmail,
-      cc_email: "soarhr@soartn.org"
-    }
+ emailjs.send("service_lk56r2m", "template_au6bbjp", {
+  ticket: ticket,
+  requester: name,
+  requester_email: email,      // ✅ MATCHES TEMPLATE
+  department: dept,
+  description: desc,
+  submitted_date: date,        // ✅ MATCHES TEMPLATE
+  to_email: toEmail,
+  cc_email: "soarhr@soartn.org"
+}
+
   )
   .then(() => {
     // Confetti
