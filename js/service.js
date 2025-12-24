@@ -1,9 +1,13 @@
-// Generate unique ticket number
+// ============================
+// Ticket Generator
+// ============================
 function generateTicket() {
   return "SOAR-" + Date.now();
 }
 
-// Launch confetti
+// ============================
+// Confetti
+// ============================
 function launchConfetti() {
   confetti({
     particleCount: 120,
@@ -12,18 +16,21 @@ function launchConfetti() {
   });
 }
 
+// ============================
 // Submit Service Request
+// ============================
 function submitService() {
   const ticket = generateTicket();
 
+  // Get form values
   const name = document.getElementById("srName").value.trim();
   const email = document.getElementById("srEmail").value.trim();
   const dept = document.getElementById("srDept").value;
   const desc = document.getElementById("srDesc").value.trim();
-  const date = new Date().toLocaleString();
+  const submittedDate = new Date().toLocaleString();
 
   if (!name || !email || !dept || !desc) {
-    alert("Please fill in all fields.");
+    alert("Please complete all fields.");
     return;
   }
 
@@ -40,50 +47,58 @@ function submitService() {
     Other: "soarhr@soartn.org"
   };
 
-  const toEmail = deptEmails[dept] || "soarhr@soartn.org";
+  const departmentEmail = deptEmails[dept] || "soarhr@soartn.org";
 
-  const emailParams = {
-    ticket: ticket,
-    requester: name,
-    email: email,
-    department: dept,
-    description: desc,
-    date: date,
-    to_email: toEmail,
-    cc_email: "soarhr@soartn.org"
-  };
-
-  emailjs.send("service_lk56r2m", "template_au6bbjp", emailParams)
-  .then(() => {
-    launchConfetti();
-    document.getElementById("ticketNum").textContent = ticket;
-    document.getElementById("successMsg").style.display = "block";
-
-    const logData = {
-      ticket,
-      type: "Service Request",
-      name,
-      email,
+  // ============================
+  // Send Email via EmailJS
+  // ============================
+  emailjs.send(
+    "service_lk56r2m",          // ✅ YOUR service ID
+    "template_au6bbjp",         // ✅ YOUR template ID
+    {
+      ticket: ticket,
+      requester: name,
+      requester_email: email,
       department: dept,
       description: desc,
-      status: "Submitted",
-      submitted: date
-    };
+      submitted_date: submittedDate,
+      to_email: departmentEmail,
+      cc_email: "soarhr@soartn.org"
+    }
+  )
+  .then(() => {
+    // Confetti
+    launchConfetti();
 
-    fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(logData)
-    });
+    // ============================
+    // Log to Google Sheets
+    // ============================
+    fetch(
+      "https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ticket: ticket,
+          type: "Service",
+          requester: name,
+          email: email,
+          department: dept,
+          description: desc,
+          status: "Submitted",
+          date: submittedDate
+        })
+      }
+    );
 
-    // clear form
-    document.getElementById("srName").value = "";
-    document.getElementById("srEmail").value = "";
-    document.getElementById("srDept").value = "";
-    document.getElementById("srDesc").value = "";
+    // Small delay so user sees success
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1500);
   })
-  .catch(err => {
-    console.error("EmailJS error:", err);
-    alert("Failed to send Service Request.");
+  .catch(error => {
+    console.error("EmailJS error:", error);
+    alert("Error submitting service request. Check console.");
   });
 }
+
