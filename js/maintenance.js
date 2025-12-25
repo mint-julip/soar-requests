@@ -32,7 +32,7 @@ function submitMaintenance() {
     return;
   }
 
-  emailjs.send("service_lk56r2m", "template_maintenance", {
+  emailjs.send("service_lk56r2m", "template_vnfmovs", {
     ticket,
     requester,
     contact,
