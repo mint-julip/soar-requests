@@ -1,12 +1,9 @@
-// Initialize EmailJS
 emailjs.init("sLNm5JCzwihAuVon0");
 
-// Ticket generator
 function generateTicket() {
   return "SOAR-" + Date.now();
 }
 
-// Confetti
 function launchConfetti() {
   confetti({
     particleCount: 120,
@@ -15,7 +12,6 @@ function launchConfetti() {
   });
 }
 
-// Submit Maintenance Request
 function submitMaintenance() {
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
@@ -32,7 +28,7 @@ function submitMaintenance() {
     return;
   }
 
-  emailjs.send("service_lk56r2m", "template_vnfmovs", {
+  const emailData = {
     ticket,
     requester,
     contact,
@@ -42,31 +38,38 @@ function submitMaintenance() {
     supplies,
     submittedDate,
     to_email: "soarhr@soartn.org",
-    cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
-  })
-  .then(() => {
-    launchConfetti();
-    document.getElementById("ticketNum").textContent = ticket;
-    document.getElementById("successBox").style.display = "block";
+    cc_email: "toosandra@gmail.com" //"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
+  };
 
-    // OPTIONAL: Google Sheets hook (safe to remove)
-    fetch("https://script.google.com/macros/s/YOUR_SCRIPT_URL/exec", {
-      method: "POST",
-      body: JSON.stringify({
-        ticket,
-        requester,
-        contact,
-        house,
-        expectedDate,
-        description,
-        supplies,
-        submittedDate,
-        type: "Maintenance"
-      })
-    }).catch(() => {});
-  })
-  .catch(err => {
-    console.error("EmailJS Error:", err);
-    alert("Failed to submit request.");
-  });
+  // ✅ SEND EMAIL
+  emailjs.send("service_lk56r2m", "template_vnfmovs", emailData)
+    .then(() => {
+      launchConfetti();
+
+      document.getElementById("ticketNum").textContent = ticket;
+      document.getElementById("successBox").style.display = "block";
+
+      // ✅ GENERATE PDF
+      generatePDF(emailData);
+
+      // ✅ LOG TO GOOGLE SHEETS
+      fetch("https://script.google.com/macros/s/YOUR_SCRIPT_URL/exec", {
+        method: "POST",
+        body: JSON.stringify({
+          ...emailData,
+          type: "Maintenance",
+          status: "Submitted"
+        })
+      }).catch(err => console.error("Sheet error", err));
+
+      // ✅ REDIRECT AFTER 3 SECONDS
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 3000);
+    })
+    .catch(err => {
+      console.error("EmailJS Error:", err);
+      alert("Failed to submit maintenance request.");
+    });
 }
+
