@@ -40,6 +40,7 @@ function submitMaintenance() {
     to_email: "soarhr@soartn.org",
     cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
   };
+ 
 
   // ✅ SEND EMAIL
   emailjs.send("service_lk56r2m", "template_vnfmovs", emailData)
@@ -52,15 +53,38 @@ function submitMaintenance() {
       // ✅ GENERATE PDF
       generatePDF(emailData);
 
+       // Data to log
+const logData = {
+  ticket,
+  type: "Maintenance",
+  requester,
+  contact,
+  house,
+  expectedDate,
+  description,
+  materials,
+  status: "Submitted"
+};
+
+// Send to Google Sheet via Apps Script Web App
+fetch("https://script.google.com/macros/s/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/exec", {
+  method: "POST",
+  body: JSON.stringify(logData)
+})
+.then(resp => resp.json())
+.then(data => console.log("Sheet log result:", data))
+.catch(err => console.error("Sheet logging error:", err));
+
+
       // ✅ LOG TO GOOGLE SHEETS
-      fetch("https://script.google.com/macros/library/d/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/1", {
-        method: "POST",
-        body: JSON.stringify({
-          ...emailData,
-          type: "Maintenance",
-          status: "Submitted"
-        })
-      }).catch(err => console.error("Sheet error", err));
+      // fetch("https://script.google.com/macros/library/d/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/1", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     ...emailData,
+      //     type: "Maintenance",
+      //     status: "Submitted"
+      //   })
+      // }).catch(err => console.error("Sheet error", err));
 
       // ✅ REDIRECT AFTER 3 SECONDS
       setTimeout(() => {
