@@ -67,12 +67,21 @@ const logData = {
 };
 
 // Send to Google Sheet via Apps Script Web App
-fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
+// fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
+//   method: "POST",
+//   body: JSON.stringify(logData)
+// })
+// .then(resp => resp.json())
+// .then(data => console.log("Sheet log result:", data))
+// .catch(err => console.error("Sheet logging error:", err));
+      
+fetch("https://script.google.com/macros/s/.../exec", {
   method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify(logData)
 })
-.then(resp => resp.json())
-.then(data => console.log("Sheet log result:", data))
+.then(resp => resp.json())  // convert response to JSON
+.then(data => console.log("Logged to Sheet:", data))
 .catch(err => console.error("Sheet logging error:", err));
 
 
