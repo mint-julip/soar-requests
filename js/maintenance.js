@@ -72,4 +72,34 @@ function submitMaintenance() {
       alert("Failed to submit maintenance request.");
     });
 }
+function generatePDF(data) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("SOAR TN - Maintenance Request", 20, 20);
+
+  doc.setFontSize(11);
+  doc.text(`Ticket #: ${data.ticket}`, 20, 30);
+  doc.text(`Date Submitted: ${data.submittedDate}`, 20, 38);
+
+  doc.text(`Requested By: ${data.requester}`, 20, 48);
+  doc.text(`Contact Info: ${data.contact}`, 20, 56);
+  doc.text(`House: ${data.house}`, 20, 64);
+  doc.text(`Expected Completion: ${data.expectedDate}`, 20, 72);
+
+  doc.text("Description:", 20, 84);
+  doc.text(doc.splitTextToSize(data.description, 170), 20, 92);
+
+  doc.text("Supplies Needed:", 20, 130);
+  doc.text(doc.splitTextToSize(data.supplies || "N/A", 170), 20, 138);
+
+  doc.text("----- Maintenance Use Only -----", 20, 170);
+  doc.text("Materials Cost: ____________", 20, 180);
+  doc.text("Mileage: ____________", 20, 190);
+  doc.text("Completed Date: ____________", 20, 200);
+  doc.text("Comments:", 20, 210);
+
+  doc.save(`${data.ticket}-Maintenance.pdf`);
+}
 
