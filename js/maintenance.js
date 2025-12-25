@@ -67,7 +67,7 @@ const logData = {
 };
 
 // Send to Google Sheet via Apps Script Web App
-fetch("https://script.google.com/macros/s/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/exec", {
+fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
   method: "POST",
   body: JSON.stringify(logData)
 })
