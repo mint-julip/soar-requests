@@ -2,81 +2,38 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SOAR TN Maintenance Request</title>
-
-<!-- EmailJS (NON-module CDN) -->
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
-<!-- Confetti -->
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
+<title>SOAR TN Requests</title>
 <style>
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
-  background: #eef2f7;
-}
-
-.container {
-  max-width: 650px;
-  margin: 40px auto;
-  padding: 30px;
-  background: #fff;
-  border-radius: 20px;
-  border: 4px solid #000;
-}
-
-h2 {
+  background: #f4f7fb;
   text-align: center;
-}
-
-input, select, textarea, button {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
+  padding: 80px;
 }
 
 button {
+  padding: 18px 40px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
   background: #0078D4;
   color: white;
-  border: none;
-  font-size: 16px;
   cursor: pointer;
 }
 
 button:hover {
-  background: #005fa3;
+  background: #005A9E;
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
-  <h2>Maintenance Request</h2>
+<img src="logo.png" width="140"><br><br>
+<h1>SOAR TN Service Portal</h1>
 
-  <input id="requester" placeholder="Requested By">
-  <input id="contact" placeholder="Contact Info">
-
-  <select id="house">
-    <option value="">Select House</option>
-    <option>Lee House</option>
-    <option>Main Office</option>
-    <option>Alcoa House</option>
-  </select>
-
-  <textarea id="description" rows="4" placeholder="Description of Issue"></textarea>
-
-  <button onclick="submitMaintenance()">Submit Request</button>
-</div>
-
-<!-- App Logic -->
-<script src="maintenance.js"></script>
-
-<script>
-  // EmailJS v3 initialization (REQUIRED)
-  emailjs.init("YOUR_PUBLIC_KEY");
-</script>
+<button onclick="location.href='maintenance.html'">
+Maintenance Requests
+</button>
 
 </body>
 </html>
