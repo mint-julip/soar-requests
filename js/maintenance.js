@@ -43,6 +43,12 @@ function submitMaintenance() {
   //   confetti();
   //   alert("Request submitted!\nTicket #: " + ticket);
 
+    fetch("https://script.google.com/macros/library/d/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/1", {
+  method: "POST",
+  body: JSON.stringify(data)
+});
+
+
     // reset form
     document.getElementById("requester").value = "";
     document.getElementById("contact").value = "";
