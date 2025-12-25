@@ -38,7 +38,7 @@ function submitMaintenance() {
     supplies,
     submittedDate,
     to_email: "soarhr@soartn.org",
-    cc_email: "toosandra@gmail.com" //"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
+    cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
   };
 
   // ✅ SEND EMAIL
