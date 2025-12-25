@@ -95,10 +95,10 @@ fetch("https://script.google.com/macros/s/.../exec", {
       //   })
       // }).catch(err => console.error("Sheet error", err));
 
-      // ✅ REDIRECT AFTER 3 SECONDS
+      // ✅ REDIRECT AFTER 5 SECONDS
       setTimeout(() => {
         window.location.href = "index.html";
-      }, 3000);
+      }, 5000);
     })
     .catch(err => {
       console.error("EmailJS Error:", err);
