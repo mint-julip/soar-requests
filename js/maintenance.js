@@ -53,7 +53,7 @@ function submitMaintenance() {
       generatePDF(emailData);
 
       // ✅ LOG TO GOOGLE SHEETS
-      fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
+      fetch("https://script.google.com/macros/library/d/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/1", {
         method: "POST",
         body: JSON.stringify({
           ...emailData,
