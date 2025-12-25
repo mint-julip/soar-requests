@@ -62,7 +62,7 @@ const logData = {
   house,
   expectedDate,
   description,
-  materials,
+  supplies,
   status: "Submitted"
 };
 
