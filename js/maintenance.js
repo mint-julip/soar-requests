@@ -68,14 +68,21 @@ const logData = {
 
 // Send to Google Sheet via Apps Script Web App
      
-fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
+fetch("https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec", {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
+  mode: "no-cors",
+  headers: {
+    "Content-Type": "text/plain;charset=utf-8"
+  },
   body: JSON.stringify(logData)
 })
-.then(res => res.text())
-.then(txt => console.log("Sheet response:", txt))
-.catch(err => console.error("Fetch error:", err));
+.then(() => {
+  console.log("Logged to Google Sheets");
+})
+.catch(err => {
+  console.error("Fetch failed", err);
+});
+
 
 
       // ✅ REDIRECT AFTER 5 SECONDS
