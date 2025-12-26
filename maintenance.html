@@ -7,8 +7,8 @@
 
   <!-- EmailJS v4 -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -42,16 +42,9 @@
       box-sizing: border-box;
     }
 
-    h2 {
-      text-align: center;
-      margin-top: 0;
-    }
+    h2 { text-align: center; margin-top: 0; }
 
-    label {
-      font-weight: bold;
-      margin-top: 15px;
-      display: block;
-    }
+    label { font-weight: bold; margin-top: 15px; display: block; }
 
     input, select, textarea {
       width: 100%;
@@ -76,9 +69,7 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background: #005a9e;
-    }
+    button:hover { background: #005a9e; }
 
     .success {
       display: none;
@@ -90,16 +81,9 @@
       text-align: center;
     }
 
-    #branding {
-      margin-top: 30px;
-      text-align: center;
-    }
+    #branding { margin-top: 30px; text-align: center; }
 
-    #branding img {
-      max-width: 140px;
-      display: block;
-      margin: 0 auto;
-    }
+    #branding img { max-width: 140px; display: block; margin: 0 auto; }
 
     #soarText {
       margin-top: 10px;
@@ -121,14 +105,15 @@
 </head>
 
 <body>
+
   <div class="frame">
     <h2>Maintenance Request</h2>
 
     <label>Requested By</label>
-    <input id="requester" placeholder="Your Name" />
+    <input id="requester" />
 
     <label>Contact Info / Phone</label>
-    <input id="contact" placeholder="Email or Phone" />
+    <input id="contact" />
 
     <label>Residential House</label>
     <select id="house">
@@ -165,7 +150,6 @@
     <div class="success" id="successBox">
       <h3>Request Submitted</h3>
       <p>Ticket #: <strong id="ticketNum"></strong></p>
-      <p>You will be redirected shortly...</p>
     </div>
   </div>
 
@@ -174,6 +158,8 @@
     <div id="soarText">SOAR TN</div>
   </div>
 
+  <!-- JS -->
   <script src="js/maintenance.js"></script>
 </body>
 </html>
+
