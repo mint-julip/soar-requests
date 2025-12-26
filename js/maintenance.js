@@ -108,7 +108,7 @@ async function submitMaintenance() {
 }
 
 // Generate PDF and return as base64 string
-function generatePDFBase64(data) {
+function generatePDF(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
