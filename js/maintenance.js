@@ -121,5 +121,5 @@ function generatePDF(data) {
   doc.text("Comments:", 20, 210);
 
   doc.save(`${data.ticket}-Maintenance.pdf`);
-}
+
 
