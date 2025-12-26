@@ -85,17 +85,6 @@ fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJj
 .catch(err => console.error("Fetch error:", err));
 
 
-
-      // ✅ LOG TO GOOGLE SHEETS
-      // fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
-      //   method: "POST",
-      //   body: JSON.stringify({
-      //     ...emailData,
-      //     type: "Maintenance",
-      //     status: "Submitted"
-      //   })
-      // }).catch(err => console.error("Sheet error", err));
-
       // ✅ REDIRECT AFTER 5 SECONDS
       setTimeout(() => {
         window.location.href = "index.html";
