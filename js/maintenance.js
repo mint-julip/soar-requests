@@ -36,16 +36,16 @@ const pdfBase64 = doc.output("datauristring");
   }
 
     // Generate PDF as base64
-  const pdfBase64 = await generatePDFBase64({
-    ticket,
-    submittedDate,
-    requester,
-    contact,
-    house,
-    expectedDate,
-    description,
-    supplies
-  });
+  // const pdfBase64 = await generatePDFBase64({
+  //   ticket,
+  //   submittedDate,
+  //   requester,
+  //   contact,
+  //   house,
+  //   expectedDate,
+  //   description,
+  //   supplies
+  // });
 
   // EmailJS data
   const emailData = {
