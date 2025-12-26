@@ -71,16 +71,7 @@ const logData = {
 fetch("https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec", {
   method: "POST",
   mode: "no-cors",
-  headers: {
-    "Content-Type": "text/plain;charset=utf-8"
-  },
   body: JSON.stringify(logData)
-})
-.then(() => {
-  console.log("Logged to Google Sheets");
-})
-.catch(err => {
-  console.error("Fetch failed", err);
 });
 
 
