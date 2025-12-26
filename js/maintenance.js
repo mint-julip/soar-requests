@@ -42,7 +42,8 @@ async function submitMaintenance() {
     supplies,
     submittedDate,
     to_email: "soarhr@soartn.org",
-    cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
+    cc_email: "sandysmith@soartn.org",
+    //cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
     attachment: pdfBase64
   };
 
