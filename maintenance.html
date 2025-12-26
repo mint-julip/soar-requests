@@ -7,25 +7,23 @@
 
   <!-- EmailJS v4 -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <!-- jsPDF for PDF generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* Base Styles */
     body {
       margin: 0;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
       background: linear-gradient(-45deg,#eef3ff,#fdfbfb,#e0f7fa,#fce4ec);
       background-size: 400% 400%;
       animation: bgMove 15s ease infinite;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
       flex-direction: column;
-      padding: 20px;
     }
 
     @keyframes bgMove {
@@ -34,47 +32,28 @@
       100% { background-position:0% 50%; }
     }
 
-    /* Card Frame */
     .frame {
-      width: 100%;
-      max-width: 700px;
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      padding: 35px 30px;
+      width: 90%;
+      max-width: 720px;
+      background: rgba(255,255,255,0.9);
+      border: 6px solid #000;
+      border-radius: 24px;
+      padding: 40px;
       box-sizing: border-box;
-      transition: transform 0.2s ease;
     }
 
-    .frame:hover { transform: translateY(-2px); }
+    h2 { text-align: center; margin-top: 0; }
 
-    h2 { text-align: center; margin-top: 0; font-size: 28px; color: #0078d4; }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 14px;
-      color: #333;
-    }
-
+    label { font-weight: bold; margin-top: 15px; display: block; }
     input, select, textarea {
       width: 100%;
-      padding: 12px 10px;
+      padding: 10px;
       margin-top: 6px;
-      border-radius: 8px;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      font-size: 14px;
       box-sizing: border-box;
-      transition: border 0.2s ease;
     }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: #0078d4;
-      outline: none;
-    }
-
-    textarea { resize: vertical; min-height: 60px; }
+    textarea { resize: vertical; }
 
     button {
       margin-top: 25px;
@@ -86,29 +65,9 @@
       background: #0078d4;
       color: #fff;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
     }
+    button:hover { background: #005a9e; }
 
-    button:hover { background: #005a9e; transform: translateY(-2px); }
-
-    /* Loader */
-    .loader {
-      display: none;
-      margin: 20px auto;
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #0078d4;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
-    }
-
-    /* Success Box */
     .success {
       display: none;
       margin-top: 25px;
@@ -117,19 +76,22 @@
       border: 2px solid #0078d4;
       border-radius: 10px;
       text-align: center;
-      font-size: 16px;
     }
 
-    /* Branding & Title */
     #branding {
-      margin-top: 25px;
+      margin-top: 30px;
       text-align: center;
     }
 
-    #branding img { max-width: 120px; margin-bottom: 5px; }
+    #branding img {
+      max-width: 140px;
+      display: block;
+      margin: 0 auto;
+    }
 
     #soarText {
-      font-size: 40px;
+      margin-top: 10px;
+      font-size: 48px;
       font-weight: bold;
       background: linear-gradient(270deg,red,orange,yellow,green,blue,indigo,violet);
       background-size: 600% 600%;
@@ -143,25 +105,18 @@
       50% { background-position:100% 50%; }
       100% { background-position:0% 50%; }
     }
-
-    /* Responsive */
-    @media(max-width:600px){
-      h2 { font-size: 24px; }
-      #soarText { font-size: 32px; }
-    }
   </style>
 </head>
 
 <body>
-
   <div class="frame">
     <h2>Maintenance Request</h2>
 
     <label>Requested By</label>
-    <input id="requester" placeholder="Your Name"/>
+    <input id="requester" />
 
     <label>Contact Info / Phone</label>
-    <input id="contact" placeholder="Email or Phone"/>
+    <input id="contact" />
 
     <label>Residential House</label>
     <select id="house">
@@ -188,18 +143,17 @@
     <input type="date" id="expectedDate" />
 
     <label>Description of Issue</label>
-    <textarea id="description" rows="4" placeholder="Describe the issue"></textarea>
+    <textarea id="description" rows="4"></textarea>
 
     <label>Supplies Needed (optional)</label>
-    <textarea id="supplies" rows="3" placeholder="List supplies if any"></textarea>
+    <textarea id="supplies" rows="3"></textarea>
 
     <button onclick="submitMaintenance()">Submit Request</button>
-
-    <div class="loader" id="loader"></div>
 
     <div class="success" id="successBox">
       <h3>Request Submitted</h3>
       <p>Ticket #: <strong id="ticketNum"></strong></p>
+      <p>You will be redirected to the main page shortly...</p>
     </div>
   </div>
 
@@ -208,7 +162,7 @@
     <div id="soarText">SOAR TN</div>
   </div>
 
+  <!-- JS -->
   <script src="js/maintenance.js"></script>
 </body>
 </html>
-
