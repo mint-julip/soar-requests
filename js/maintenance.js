@@ -56,10 +56,35 @@ function generatePDFBase64(data) {
   });
 }
 
+function savePDFToDrive(base64, filename) {
+  const folderId = "PASTE_FOLDER_ID_HERE";
+  const folder = DriveApp.getFolderById(folderId);
+
+  const blob = Utilities.newBlob(
+    Utilities.base64Decode(base64),
+    "application/pdf",
+    filename
+  );
+
+  const file = folder.createFile(blob);
+  return file.getUrl();
+}
+
+
 /*************************
  * Main Submit Function
  *************************/
 async function submitMaintenance() {
+  const submitBtn = document.querySelector("button");
+submitBtn.disabled = true;
+submitBtn.innerText = "Submitting...";
+  if (sessionStorage.getItem("submitted")) {
+  alert("This request has already been submitted.");
+  return;
+}
+sessionStorage.setItem("submitted", "true");
+
+
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
 
@@ -120,12 +145,12 @@ async function submitMaintenance() {
     document.getElementById("ticketNum").textContent = ticket;
     document.getElementById("successBox").style.display = "block";
 
-    // 🔹 Log to Google Sheets
+
+     // 🔹 Log to Google Sheets
     fetch("https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec", {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify({
-        ticket,
+  method: "POST",
+  body: JSON.stringify({
+      ticket,
         type: "Maintenance",
         requester,
         contact,
@@ -133,9 +158,11 @@ async function submitMaintenance() {
         expectedDate,
         description,
         supplies,
-        status: "Submitted"
-      })
-    });
+    status: "Submitted",
+    pdf_base64: pdfBase64
+  })
+});
+
 
     // 🔹 Redirect
     setTimeout(() => {
