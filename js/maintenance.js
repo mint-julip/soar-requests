@@ -101,6 +101,19 @@ async function submitMaintenance() {
       "template_vnfmovs",
       emailData
     );
+    //auto reply to requestor
+    await emailjs.send(
+  "service_lk56r2m",
+  "maintenance_autoreply",
+  {
+    requester: requester,
+    requester_email: contact,
+    ticket: ticket,
+    house: house,
+    description: description
+  }
+);
+
 
     launchConfetti();
 
