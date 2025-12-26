@@ -52,30 +52,48 @@ function submitMaintenance() {
     //cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
   };
 
-  // Generate PDF
+  // // Generate PDF
   const pdfBlob = generatePDF(emailData);
 
-  // Create FormData to attach PDF
-  const formData = new FormData();
-  formData.append("ticket", emailData.ticket);
-  formData.append("requester", emailData.requester);
-  formData.append("contact", emailData.contact);
-  formData.append("house", emailData.house);
-  formData.append("expectedDate", emailData.expectedDate);
-  formData.append("description", emailData.description);
-  formData.append("supplies", emailData.supplies);
-  formData.append("submittedDate", emailData.submittedDate);
-  formData.append("to_email", emailData.to_email);
-  formData.append("cc_email", emailData.cc_email);
-  formData.append("pdf_file", pdfBlob, `${ticket}-Maintenance.pdf`);
+  // // Create FormData to attach PDF
+  // const formData = new FormData();
+  // formData.append("ticket", emailData.ticket);
+  // formData.append("requester", emailData.requester);
+  // formData.append("contact", emailData.contact);
+  // formData.append("house", emailData.house);
+  // formData.append("expectedDate", emailData.expectedDate);
+  // formData.append("description", emailData.description);
+  // formData.append("supplies", emailData.supplies);
+  // formData.append("submittedDate", emailData.submittedDate);
+  // formData.append("to_email", emailData.to_email);
+  // formData.append("cc_email", emailData.cc_email);
+  // formData.append("pdf_file", pdfBlob, `${ticket}-Maintenance.pdf`);
 
-  // Send Email via EmailJS (using template with attachment)
-  emailjs.send("service_lk56r2m", "template_vnfmovs", emailData)
-    .then(() => {
-      // Confetti & success display
-      launchConfetti();
-      document.getElementById("ticketNum").textContent = ticket;
-      document.getElementById("successBox").style.display = "block";
+  // // Send Email via EmailJS (using template with attachment)
+  // emailjs.send("service_lk56r2m", "template_vnfmovs", emailData)
+  //   .then(() => {
+  //     // Confetti & success display
+  //     launchConfetti();
+  //     document.getElementById("ticketNum").textContent = ticket;
+  //     document.getElementById("successBox").style.display = "block";
+
+  // Create FormData to attach PDF
+const formData = new FormData();
+formData.append("ticket", emailData.ticket);
+formData.append("requester", emailData.requester);
+formData.append("contact", emailData.contact);
+formData.append("house", emailData.house);
+formData.append("expectedDate", emailData.expectedDate);
+formData.append("description", emailData.description);
+formData.append("supplies", emailData.supplies);
+formData.append("submittedDate", emailData.submittedDate);
+formData.append("to_email", emailData.to_email);
+formData.append("cc_email", emailData.cc_email);
+formData.append("pdf_file", pdfBlob, `${ticket}-Maintenance.pdf`);
+
+// Send email with PDF attachment
+emailjs.send("service_lk56r2m", "template_vnfmovs", formData)
+
 
       // Log to Google Sheets via Web App
       const logData = {
