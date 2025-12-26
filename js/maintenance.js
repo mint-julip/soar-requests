@@ -26,12 +26,26 @@ function submitMaintenance() {
   const expectedDate = document.getElementById("expectedDate").value;
   const description = document.getElementById("description").value.trim();
   const supplies = document.getElementById("supplies").value.trim();
+const pdfBase64 = doc.output("datauristring"); 
+
 
   // Validate required fields
   if (!requester || !contact || !house || !description) {
     alert("Please complete all required fields.");
     return;
   }
+
+    // Generate PDF as base64
+  const pdfBase64 = await generatePDFBase64({
+    ticket,
+    submittedDate,
+    requester,
+    contact,
+    house,
+    expectedDate,
+    description,
+    supplies
+  });
 
   // EmailJS data
   const emailData = {
@@ -44,7 +58,8 @@ function submitMaintenance() {
     supplies,
     submittedDate,
     to_email: "soarhr@soartn.org",
-    cc_email: "sandysmith@soartn.org"
+    cc_email: "sandysmith@soartn.org",
+    attachment: pdfBase64  // <-- base64 PDF here
     //cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
   };
 
@@ -57,8 +72,8 @@ function submitMaintenance() {
       document.getElementById("ticketNum").textContent = ticket;
       document.getElementById("successBox").style.display = "block";
 
-      // GENERATE PDF
-      generatePDF(emailData);
+      // // GENERATE PDF
+      // generatePDF(emailData);
 
       // LOG DATA TO GOOGLE SHEETS
       const logData = {
@@ -92,7 +107,7 @@ function submitMaintenance() {
 }
 
 // GENERATE PDF
-function generatePDF(data) {
+async function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -120,6 +135,8 @@ function generatePDF(data) {
   doc.text("Completed Date: ____________", 20, 200);
   doc.text("Comments:", 20, 210);
 
-  doc.save(`${data.ticket}-Maintenance.pdf`);
+  // doc.save(`${data.ticket}-Maintenance.pdf`);
+  // Return base64 string instead of saving
+  return doc.output("datauristring").split(",")[1]; // base64
 }
 
