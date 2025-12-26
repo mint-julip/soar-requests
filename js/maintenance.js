@@ -68,13 +68,25 @@ async function submitMaintenance() {
   };
 
   // Send EmailJS
-  emailjs.send("service_lk56r2m", "template_vnfmovs", emailData)
-    .then(() => {
-      launchConfetti();
+  // emailjs.send("service_lk56r2m", "template_vnfmovs", emailData)
+  //   .then(() => {
+  //     launchConfetti();
+
+  const pdfBase64 = generatePDF(emailData);
+
+emailjs.send("service_lk56r2m", "template_vnfmovs", {
+  ...emailData,
+  attachment: pdfBase64
+}).then(() => {
+  launchConfetti();
+      document.getElementById("ticketNum").textContent = ticket;
+  document.getElementById("successBox").style.display = "block";
+});
+
 
       // Show success message with ticket
       document.getElementById("ticketNum").textContent = ticket;
-      document.getElementById("successBox").style.display = "block";
+      // document.getElementById("successBox").style.display = "block";
 
       // Log data to Google Sheets
       const logData = {
