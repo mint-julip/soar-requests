@@ -16,7 +16,7 @@ function launchConfetti() {
 }
 
 // Submit Maintenance Request
-function submitMaintenance() {
+async function submitMaintenance() {
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
 
@@ -26,16 +26,25 @@ function submitMaintenance() {
   const expectedDate = document.getElementById("expectedDate").value;
   const description = document.getElementById("description").value.trim();
   const supplies = document.getElementById("supplies").value.trim();
-const pdfBase64 = doc.output("datauristring"); 
 
-
-  // Validate required fields
   if (!requester || !contact || !house || !description) {
     alert("Please complete all required fields.");
     return;
   }
 
-  // EmailJS data
+  // Generate PDF as base64 string
+  const pdfBase64 = generatePDFBase64({
+    ticket,
+    submittedDate,
+    requester,
+    contact,
+    house,
+    expectedDate,
+    description,
+    supplies
+  });
+
+  // EmailJS data with attachment
   const emailData = {
     ticket,
     requester,
@@ -47,11 +56,18 @@ const pdfBase64 = doc.output("datauristring");
     submittedDate,
     to_email: "soarhr@soartn.org",
     cc_email: "sandysmith@soartn.org",
-    attachment: pdfBase64  // <-- base64 PDF here
-    //cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
+   // cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
+    attachment: [
+      {
+        content: pdfBase64.split(",")[1], // Remove data:image/pdf;base64 prefix
+        filename: `${ticket}-Maintenance.pdf`,
+        type: "application/pdf",
+        disposition: "attachment"
+      }
+    ]
   };
 
-  // SEND EMAIL
+  // Send EmailJS
   emailjs.send("service_lk56r2m", "template_vnfmovs", emailData)
     .then(() => {
       launchConfetti();
@@ -60,10 +76,7 @@ const pdfBase64 = doc.output("datauristring");
       document.getElementById("ticketNum").textContent = ticket;
       document.getElementById("successBox").style.display = "block";
 
-      // // GENERATE PDF
-      // generatePDF(emailData);
-
-      // LOG DATA TO GOOGLE SHEETS
+      // Log data to Google Sheets
       const logData = {
         ticket,
         type: "Maintenance",
@@ -82,7 +95,7 @@ const pdfBase64 = doc.output("datauristring");
         body: JSON.stringify(logData)
       }).catch(err => console.error("Google Sheet logging error:", err));
 
-      // REDIRECT BACK TO LANDING PAGE AFTER 5 SECONDS
+      // Redirect back to landing page after 5 seconds
       setTimeout(() => {
         window.location.href = "index.html";
       }, 5000);
@@ -94,8 +107,8 @@ const pdfBase64 = doc.output("datauristring");
     });
 }
 
-// GENERATE PDF
-async function generatePDFBase64(data) {
+// Generate PDF and return as base64 string
+function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -123,8 +136,6 @@ async function generatePDFBase64(data) {
   doc.text("Completed Date: ____________", 20, 200);
   doc.text("Comments:", 20, 210);
 
-  // doc.save(`${data.ticket}-Maintenance.pdf`);
-  // Return base64 string instead of saving
-  return doc.output("datauristring").split(",")[1]; // base64
+  // Return as base64 string
+  return doc.output("datauristring");
 }
-
