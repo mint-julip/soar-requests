@@ -67,14 +67,7 @@ const logData = {
 };
 
 // Send to Google Sheet via Apps Script Web App
-// fetch("https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec", {
-//   method: "POST",
-//   body: JSON.stringify(logData)
-// })
-// .then(resp => resp.json())
-// .then(data => console.log("Sheet log result:", data))
-// .catch(err => console.error("Sheet logging error:", err));
-      
+     
 fetch("https://script.google.com/macros/s/AKfycbyZI-DSofbhJY-H3OK5M10JiFj1CQGTJjmHTMMrnqOgM-B_7j8cKUg3t_yH-QzJUY-Fug/exec", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
