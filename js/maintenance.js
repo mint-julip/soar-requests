@@ -72,20 +72,22 @@ async function submitMaintenance() {
   //   .then(() => {
   //     launchConfetti();
 
-  const pdfBase64 = generatePDF(emailData);
+const pdfBase64 = generatePDF(emailData); // use correct function
 
 emailjs.send("service_lk56r2m", "template_vnfmovs", {
   ...emailData,
   attachment: pdfBase64
-}).then(() => {
+})
+.then(() => {
   launchConfetti();
-      document.getElementById("ticketNum").textContent = ticket;
   document.getElementById("successBox").style.display = "block";
-});
+  document.getElementById("ticketNum").textContent = ticket;
+})
+.catch(err => console.error("EmailJS Error:", err));
 
 
       // Show success message with ticket
-      document.getElementById("ticketNum").textContent = ticket;
+      //document.getElementById("ticketNum").textContent = ticket;
       // document.getElementById("successBox").style.display = "block";
 
       // Log data to Google Sheets
