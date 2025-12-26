@@ -86,8 +86,7 @@ function submitMaintenance() {
     submittedDate,
 
     to_email: "soarhr@soartn.org",
-    cc_email: "sandysmith@soartn.org",
-    //cc_email: "alishasanders@soartn.org,kobypresley@soartn.org",
+    cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
 
     attachment: generatePDFBase64({
       ticket,
