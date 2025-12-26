@@ -67,7 +67,7 @@ const logData = {
 };
 
 // Send to Google Sheet via Apps Script Web App
-// fetch("https://script.google.com/macros/s/AKfycbwX9biFW7D8GLFyMDHzbixKBosWBrPp4RcwcDmBqPRNGs0OfA5qDS-_HbE0Ts7kG6_AeA/exec", {
+// fetch("https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec", {
 //   method: "POST",
 //   body: JSON.stringify(logData)
 // })
