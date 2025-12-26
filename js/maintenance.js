@@ -1,12 +1,12 @@
 // Initialize EmailJS
-emailjs.init("sLNm5JCzwihAuVon0"); // <-- Your EmailJS Public Key
+emailjs.init("sLNm5JCzwihAuVon0"); // Replace with your EmailJS public key
 
 // Generate unique ticket number
 function generateTicket() {
   return "SOAR-" + Date.now();
 }
 
-// Launch confetti animation
+// Launch confetti
 function launchConfetti() {
   confetti({
     particleCount: 120,
@@ -15,12 +15,11 @@ function launchConfetti() {
   });
 }
 
-// Main function to submit maintenance request
+// Submit Maintenance Request
 function submitMaintenance() {
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
 
-  // Get form values
   const requester = document.getElementById("requester").value.trim();
   const contact = document.getElementById("contact").value.trim();
   const house = document.getElementById("house").value;
@@ -34,10 +33,7 @@ function submitMaintenance() {
     return;
   }
 
-  // Show loader
-  document.getElementById("loader").style.display = "block";
-
-  // EmailJS email data
+  // EmailJS data
   const emailData = {
     ticket,
     requester,
@@ -45,57 +41,25 @@ function submitMaintenance() {
     house,
     expectedDate,
     description,
-    supplies: supplies || "N/A",
+    supplies,
     submittedDate,
     to_email: "soarhr@soartn.org",
-    cc_email: "sandysmith@soartn.org"
-    //cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
+    cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org"
   };
 
-  // // Generate PDF
-  const pdfBlob = generatePDF(emailData);
+  // SEND EMAIL
+  emailjs.send("service_lk56r2m", "template_vnfmovs", emailData)
+    .then(() => {
+      launchConfetti();
 
-  // // Create FormData to attach PDF
-  // const formData = new FormData();
-  // formData.append("ticket", emailData.ticket);
-  // formData.append("requester", emailData.requester);
-  // formData.append("contact", emailData.contact);
-  // formData.append("house", emailData.house);
-  // formData.append("expectedDate", emailData.expectedDate);
-  // formData.append("description", emailData.description);
-  // formData.append("supplies", emailData.supplies);
-  // formData.append("submittedDate", emailData.submittedDate);
-  // formData.append("to_email", emailData.to_email);
-  // formData.append("cc_email", emailData.cc_email);
-  // formData.append("pdf_file", pdfBlob, `${ticket}-Maintenance.pdf`);
+      // Show success message with ticket
+      document.getElementById("ticketNum").textContent = ticket;
+      document.getElementById("successBox").style.display = "block";
 
-  // // Send Email via EmailJS (using template with attachment)
-  // emailjs.send("service_lk56r2m", "template_vnfmovs", emailData)
-  //   .then(() => {
-  //     // Confetti & success display
-  //     launchConfetti();
-  //     document.getElementById("ticketNum").textContent = ticket;
-  //     document.getElementById("successBox").style.display = "block";
+      // GENERATE PDF
+      generatePDF(emailData);
 
-  // Create FormData to attach PDF
-const formData = new FormData();
-formData.append("ticket", emailData.ticket);
-formData.append("requester", emailData.requester);
-formData.append("contact", emailData.contact);
-formData.append("house", emailData.house);
-formData.append("expectedDate", emailData.expectedDate);
-formData.append("description", emailData.description);
-formData.append("supplies", emailData.supplies);
-formData.append("submittedDate", emailData.submittedDate);
-formData.append("to_email", emailData.to_email);
-formData.append("cc_email", emailData.cc_email);
-formData.append("pdf_file", pdfBlob, `${ticket}-Maintenance.pdf`);
-
-// Send email with PDF attachment
-emailjs.send("service_lk56r2m", "template_vnfmovs", formData)
-
-
-      // Log to Google Sheets via Web App
+      // LOG DATA TO GOOGLE SHEETS
       const logData = {
         ticket,
         type: "Maintenance",
@@ -110,26 +74,23 @@ emailjs.send("service_lk56r2m", "template_vnfmovs", formData)
 
       fetch("https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec", {
         method: "POST",
-        mode: "no-cors", // Required for Google Apps Script CORS
+        mode: "no-cors",
         body: JSON.stringify(logData)
-      }).catch(err => console.error("Sheet logging error:", err));
+      }).catch(err => console.error("Google Sheet logging error:", err));
 
-      // Hide loader after submission
-      document.getElementById("loader").style.display = "none";
-
-      // Redirect back to landing page after 5s
+      // REDIRECT BACK TO LANDING PAGE AFTER 5 SECONDS
       setTimeout(() => {
         window.location.href = "index.html";
       }, 5000);
+
     })
     .catch(err => {
-      console.error("EmailJS error:", err);
-      document.getElementById("loader").style.display = "none";
-      alert("Failed to submit maintenance request. Check console.");
+      console.error("EmailJS Error:", err);
+      alert("Failed to submit maintenance request.");
     });
 }
 
-// Generate PDF as blob
+// GENERATE PDF
 function generatePDF(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -140,13 +101,14 @@ function generatePDF(data) {
   doc.setFontSize(11);
   doc.text(`Ticket #: ${data.ticket}`, 20, 30);
   doc.text(`Date Submitted: ${data.submittedDate}`, 20, 38);
-  doc.text(`Requested By: ${data.requester}`, 20, 46);
-  doc.text(`Contact Info: ${data.contact}`, 20, 54);
-  doc.text(`House: ${data.house}`, 20, 62);
-  doc.text(`Expected Completion: ${data.expectedDate}`, 20, 70);
 
-  doc.text("Description:", 20, 82);
-  doc.text(doc.splitTextToSize(data.description, 170), 20, 90);
+  doc.text(`Requested By: ${data.requester}`, 20, 48);
+  doc.text(`Contact Info: ${data.contact}`, 20, 56);
+  doc.text(`House: ${data.house}`, 20, 64);
+  doc.text(`Expected Completion: ${data.expectedDate}`, 20, 72);
+
+  doc.text("Description:", 20, 84);
+  doc.text(doc.splitTextToSize(data.description, 170), 20, 92);
 
   doc.text("Supplies Needed:", 20, 130);
   doc.text(doc.splitTextToSize(data.supplies || "N/A", 170), 20, 138);
@@ -157,8 +119,6 @@ function generatePDF(data) {
   doc.text("Completed Date: ____________", 20, 200);
   doc.text("Comments:", 20, 210);
 
-  // Return PDF as Blob
-  const pdfBlob = doc.output("blob");
-  return pdfBlob;
+  doc.save(`${data.ticket}-Maintenance.pdf`);
 }
 
