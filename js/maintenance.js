@@ -1,6 +1,6 @@
 // ---------------- CONFIG ----------------
-emailjs.init("sLNm5JCzwihAuVon0"); // <-- Your EmailJS Public Key
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"; // <-- Your Google Apps Script Web App
+emailjs.init("service_lk56r2m"); // <-- Your EmailJS Public Key
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec"; // <-- Your Google Apps Script Web App
 const HR_EMAILS = ["soarhr@soartn.org"]; //add other emails here
 const HR_TEMPLATE_ID = "template_vnfmovs"; // HR email template
 const AUTO_REPLY_TEMPLATE_ID = "template_foh2u7z";  // Requester auto-reply template
