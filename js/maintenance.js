@@ -5,6 +5,7 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1Z
 // ---------------- HELPERS ----------------
 function generateTicket() {
   return "SOAR-" + Date.now();
+  
 }
 
 function launchConfetti() {
