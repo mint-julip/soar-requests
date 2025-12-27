@@ -103,11 +103,14 @@ function submitMaintenance() {
   .catch(err => console.error("EmailJS Auto-reply Error:", err));
 
   // ---------------- GOOGLE SHEETS LOG ----------------
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify(payload)
-  }).catch(err => console.error("Google Sheet logging error:", err));
+fetch(GOOGLE_SCRIPT_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
+.then(res => res.json())
+.then(data => console.log("Server response:", data))
+.catch(err => console.error("Fetch error:", err));
 
   // Show success + confetti
   launchConfetti();
