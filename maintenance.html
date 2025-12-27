@@ -215,7 +215,7 @@
       emailjs.send("service_lk56r2m", "template_maintenance_requests", {
         ...payload,
         to_email: "soarhr@soartn.org",
-        cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
+        cc_email: "sandysmith@soartn.org", //"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
         attachment: payload.pdfBase64
       }).then(() => console.log("Email sent with PDF attachment!"))
         .catch(err => console.error("EmailJS Error:", err));
