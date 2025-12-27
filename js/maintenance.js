@@ -79,7 +79,7 @@ function submitMaintenance() {
   payload.pdfBase64 = generatePDFBase64(payload);
 
   // ---------------- EMAILJS to HR ----------------
-  emailjs.send("service_lk56r2m", "template_vnfmovs", {
+  emailjs.send("service_lk56r2m", "template_foh2u7z", {
     ...payload,
     to_email: "soarhr@soartn.org",
     cc_email: "sandysmith@soartn.org", //"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
