@@ -87,14 +87,26 @@ async function submitMaintenance() {
     payload.pdfBase64 = generatePDFBase64(payload);
 
     // ---------- 1️⃣ EMAIL HR (EmailJS) ----------
-    await emailjs.send("service_lk56r2m", "template_vnfmovs", {
-      ...payload,
-      to_email: "soarhr@soartn.org",
-      cc_email: HR_EMAILS,
-      attachment: payload.pdfBase64,
-      attachment_name: `${ticket}-Maintenance.pdf`,
-      attachment_type: "application/pdf"
-    });
+  // 1️⃣ SEND MAINTENANCE REQUEST TO HR (WITH PDF)
+await emailjs.send("service_lk56r2m", "template_maintenance_requests", {
+  ...payload,
+  to_email: "soarhr@soartn.org",
+  cc_email: HR_EMAILS,
+  attachment: payload.pdfBase64,
+  attachment_name: `${ticket}-Maintenance.pdf`,
+  attachment_type: "application/pdf"
+});
+
+// 2️⃣ AUTO-REPLY CONFIRMATION TO REQUESTER
+await emailjs.send("service_lk56r2m", "maintenance_autoreply", {
+  requester: payload.requester,
+  email: payload.email,
+  ticket: payload.ticket,
+  house: payload.house,
+  description: payload.description,
+  submittedDate: payload.submittedDate
+});
+
 
     // ---------- 2️⃣ SEND TO GOOGLE APPS SCRIPT ----------
     await fetch(GOOGLE_SCRIPT_URL, {
