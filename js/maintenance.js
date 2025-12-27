@@ -1,9 +1,10 @@
 // ---------------- CONFIG ----------------
-emailjs.init("service_lk56r2m"); // <-- Your EmailJS Public Key
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec"; // <-- Your Google Apps Script Web App
-const HR_EMAILS = ["soarhr@soartn.org"]; //add other emails here
-const HR_TEMPLATE_ID = "template_vnfmovs"; // HR email template
-const AUTO_REPLY_TEMPLATE_ID = "template_foh2u7z";  // Requester auto-reply template
+emailjs.init("sLNm5JCzwihAuVon0"); // EmailJS public key
+
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
+const HR_EMAILS = [
+  "soarhr@soartn.org"  //add the other emails back
+];
 
 // ---------------- HELPERS ----------------
 function generateTicket() {
@@ -24,38 +25,43 @@ function generatePDFBase64(data) {
   doc.setFontSize(11);
   doc.text(`Ticket #: ${data.ticket}`, 20, 30);
   doc.text(`Date Submitted: ${data.submittedDate}`, 20, 38);
-  doc.text(`Requested By: ${data.requester}`, 20, 46);
-  doc.text(`Email: ${data.email}`, 20, 54);
-  doc.text(`House: ${data.house}`, 20, 62);
-  doc.text(`Expected Completion: ${data.expectedDate}`, 20, 70);
-  doc.text("Description:", 20, 82);
-  doc.text(doc.splitTextToSize(data.description, 170), 20, 90);
+  doc.text(`Requested By: ${data.requester}`, 20, 48);
+  doc.text(`Email: ${data.email}`, 20, 56);
+  doc.text(`House: ${data.house}`, 20, 64);
+  doc.text(`Expected Completion: ${data.expectedDate}`, 20, 72);
+
+  doc.text("Description:", 20, 84);
+  doc.text(doc.splitTextToSize(data.description, 170), 20, 92);
+
   doc.text("Supplies Needed:", 20, 130);
   doc.text(doc.splitTextToSize(data.supplies || "N/A", 170), 20, 138);
+
   doc.text("----- Maintenance Use Only -----", 20, 170);
   doc.text("Materials Cost: ____________", 20, 180);
   doc.text("Mileage: ____________", 20, 190);
   doc.text("Completed Date: ____________", 20, 200);
   doc.text("Comments:", 20, 210);
 
-  return doc.output("datauristring").split(",")[1]; // Base64 string
+  // Return base64 string for attachment
+  return doc.output("datauristring").split(",")[1];
 }
 
 // ---------------- MAIN SUBMIT ----------------
 function submitMaintenance() {
   const btn = document.getElementById("submitBtn");
-  btn.disabled = true;
+  btn.disabled = true; // Prevent double submission
 
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
 
   const requester = document.getElementById("requester").value.trim();
-  const email = document.getElementById("email").value.trim();
+  const email = document.getElementById("contact").value.trim();
   const house = document.getElementById("house").value;
   const expectedDate = document.getElementById("expectedDate").value;
   const description = document.getElementById("description").value.trim();
   const supplies = document.getElementById("supplies").value.trim();
 
+  // Validate required fields
   if (!requester || !email || !house || !description) {
     alert("Please complete all required fields.");
     btn.disabled = false;
@@ -73,36 +79,37 @@ function submitMaintenance() {
     submittedDate
   };
 
-  // Generate PDF base64
   payload.pdfBase64 = generatePDFBase64(payload);
 
   // ---------------- SEND EMAILS ----------------
-  // 1️⃣ Email to HR
-  emailjs.send("service_lk56r2m", HR_TEMPLATE_ID, {
-    ...payload,
-    to_email: HR_EMAILS.join(","),
-    attachment: payload.pdfBase64
-  }).then(() => {
-    console.log("HR email sent!");
-  }).catch(err => console.error("HR EmailJS Error:", err));
+  // HR email with PDF attachment
+  HR_EMAILS.forEach(hrEmail => {
+    emailjs.send("service_lk56r2m", "template_vnfmovs", {
+      ...payload,
+      to_email: hrEmail,
+      attachment: payload.pdfBase64
+    }).then(() => console.log(`Email sent to ${hrEmail}`))
+      .catch(err => console.error("HR Email Error:", err));
+  });
 
-  // 2️⃣ Auto-reply to requester
-  emailjs.send("service_lk56r2m", AUTO_REPLY_TEMPLATE_ID, {
-    ...payload,
-    to_email: email,
-    attachment: payload.pdfBase64
-  }).then(() => {
-    console.log("Auto-reply sent!");
-  }).catch(err => console.error("Auto-reply Error:", err));
+  // Auto-reply to requester (no attachment)
+  emailjs.send("service_lk56r2m", "template_foh2u7z", {
+    requester_name: requester,
+    requester_email: email,
+    ticket: ticket,
+    house: house,
+    description: description
+  }).then(() => console.log("Auto-reply sent to requester"))
+    .catch(err => console.error("Auto-reply Error:", err));
 
-  // ---------------- LOG TO GOOGLE SHEETS ----------------
+  // ---------------- LOG TO GOOGLE SHEET ----------------
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
     body: JSON.stringify(payload)
   }).catch(err => console.error("Google Sheet logging error:", err));
 
-  // ---------------- SUCCESS UI ----------------
+  // ---------------- UI FEEDBACK ----------------
   launchConfetti();
   document.getElementById("ticketNum").textContent = ticket;
   document.getElementById("successBox").style.display = "block";
@@ -113,3 +120,7 @@ function submitMaintenance() {
   }, 5000);
 }
 
+// ---------------- ATTACH EVENT ----------------
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("submitBtn").addEventListener("click", submitMaintenance);
+});
