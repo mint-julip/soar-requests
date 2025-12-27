@@ -1,13 +1,16 @@
-// ================= CONFIG =================
-emailjs.init("sLNm5JCzwihAuVon0");
+// ---------------- CONFIG ----------------
+emailjs.init("sLNm5JCzwihAuVon0"); // EmailJS public key
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
 
-const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
+// HR Emails
+const HR_EMAILS = [
+  "soarhr@soartn.org",
+  "cherylhintz@soartn.org",
+  "alishasanders@soartn.org",
+  "kobypresley@soartn.org"
+];
 
-const HR_EMAILS =
-  "soarhr@soartn.org"; //,cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org";
-
-// ================= HELPERS =================
+// ---------------- HELPERS ----------------
 function generateTicket() {
   return "SOAR-" + Date.now();
 }
@@ -16,7 +19,7 @@ function launchConfetti() {
   confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
 }
 
-// ================= PDF → BASE64 =================
+// ---------------- PDF BASE64 ----------------
 function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -30,7 +33,7 @@ function generatePDFBase64(data) {
   doc.text(`Requested By: ${data.requester}`, 20, 48);
   doc.text(`Email: ${data.email}`, 20, 56);
   doc.text(`House: ${data.house}`, 20, 64);
-  doc.text(`Expected Completion: ${data.expectedDate || "N/A"}`, 20, 72);
+  doc.text(`Expected Completion: ${data.expectedDate}`, 20, 72);
 
   doc.text("Description:", 20, 84);
   doc.text(doc.splitTextToSize(data.description, 170), 20, 92);
@@ -44,90 +47,75 @@ function generatePDFBase64(data) {
   doc.text("Completed Date: ____________", 20, 200);
   doc.text("Comments:", 20, 210);
 
-  // Return BASE64 ONLY (EmailJS + Apps Script both need this)
-  return doc.output("datauristring").split(",")[1];
+  return doc.output("datauristring").split(",")[1]; // Base64
 }
 
-// ================= MAIN SUBMIT =================
-async function submitMaintenance() {
+// ---------------- MAIN SUBMIT ----------------
+function submitMaintenance() {
   const btn = document.getElementById("submitBtn");
   btn.disabled = true;
-  btn.textContent = "Submitting...";
 
-  try {
-    const ticket = generateTicket();
-    const submittedDate = new Date().toLocaleString();
+  const ticket = generateTicket();
+  const submittedDate = new Date().toLocaleString();
 
-    const requester = document.getElementById("requester").value.trim();
-    const email = document.getElementById("contact").value.trim();
-    const house = document.getElementById("house").value;
-    const expectedDate = document.getElementById("expectedDate").value;
-    const description = document.getElementById("description").value.trim();
-    const supplies = document.getElementById("supplies").value.trim();
+  const requester = document.getElementById("requester").value.trim();
+  const email = document.getElementById("contact").value.trim();
+  const house = document.getElementById("house").value;
+  const expectedDate = document.getElementById("expectedDate").value;
+  const description = document.getElementById("description").value.trim();
+  const supplies = document.getElementById("supplies").value.trim();
 
-    if (!requester || !email || !house || !description) {
-      alert("Please complete all required fields.");
-      btn.disabled = false;
-      btn.textContent = "Submit Request";
-      return;
-    }
-
-    const payload = {
-      ticket,
-      requester,
-      email,
-      house,
-      expectedDate,
-      description,
-      supplies,
-      submittedDate
-    };
-
-    // Generate PDF once
-    payload.pdfBase64 = generatePDFBase64(payload);
-
-    // ---------- 1️⃣ EMAIL HR (EmailJS) ----------
-  // 1️⃣ SEND MAINTENANCE REQUEST TO HR (WITH PDF)
-await emailjs.send("service_lk56r2m", "template_maintenance_requests", {
-  ...payload,
-  to_email: "soarhr@soartn.org",
-  cc_email: HR_EMAILS,
-  attachment: payload.pdfBase64,
-  attachment_name: `${ticket}-Maintenance.pdf`,
-  attachment_type: "application/pdf"
-});
-
-// 2️⃣ AUTO-REPLY CONFIRMATION TO REQUESTER
-await emailjs.send("service_lk56r2m", "maintenance_autoreply", {
-  requester: payload.requester,
-  email: payload.email,
-  ticket: payload.ticket,
-  house: payload.house,
-  description: payload.description,
-  submittedDate: payload.submittedDate
-});
-
-
-    // ---------- 2️⃣ SEND TO GOOGLE APPS SCRIPT ----------
-    await fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    // ---------- UI SUCCESS ----------
-    launchConfetti();
-    document.getElementById("ticketNum").textContent = ticket;
-    document.getElementById("successBox").style.display = "block";
-
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 5000);
-
-  } catch (err) {
-    console.error("Submission Error:", err);
-    alert("Something went wrong. Please try again.");
+  if (!requester || !email || !house || !description) {
+    alert("Please complete all required fields.");
     btn.disabled = false;
-    btn.textContent = "Submit Request";
+    return;
   }
+
+  const payload = {
+    ticket,
+    requester,
+    email,
+    house,
+    expectedDate,
+    description,
+    supplies,
+    submittedDate
+  };
+
+  // Generate Base64 PDF
+  payload.pdfBase64 = generatePDFBase64(payload);
+
+  // ---------------- EMAILJS: HR EMAIL ----------------
+  emailjs.send("service_lk56r2m", "template_maintenance_requests", {
+    ...payload,
+    to_email: HR_EMAILS.join(","),
+    attachment: payload.pdfBase64
+  })
+  .then(() => console.log("HR Email sent with PDF!"))
+  .catch(err => console.error("EmailJS HR Error:", err));
+
+  // ---------------- EMAILJS: AUTO-REPLY ----------------
+  emailjs.send("service_lk56r2m", "template_maintenance_autoreply", {
+    ...payload,
+    to_email: email
+  })
+  .then(() => console.log("Auto-reply sent to requester"))
+  .catch(err => console.error("EmailJS Auto-reply Error:", err));
+
+  // ---------------- GOOGLE SHEETS LOG ----------------
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(payload)
+  }).catch(err => console.error("Google Sheet logging error:", err));
+
+  // Show success + confetti
+  launchConfetti();
+  document.getElementById("ticketNum").textContent = ticket;
+  document.getElementById("successBox").style.display = "block";
+
+  // Redirect after 5 seconds
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 5000);
 }
