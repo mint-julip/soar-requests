@@ -7,24 +7,129 @@
 
   <!-- EmailJS v4 -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Inline CSS -->
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(-45deg,#eef3ff,#fdfbfb,#e0f7fa,#fce4ec);
+      background-size: 400% 400%;
+      animation: bgMove 15s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
+    @keyframes bgMove {
+      0% { background-position:0% 50%; }
+      50% { background-position:100% 50%; }
+      100% { background-position:0% 50%; }
+    }
+
+    .frame {
+      width: 90%;
+      max-width: 720px;
+      background: rgba(255,255,255,0.9);
+      border: 6px solid #000;
+      border-radius: 24px;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    textarea { resize: vertical; }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      background: #0078d4;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #005a9e;
+    }
+
+    .success {
+      display: none;
+      margin-top: 25px;
+      padding: 20px;
+      background: #e6f0fa;
+      border: 2px solid #0078d4;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    #branding {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    #branding img {
+      max-width: 140px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    #soarText {
+      margin-top: 10px;
+      font-size: 48px;
+      font-weight: bold;
+      background: linear-gradient(270deg,red,orange,yellow,green,blue,indigo,violet);
+      background-size: 600% 600%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbowMove 8s linear infinite;
+    }
+
+    @keyframes rainbowMove {
+      0% { background-position:0% 50%; }
+      50% { background-position:100% 50%; }
+      100% { background-position:0% 50%; }
+    }
+  </style>
 </head>
+
 <body>
 
   <div class="frame">
     <h2>Maintenance Request</h2>
 
     <label>Requested By</label>
-    <input id="requester" placeholder="Your Name" />
+    <input id="requester" />
 
-    <label>Email</label>
-    <input id="email" placeholder="Your Email" />
+    <label>Email / Contact Info</label>
+    <input id="contact" />
 
     <label>Residential House</label>
     <select id="house">
@@ -59,16 +164,17 @@
     <button id="submitBtn" onclick="submitMaintenance()">Submit Request</button>
 
     <div class="success" id="successBox">
-      <h3>Request Submitted!</h3>
+      <h3>Request Submitted</h3>
       <p>Ticket #: <strong id="ticketNum"></strong></p>
-      <p>You will be redirected to the main page shortly.</p>
     </div>
   </div>
 
   <div id="branding">
     <img src="logo.png" alt="SOAR Logo">
+    <div id="soarText">SOAR TN</div>
   </div>
 
-  <script src="js/maintenance.js"></script>
+  <!-- External JS -->
+  <script src="maintenance.js"></script>
 </body>
 </html>
