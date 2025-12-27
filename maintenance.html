@@ -5,15 +5,17 @@
   <title>SOAR TN – Maintenance Request</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- EmailJS v4 -->
+  <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
   <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* Body and animated background */
+    /* --- PAGE STYLES --- */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -26,13 +28,8 @@
       align-items: center;
       justify-content: center;
     }
-    @keyframes bgMove {
-      0% { background-position:0% 50%; }
-      50% { background-position:100% 50%; }
-      100% { background-position:0% 50%; }
-    }
+    @keyframes bgMove {0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; }}
 
-    /* Frame */
     .frame {
       width: 90%;
       max-width: 720px;
@@ -43,16 +40,9 @@
       box-sizing: border-box;
     }
 
-    h2 {
-      text-align: center;
-      margin-top: 0;
-    }
+    h2 { text-align: center; margin-top: 0; }
 
-    label {
-      font-weight: bold;
-      margin-top: 15px;
-      display: block;
-    }
+    label { font-weight: bold; margin-top: 15px; display: block; }
 
     input, select, textarea {
       width: 100%;
@@ -62,7 +52,6 @@
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
-
     textarea { resize: vertical; }
 
     button {
@@ -76,10 +65,7 @@
       color: #fff;
       cursor: pointer;
     }
-
-    button:hover {
-      background: #005a9e;
-    }
+    button:hover { background: #005a9e; }
 
     .success {
       display: none;
@@ -91,16 +77,8 @@
       text-align: center;
     }
 
-    /* Branding */
-    #branding {
-      margin-top: 30px;
-      text-align: center;
-    }
-    #branding img {
-      max-width: 140px;
-      display: block;
-      margin: 0 auto;
-    }
+    #branding { margin-top: 30px; text-align: center; }
+    #branding img { max-width: 140px; display: block; margin: 0 auto; }
 
     #soarText {
       margin-top: 10px;
@@ -112,12 +90,7 @@
       -webkit-text-fill-color: transparent;
       animation: rainbowMove 8s linear infinite;
     }
-
-    @keyframes rainbowMove {
-      0% { background-position:0% 50%; }
-      50% { background-position:100% 50%; }
-      100% { background-position:0% 50%; }
-    }
+    @keyframes rainbowMove {0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; }}
   </style>
 </head>
 
@@ -130,7 +103,7 @@
     <input id="requester" />
 
     <label>Contact Info / Email</label>
-    <input id="contact" />
+    <input id="contact" type="email" />
 
     <label>Residential House</label>
     <select id="house">
@@ -162,12 +135,11 @@
     <label>Supplies Needed (optional)</label>
     <textarea id="supplies" rows="3"></textarea>
 
-    <button id="submitBtn" onclick="submitMaintenance()">Submit Request</button>
+    <button id="submitBtn">Submit Request</button>
 
     <div class="success" id="successBox">
       <h3>Request Submitted</h3>
       <p>Ticket #: <strong id="ticketNum"></strong></p>
-      <p>You will be redirected to the home page shortly...</p>
     </div>
   </div>
 
@@ -176,7 +148,99 @@
     <div id="soarText">SOAR TN</div>
   </div>
 
-  <!-- Maintenance JS -->
-  <script src="js/maintenance.js"></script>
+  <script>
+    // ---------------- CONFIG ----------------
+    emailjs.init("sLNm5JCzwihAuVon0");
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
+
+    // ---------------- HELPERS ----------------
+    function generateTicket() { return "SOAR-" + Date.now(); }
+    function launchConfetti() { confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } }); }
+
+    // ---------------- PDF ----------------
+    function generatePDFBase64(data) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(16);
+      doc.text("SOAR TN - Maintenance Request", 20, 20);
+      doc.setFontSize(11);
+      doc.text(`Ticket #: ${data.ticket}`, 20, 30);
+      doc.text(`Date Submitted: ${data.submittedDate}`, 20, 38);
+      doc.text(`Requested By: ${data.requester}`, 20, 48);
+      doc.text(`Email: ${data.email}`, 20, 56);
+      doc.text(`House: ${data.house}`, 20, 64);
+      doc.text(`Expected Completion: ${data.expectedDate}`, 20, 72);
+
+      doc.text("Description:", 20, 84);
+      doc.text(doc.splitTextToSize(data.description, 170), 20, 92);
+
+      doc.text("Supplies Needed:", 20, 130);
+      doc.text(doc.splitTextToSize(data.supplies || "N/A", 170), 20, 138);
+
+      doc.text("----- Maintenance Use Only -----", 20, 170);
+      doc.text("Materials Cost: ____________", 20, 180);
+      doc.text("Mileage: ____________", 20, 190);
+      doc.text("Completed Date: ____________", 20, 200);
+      doc.text("Comments:", 20, 210);
+
+      return doc.output("datauristring").split(",")[1]; // base64
+    }
+
+    // ---------------- SUBMIT ----------------
+    document.getElementById("submitBtn").addEventListener("click", async () => {
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+
+      const ticket = generateTicket();
+      const submittedDate = new Date().toLocaleString();
+
+      const requester = document.getElementById("requester").value.trim();
+      const email = document.getElementById("contact").value.trim();
+      const house = document.getElementById("house").value;
+      const expectedDate = document.getElementById("expectedDate").value;
+      const description = document.getElementById("description").value.trim();
+      const supplies = document.getElementById("supplies").value.trim();
+
+      if (!requester || !email || !house || !description) {
+        alert("Please complete all required fields.");
+        btn.disabled = false;
+        return;
+      }
+
+      const payload = { ticket, requester, email, house, expectedDate, description, supplies, submittedDate };
+      payload.pdfBase64 = generatePDFBase64(payload);
+
+      // Email to HR
+      emailjs.send("service_lk56r2m", "template_maintenance_requests", {
+        ...payload,
+        to_email: "soarhr@soartn.org",
+        cc_email: "cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
+        attachment: payload.pdfBase64
+      }).then(() => console.log("Email sent with PDF attachment!"))
+        .catch(err => console.error("EmailJS Error:", err));
+
+      // Auto-reply to requester
+      emailjs.send("service_lk56r2m", "template_maintenance_autoreply", {
+        ...payload,
+        to_email: email
+      }).then(() => console.log("Auto-reply sent!"))
+        .catch(err => console.error("Auto-reply Error:", err));
+
+      // Send to Google Sheets / Drive
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(payload)
+      }).catch(err => console.error("Google Sheet logging error:", err));
+
+      launchConfetti();
+      document.getElementById("ticketNum").textContent = ticket;
+      document.getElementById("successBox").style.display = "block";
+
+      setTimeout(() => window.location.href = "index.html", 5000);
+    });
+  </script>
+
 </body>
 </html>
