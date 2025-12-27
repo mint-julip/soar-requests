@@ -1,14 +1,6 @@
 // ---------------- CONFIG ----------------
-emailjs.init("sLNm5JCzwihAuVon0"); // EmailJS public key
+emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
-
-// HR Emails
-const HR_EMAILS = [
-  "soarhr@soartn.org",
-  "cherylhintz@soartn.org",
-  "alishasanders@soartn.org",
-  "kobypresley@soartn.org"
-];
 
 // ---------------- HELPERS ----------------
 function generateTicket() {
@@ -19,7 +11,6 @@ function launchConfetti() {
   confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
 }
 
-// ---------------- PDF BASE64 ----------------
 function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -47,7 +38,7 @@ function generatePDFBase64(data) {
   doc.text("Completed Date: ____________", 20, 200);
   doc.text("Comments:", 20, 210);
 
-  return doc.output("datauristring").split(",")[1]; // Base64
+  return doc.output("datauristring").split(",")[1]; // Base64 for attachment
 }
 
 // ---------------- MAIN SUBMIT ----------------
@@ -79,45 +70,38 @@ function submitMaintenance() {
     expectedDate,
     description,
     supplies,
-    submittedDate
+    submittedDate,
+    pdfBase64: "" // will be added below
   };
 
-  // Generate Base64 PDF
+  // Generate PDF Base64
   payload.pdfBase64 = generatePDFBase64(payload);
 
-  // ---------------- EMAILJS: HR EMAIL ----------------
-  emailjs.send("service_lk56r2m", "template_maintenance_requests", {
+  // ---------------- EMAILJS to HR ----------------
+  emailjs.send("service_lk56r2m", "template_vnfmovs", {
     ...payload,
-    to_email: HR_EMAILS.join(","),
+    to_email: "soarhr@soartn.org",
+    cc_email: "sandysmith@soartn.org", //"cherylhintz@soartn.org,alishasanders@soartn.org,kobypresley@soartn.org",
     attachment: payload.pdfBase64
   })
-  .then(() => console.log("HR Email sent with PDF!"))
-  .catch(err => console.error("EmailJS HR Error:", err));
+  .then(() => console.log("Email sent to HR with PDF attachment"))
+  .catch(err => console.error("EmailJS Error:", err));
 
-  // ---------------- EMAILJS: AUTO-REPLY ----------------
-  emailjs.send("service_lk56r2m", "template_maintenance_autoreply", {
-    ...payload,
-    to_email: email
+  // ---------------- POST to Google Apps Script ----------------
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
   })
-  .then(() => console.log("Auto-reply sent to requester"))
-  .catch(err => console.error("EmailJS Auto-reply Error:", err));
+  .then(res => res.json())
+  .then(resData => console.log("Server response:", resData))
+  .catch(err => console.error("Google Sheet/Drive error:", err));
 
-  // ---------------- GOOGLE SHEETS LOG ----------------
-fetch(GOOGLE_SCRIPT_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload)
-})
-.then(res => res.json())
-.then(data => console.log("Server response:", data))
-.catch(err => console.error("Fetch error:", err));
-
-  // Show success + confetti
   launchConfetti();
+
   document.getElementById("ticketNum").textContent = ticket;
   document.getElementById("successBox").style.display = "block";
 
-  // Redirect after 5 seconds
   setTimeout(() => {
     window.location.href = "index.html";
   }, 5000);
