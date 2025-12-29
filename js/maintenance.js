@@ -1,180 +1,136 @@
-/***********************************************************
- * SOAR TN – Maintenance Request (Client Script)
- * Includes:
- * - Ticket generation
- * - PDF generation (jsPDF)
- * - EmailJS (HR + auto-reply)
- * - Google Apps Script logging
- * - UI feedback
- ***********************************************************/
+// ---------------- CONFIG ----------------
+emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
 
-/* ================== CONFIG ================== */
+const HR_EMAILS = [
+  "soarhr@soartn.org"
+  // "cherylhintz@soartn.org",
+  // "alishasanders@soartn.org",
+  // "kobypresley@soartn.org"
+];
 
-// EmailJS
-emailjs.init("sLNm5JCzwihAuVon0");
-
-// Google Apps Script Web App URL
-const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
-
-// EmailJS service + templates
-const EMAIL_SERVICE_ID = "service_lk56r2m";
-const HR_TEMPLATE_ID = "template_vnfmovs";
-const AUTO_REPLY_TEMPLATE_ID = "template_foh2u7z";
-
-// HR recipients (used by EmailJS template)
-const HR_EMAILS = ["soarhr@soartn.org"];
-
-/* ================== HELPERS ================== */
-
+// ---------------- HELPERS ----------------
 function generateTicket() {
-  return "SOAR-M-" + Date.now();
+  return "SOAR-" + Date.now();
 }
 
 function launchConfetti() {
-  if (typeof confetti === "function") {
-    confetti({
-      particleCount: 120,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
-  }
+  confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
 }
 
-/* ================== PDF GENERATION ================== */
-
-function generateMaintenancePDF(data) {
+function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
   doc.setFontSize(16);
-  doc.text("SOAR TN – Maintenance Request", 20, 20);
+  doc.text("SOAR TN - Maintenance Request", 20, 20);
 
   doc.setFontSize(11);
-  doc.text(`Submitted: ${new Date(data.timestamp).toLocaleString()}`, 20, 40);
-  doc.text(`Ticket #: ${data.ticket}`, 20, 32);
-  doc.text(`Type: ${data.type}`, 20, 48);
+  doc.text(`Ticket #: ${data.ticket}`, 20, 30);
+  doc.text(`Date Submitted: ${data.submittedDate}`, 20, 38);
   doc.text(`Requested By: ${data.requester}`, 20, 48);
-  doc.text(`Contact Email: ${data.contact}`, 20, 56);
-  doc.text(`House / Dept: ${data.house_dept}`, 20, 64);
-  doc.text(`Expected Completion: ${data.expected_date || "N/A"}`, 20, 72);
+  doc.text(`Email: ${data.email}`, 20, 56);
+  doc.text(`House / Dept: ${data.house}`, 20, 64);
+  doc.text(`Priority: ${data.priority}`, 20, 72);
+  doc.text(`Expected Completion: ${data.expectedDate}`, 20, 80);
 
-  doc.text("Description of Issue:", 20, 86);
-  doc.text(doc.splitTextToSize(data.description, 170), 20, 94);
+  doc.text("Description:", 20, 92);
+  doc.text(doc.splitTextToSize(data.description, 170), 20, 100);
 
-  doc.text("Supplies / Parts Needed:", 20, 134);
-  doc.text(
-    doc.splitTextToSize(data.amount_supplies || "N/A", 170),
-    20,
-    142
-  );
+  doc.text("Supplies / Parts Needed:", 20, 140);
+  doc.text(doc.splitTextToSize(data.supplies || "N/A", 170), 20, 148);
 
-  doc.text("----- Maintenance Use Only -----", 20, 182);
-  doc.text("Assigned To: ____________________", 20, 192);
-  doc.text("Completion Date: ________________", 20, 202);
-  doc.text("Notes:", 20, 212);
+  doc.text("----- Maintenance Use Only -----", 20, 180);
+  doc.text("Materials Cost: ____________", 20, 190);
+  doc.text("Mileage: ____________", 20, 200);
+  doc.text("Completed Date: ____________", 20, 210);
+  doc.text("Comments:", 20, 220);
 
-  // Return Base64 (no prefix)
   return doc.output("datauristring").split(",")[1];
 }
 
-/* ================== MAIN SUBMIT ================== */
-document.addEventListener("DOMContentLoaded", () => {
-  const submitBtn = document.getElementById("submitBtn");
-  submitBtn.addEventListener("click", submitMaintenance);
-});
+// ---------------- MAIN SUBMIT ----------------
+function submitMaintenance() {
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true;
 
-async function submitMaintenance() {
-  // const btn = document.getElementById("submitBtn");
-  // btn.disabled = true;
-  
+  const ticket = generateTicket();
+  const submittedDate = new Date().toLocaleString();
 
-  // Collect form values
   const requester = document.getElementById("requester").value.trim();
-  const contact = document.getElementById("contact").value.trim();
-  const houseDept = document.getElementById("house").value;
+  const email = document.getElementById("contact").value.trim();
+  const house = document.getElementById("house").value;
+  const priority = document.getElementById("priority").value;
   const expectedDate = document.getElementById("expectedDate").value;
   const description = document.getElementById("description").value.trim();
   const supplies = document.getElementById("supplies").value.trim();
 
-  // Validate
-  if (!requester || !contact || !houseDept || !description) {
+  // Validate required fields
+  if (!requester || !email || !house || !priority || !description) {
     alert("Please complete all required fields.");
     btn.disabled = false;
     return;
   }
 
-  // Build payload
   const payload = {
-    timestamp: new Date().toISOString(),
-    ticket: generateTicket(),
-    type: "Maintenance",
-    requester: requester,
-    contact: contact,
-    house_dept: houseDept,
-    description: description,
-    amount_supplies: supplies || "N/A",
-    priority: "Normal",
-    expected_date: expectedDate || "",
-    status: "Submitted",
-    assigned_to: "",
-    last_updated: "",
-    source_form: "Maintenance Form"
+    ticket,
+    requester,
+    email,
+    house,
+    priority,
+    expectedDate,
+    description,
+    supplies,
+    submittedDate
   };
 
-  // Generate PDF
-  payload.pdfBase64 = generateMaintenancePDF(payload);
+  payload.pdfBase64 = generatePDFBase64(payload);
 
-  /* ========== EMAIL HR (with PDF) ========== */
-  try {
-    for (const hr of HR_EMAILS) {
-      await emailjs.send(EMAIL_SERVICE_ID, HR_TEMPLATE_ID, {
-        ...payload,
-        to_email: hr,
-        attachment: payload.pdfBase64
-      });
-    }
-  } catch (err) {
-    console.error("HR email error:", err);
-  }
+  // ---------------- SEND EMAILS ----------------
+  // HR email with PDF attachment
+  HR_EMAILS.forEach(hrEmail => {
+    emailjs.send("service_lk56r2m", "template_vnfmovs", {
+      ...payload,
+      to_email: hrEmail,
+      attachment: payload.pdfBase64
+    }).then(() => console.log(`Email sent to ${hrEmail}`))
+      .catch(err => console.error("HR Email Error:", err));
+  });
 
-  /* ========== AUTO-REPLY (NO PDF) ========== */
-  try {
-    await emailjs.send(EMAIL_SERVICE_ID, AUTO_REPLY_TEMPLATE_ID, {
-      requester_name: requester,
-      requester_email: contact,
-      ticket: payload.ticket,
-      house: houseDept,
-      description: description
-    });
-  } catch (err) {
-    console.error("Auto-reply error:", err);
-  }
+  // Auto-reply to requester
+  emailjs.send("service_lk56r2m", "template_foh2u7z", {
+    requester_name: requester,
+    requester_email: email,
+    ticket: ticket,
+    house: house,
+    description: description,
+    priority: priority
+  }).then(() => console.log("Auto-reply sent to requester"))
+    .catch(err => console.error("Auto-reply Error:", err));
 
-  /* ========== LOG TO GOOGLE SHEETS ========== */
-  try {
-    await fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: { "Content-Type": "application/json" }
-    });
-  } catch (err) {
-    console.error("Google Sheet error:", err);
-  }
+  // ---------------- LOG TO GOOGLE SHEET ----------------
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(payload)
+  }).catch(err => console.error("Google Sheet logging error:", err));
 
-  /* ========== UI FEEDBACK ========== */
+  // ---------------- UI FEEDBACK ----------------
   launchConfetti();
-  document.getElementById("ticketNum").textContent = payload.ticket;
+  document.getElementById("ticketDisplay").textContent = ticket;
   document.getElementById("successBox").style.display = "block";
 
+  // Reset button after 5 seconds
   setTimeout(() => {
+    btn.disabled = false;
     window.location.href = "index.html";
   }, 5000);
 }
 
-/* ================== EVENT BINDING ================== */
-
+// ---------------- ATTACH EVENT ----------------
 document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("submitBtn");
-  if (btn) btn.addEventListener("click", submitMaintenance);
+  const submitBtn = document.getElementById("submitBtn");
+  if (submitBtn) {
+    submitBtn.addEventListener("click", submitMaintenance);
+  }
 });
