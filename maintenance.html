@@ -1,126 +1,135 @@
-// ===================== CONFIG =====================
-emailjs.init("sLNm5JCzwihAuVon0");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SOAR TN | Maintenance Request</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-const HR_EMAILS = [
-  "soarhr@soartn.org"
-  <!-- "alishasanders@soartn.org",
-  "kobypresley@soartn.org" -->
-];
+  <!-- Inline CSS ONLY -->
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #eef3ff, #fdfbfb);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-// ===================== HELPERS =====================
-function generateTicket() {
-  return "SOAR-" + Date.now();
-}
+    .container {
+      width: 95%;
+      max-width: 700px;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
 
-function launchConfetti() {
-  confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-}
+    h2 {
+      text-align: center;
+      margin-top: 0;
+      color: #003366;
+    }
 
-// ===================== PDF BASE64 =====================
-function generatePDFBase64(data) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
 
-  doc.setFontSize(16);
-  doc.text("SOAR TN – Maintenance Request", 20, 20);
+    input, select, textarea {
+      width: 100%;
+      margin-top: 6px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
 
-  doc.setFontSize(11);
-  doc.text(`Ticket #: ${data.ticket}`, 20, 30);
-  doc.text(`Submitted: ${data.submittedDate}`, 20, 38);
-  doc.text(`Requester: ${data.requester}`, 20, 46);
-  doc.text(`Email: ${data.email}`, 20, 54);
-  doc.text(`House: ${data.house}`, 20, 62);
-  doc.text(`Expected Date: ${data.expectedDate}`, 20, 70);
+    textarea {
+      resize: vertical;
+    }
 
-  doc.text("Description:", 20, 82);
-  doc.text(doc.splitTextToSize(data.description, 170), 20, 90);
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
+      background: #0078d4;
+      color: #fff;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
 
-  doc.text("Supplies Needed:", 20, 125);
-  doc.text(doc.splitTextToSize(data.supplies || "N/A", 170), 20, 133);
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
 
-  return doc.output("datauristring").split(",")[1];
-}
+    .success {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: #e6f2ff;
+      border: 1px solid #0078d4;
+      border-radius: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
 
-// ===================== MAIN SUBMIT =====================
-async function submitMaintenance() {
-  const btn = document.getElementById("submitBtn");
-  btn.disabled = true;
+<body>
 
-  const ticket = generateTicket();
-  const submittedDate = new Date().toLocaleString();
+<div class="container">
+  <h2>Maintenance Request</h2>
 
-  const requester = document.getElementById("requester").value.trim();
-  const email = document.getElementById("contact").value.trim();
-  const house = document.getElementById("house").value;
-  const expectedDate = document.getElementById("expectedDate").value;
-  const description = document.getElementById("description").value.trim();
-  const supplies = document.getElementById("supplies").value.trim();
+  <label>Requester Name *</label>
+  <input id="requester" type="text">
 
-  if (!requester || !email || !house || !description) {
-    alert("Please complete all required fields.");
-    btn.disabled = false;
-    return;
-  }
+  <label>Email *</label>
+  <input id="email" type="email">
 
-  const payload = {
-    timestamp,
-    ticket,
-    type,
-    requester,
-    contact,
-    house,
-    description,
-    amount,
-    priority,
-    expectedDate,
-    status,
-    assignedTo,
-    lastUpdated,
-    sourceForm
-  };
+  <label>House / Department *</label>
+  <select id="house">
+    <option value="">Select</option>
+    <option>Lee House</option>
+    <option>Alcoa House</option>
+    <option>Cusick House</option>
+    <option>Cherokee House</option>
+    <option>Main Office</option>
+  </select>
 
+  <label>Priority *</label>
+  <select id="priority">
+    <option value="">Select</option>
+    <option>Low</option>
+    <option>Medium</option>
+    <option>High</option>
+    <option>Emergency</option>
+  </select>
 
-  payload.pdfBase64 = generatePDFBase64(payload);
+  <label>Expected Completion Date</label>
+  <input id="expectedDate" type="date">
 
-  // ===== HR EMAILS =====
-  for (const hr of HR_EMAILS) {
-    await emailjs.send("service_lk56r2m", "template_maintenance_requests", {
-      ...payload,
-      to_email: hr,
-      attachment: payload.pdfBase64
-    });
-  }
+  <label>Description *</label>
+  <textarea id="description" rows="4"></textarea>
 
-  // ===== AUTO-REPLY =====
-  await emailjs.send("service_lk56r2m", "maintenance_autoreply", {
-    requester_name: requester,
-    requester_email: email,
-    ticket,
-    house,
-    description
-  });
+  <label>Supplies / Parts Needed</label>
+  <textarea id="supplies" rows="3"></textarea>
 
-  // ===== LOG TO GOOGLE =====
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify(payload)
-  });
+  <button id="submitBtn">Submit Maintenance Request</button>
 
-  launchConfetti();
-  document.getElementById("ticketNum").textContent = ticket;
-  document.getElementById("successBox").style.display = "block";
+  <div class="success" id="successBox">
+    <strong>Request submitted!</strong><br>
+    Ticket #: <span id="ticketDisplay"></span>
+  </div>
+</div>
 
-  setTimeout(() => {
-    window.location.href = "index.html";
-  }, 5000);
-}
-
-// ===================== EVENT =====================
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("submitBtn")
-    .addEventListener("click", submitMaintenance);
-});
+<script src="maintenance.js"></script>
+</body>
+</html>
