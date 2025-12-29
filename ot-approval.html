@@ -4,80 +4,34 @@
   <meta charset="UTF-8">
   <title>SOAR TN | OT Approval</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Inline CSS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f6fb;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding-top: 40px;
-    }
-    .container {
-      width: 95%;
-      max-width: 800px;
-      background: #fff;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    h2 { text-align: center; color: #003366; margin-top: 0; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: left;
-    }
-    th { background: #0078d4; color: #fff; }
-    select {
-      padding: 5px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #0078d4;
-      color: #fff;
-      cursor: pointer;
-    }
-    button:hover { background: #005a9e; }
+    body { font-family: Arial, sans-serif; margin:0; display:flex; justify-content:center; align-items:center; min-height:100vh; background:#f4f6f9; }
+    .container { width:90%; max-width:600px; background:#fff; border-radius:15px; padding:25px; box-shadow:0 10px 20px rgba(0,0,0,0.1);}
+    h2 { text-align:center; color:#003366; }
+    label { font-weight:bold; display:block; margin-top:15px; }
+    select, button { width:100%; margin-top:10px; padding:10px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
+    button { background:#0078d4; color:#fff; font-size:16px; border:none; cursor:pointer; }
+    button:hover { background:#005a9e; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>OT Requests Approval</h2>
-    <table id="otTable">
-      <thead>
-        <tr>
-          <th>Ticket</th>
-          <th>Requester</th>
-          <th>Email</th>
-          <th>Department</th>
-          <th>OT Date</th>
-          <th>Hours</th>
-          <th>Description</th>
-          <th>Priority</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Rows populated via JS -->
-      </tbody>
-    </table>
-    <button id="refreshBtn">Refresh Requests</button>
-  </div>
+<div class="container">
+  <h2>OT Approval</h2>
+  <label>Ticket #</label>
+  <input id="ticket" type="text">
+  <label>Decision</label>
+  <select id="decision">
+    <option value="">Select</option>
+    <option value="Approved">Approved</option>
+    <option value="Denied">Denied</option>
+  </select>
+  <label>Comments</label>
+  <textarea id="comments" rows="4"></textarea>
+  <button id="approveBtn">Submit Decision</button>
+</div>
 
-  <script src="./js/ot-approval.js"></script>
+<script src="./js/ot-approval.js"></script>
 </body>
 </html>
+
