@@ -14,8 +14,16 @@ function generateTicket() {
   return "SOAR-" + Date.now();
 }
 
+// function launchConfetti() {
+//   confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+// }
+
 function launchConfetti() {
-  confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+  } else {
+    console.warn("Confetti library not loaded.");
+  }
 }
 
 function generatePDFBase64(data) {
