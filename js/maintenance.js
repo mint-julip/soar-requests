@@ -51,8 +51,9 @@ function generateMaintenancePDF(data) {
   doc.text("SOAR TN – Maintenance Request", 20, 20);
 
   doc.setFontSize(11);
-  doc.text(`Ticket #: ${data.ticket}`, 20, 32);
   doc.text(`Submitted: ${new Date(data.timestamp).toLocaleString()}`, 20, 40);
+  doc.text(`Ticket #: ${data.ticket}`, 20, 32);
+  doc.text(`Type: ${data.type}`, 20, 48);
   doc.text(`Requested By: ${data.requester}`, 20, 48);
   doc.text(`Contact Email: ${data.contact}`, 20, 56);
   doc.text(`House / Dept: ${data.house_dept}`, 20, 64);
