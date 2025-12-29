@@ -1,95 +1,29 @@
-/***********************
- * CONFIG
- ***********************/
-emailjs.init("YOUR_PUBLIC_EMAILJS_KEY");
+function generateMaintenancePDF(data) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
 
-const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+  doc.setFontSize(16);
+  doc.text("SOAR TN – Maintenance Request", 20, 20);
 
-const HR_TEMPLATE_ID = "maintenance_hr_notify";
-const AUTO_TEMPLATE_ID = "maintenance_autoreply";
-const EMAIL_SERVICE_ID = "service_xxxxx";
+  doc.setFontSize(11);
+  doc.text(`Ticket #: ${data.ticket}`, 20, 32);
+  doc.text(`Submitted: ${new Date(data.timestamp).toLocaleString()}`, 20, 40);
+  doc.text(`Requester: ${data.requester}`, 20, 48);
+  doc.text(`Email: ${data.contact}`, 20, 56);
+  doc.text(`House / Dept: ${data.house_dept}`, 20, 64);
+  doc.text(`Priority: ${data.priority}`, 20, 72);
+  doc.text(`Expected Date: ${data.expected_date || "N/A"}`, 20, 80);
 
-/***********************
- * HELPERS
- ***********************/
-function generateTicket() {
-  return "SOAR-M-" + Date.now();
+  doc.text("Description:", 20, 92);
+  doc.text(doc.splitTextToSize(data.description, 170), 20, 100);
+
+  doc.text("Supplies / Parts:", 20, 140);
+  doc.text(doc.splitTextToSize(data.amount_supplies || "N/A", 170), 20, 148);
+
+  doc.text("----- Maintenance Use Only -----", 20, 190);
+  doc.text("Assigned To: ____________________", 20, 200);
+  doc.text("Completion Date: ________________", 20, 210);
+  doc.text("Notes:", 20, 220);
+
+  return doc.output("datauristring").split(",")[1];
 }
-
-function requiredFieldsMissing(data) {
-  return (
-    !data.requester ||
-    !data.email ||
-    !data.house ||
-    !data.priority ||
-    !data.description
-  );
-}
-
-/***********************
- * SUBMIT HANDLER
- ***********************/
-async function submitMaintenance() {
-  const btn = document.getElementById("submitBtn");
-  btn.disabled = true;
-
-  const data = {
-    timestamp: new Date().toISOString(),
-    ticket: generateTicket(),
-    type: "Maintenance",
-    requester: document.getElementById("requester").value.trim(),
-    contact: document.getElementById("email").value.trim(),
-    house_dept: document.getElementById("house").value,
-    priority: document.getElementById("priority").value,
-    expected_date: document.getElementById("expectedDate").value,
-    description: document.getElementById("description").value.trim(),
-    amount_supplies: document.getElementById("supplies").value.trim(),
-    status: "New",
-    assigned_to: "",
-    last_updated: new Date().toLocaleString(),
-    source_form: "Maintenance Form"
-  };
-
-  if (requiredFieldsMissing(data)) {
-    alert("Please complete all required fields.");
-    btn.disabled = false;
-    return;
-  }
-
-  try {
-    /* HR EMAIL */
-    await emailjs.send(EMAIL_SERVICE_ID, HR_TEMPLATE_ID, data);
-
-    /* AUTO REPLY */
-    await emailjs.send(EMAIL_SERVICE_ID, AUTO_TEMPLATE_ID, {
-      requester_name: data.requester,
-      requester_email: data.contact,
-      ticket: data.ticket
-    });
-
-    /* LOG TO GOOGLE */
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify(data)
-    });
-
-    document.getElementById("ticketDisplay").textContent = data.ticket;
-    document.getElementById("successBox").style.display = "block";
-
-  } catch (err) {
-    console.error("Submission error:", err);
-    alert("There was an error submitting the request.");
-    btn.disabled = false;
-  }
-}
-
-/***********************
- * EVENT LISTENER
- ***********************/
-document.addEventListener("DOMContentLoaded", () => {
-  document
-    .getElementById("submitBtn")
-    .addEventListener("click", submitMaintenance);
-});
