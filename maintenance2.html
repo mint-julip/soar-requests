@@ -5,14 +5,13 @@
   <title>SOAR TN – Maintenance Request</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- EmailJS v4 (CORRECT SDK) -->
+  <!-- EmailJS v4 -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+  <!-- Inline CSS -->
   <style>
     body {
       margin: 0;
@@ -129,7 +128,7 @@
     <label>Requested By</label>
     <input id="requester" />
 
-    <label>Contact Info / Phone</label>
+    <label>Email / Contact Info</label>
     <input id="contact" />
 
     <label>Residential House</label>
@@ -162,7 +161,7 @@
     <label>Supplies Needed (optional)</label>
     <textarea id="supplies" rows="3"></textarea>
 
-    <button onclick="submitMaintenance()">Submit Request</button>
+    <button id="submitBtn" onclick="submitMaintenance()">Submit Request</button>
 
     <div class="success" id="successBox">
       <h3>Request Submitted</h3>
@@ -175,7 +174,7 @@
     <div id="soarText">SOAR TN</div>
   </div>
 
-  <!-- JS -->
+  <!-- External JS -->
   <script src="js/maintenance.js"></script>
 </body>
 </html>
