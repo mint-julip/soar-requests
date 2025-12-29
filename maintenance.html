@@ -5,9 +5,9 @@ const GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
 
 const HR_EMAILS = [
-  "soarhr@soartn.org",
-  "alishasanders@soartn.org",
-  "kobypresley@soartn.org"
+  "soarhr@soartn.org"
+  <!-- "alishasanders@soartn.org",
+  "kobypresley@soartn.org" -->
 ];
 
 // ===================== HELPERS =====================
@@ -66,15 +66,22 @@ async function submitMaintenance() {
   }
 
   const payload = {
+    timestamp,
     ticket,
+    type,
     requester,
-    email,
+    contact,
     house,
-    expectedDate,
     description,
-    supplies,
-    submittedDate
+    amount,
+    priority,
+    expectedDate,
+    status,
+    assignedTo,
+    lastUpdated,
+    sourceForm
   };
+
 
   payload.pdfBase64 = generatePDFBase64(payload);
 
