@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>SOAR TN | OT Request</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -13,80 +13,21 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #eef3ff, #fdfbfb);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      width: 95%;
-      max-width: 700px;
-      background: #fff;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
-
-    h2 {
-      text-align: center;
-      margin-top: 0;
-      color: #003366;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      margin-top: 6px;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-
+    body { font-family: Arial, sans-serif; margin: 0; background: #eef3ff; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+    .container { width: 95%; max-width: 700px; background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+    h2 { text-align: center; color: #003366; margin-top: 0; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, select, textarea { width: 100%; margin-top: 6px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
     textarea { resize: vertical; }
-
-    button {
-      margin-top: 25px;
-      width: 100%;
-      padding: 14px;
-      background: #0078d4;
-      color: #fff;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      background: #999;
-      cursor: not-allowed;
-    }
-
-    .success {
-      display: none;
-      margin-top: 20px;
-      padding: 15px;
-      background: #e6f2ff;
-      border: 1px solid #0078d4;
-      border-radius: 10px;
-      text-align: center;
-    }
+    button { margin-top: 25px; width: 100%; padding: 14px; background: #0078d4; color: #fff; font-size: 18px; border: none; border-radius: 10px; cursor: pointer; }
+    button:disabled { background: #999; cursor: not-allowed; }
+    .success { display: none; margin-top: 20px; padding: 15px; background: #e6f2ff; border: 1px solid #0078d4; border-radius: 10px; text-align: center; }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h2>Overtime Request</h2>
+    <h2>OT Request Form</h2>
 
     <label>Requester Name *</label>
     <input id="requester" type="text">
@@ -94,29 +35,21 @@
     <label>Email *</label>
     <input id="contact" type="email">
 
-    <label>Department *</label>
-    <select id="department">
+    <label>House / Department *</label>
+    <select id="house">
       <option value="">Select</option>
-      <option>Administration</option>
-      <option>Program</option>
-      <option>Maintenance</option>
-      <option>Other</option>
+      <option>Lee House</option>
+      <option>Alcoa House</option>
+      <option>Cusick House</option>
+      <option>Cherokee House</option>
+      <option>Main Office</option>
     </select>
 
-    <label>Priority *</label>
-    <select id="priority">
-      <option value="">Select</option>
-      <option>Low</option>
-      <option>Medium</option>
-      <option>High</option>
-      <option>Emergency</option>
-    </select>
-
-    <label>Date of OT *</label>
+    <label>OT Date *</label>
     <input id="otDate" type="date">
 
     <label>Hours Requested *</label>
-    <input id="hours" type="number" min="0" step="0.5">
+    <input id="hours" type="number" min="0" step="0.1">
 
     <label>Description *</label>
     <textarea id="description" rows="4"></textarea>
@@ -125,10 +58,10 @@
 
     <div class="success" id="successBox">
       <strong>Request submitted!</strong><br>
-      Ticket #: <span id="ticketDisplay"></span>
+      Ticket #: <span id="ticketNum"></span>
     </div>
   </div>
 
-  <script src="./js/ot-request.js"></script>
+  <script src="./js/ot.js"></script>
 </body>
 </html>
