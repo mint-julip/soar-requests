@@ -79,10 +79,15 @@ function generateMaintenancePDF(data) {
 }
 
 /* ================== MAIN SUBMIT ================== */
+document.addEventListener("DOMContentLoaded", () => {
+  const submitBtn = document.getElementById("submitBtn");
+  submitBtn.addEventListener("click", submitMaintenance);
+});
 
 async function submitMaintenance() {
-  const btn = document.getElementById("submitBtn");
-  btn.disabled = true;
+  // const btn = document.getElementById("submitBtn");
+  // btn.disabled = true;
+  
 
   // Collect form values
   const requester = document.getElementById("requester").value.trim();
