@@ -4,13 +4,10 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1Z
 const HR_EMAILS = ["soarhr@soartn.org"];
 
 // ---------------- HELPERS ----------------
-function generateTicket() {
-  return "SOAR-OT-" + Date.now();
-}
+function generateTicket() { return "OT-" + Date.now(); }
 
-// Launch confetti
 function launchConfetti() {
-  confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+  if (window.confetti) confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
 }
 
 function generatePDFBase64(data) {
@@ -22,12 +19,12 @@ function generatePDFBase64(data) {
 
   doc.setFontSize(11);
   doc.text(`Ticket #: ${data.ticket}`, 20, 30);
-  doc.text(`Date Submitted: ${data.submittedDate}`, 20, 38);
+  doc.text(`Submitted: ${data.submittedDate}`, 20, 38);
   doc.text(`Requester: ${data.requester}`, 20, 46);
   doc.text(`Email: ${data.email}`, 20, 54);
-  doc.text(`Department: ${data.department}`, 20, 62);
+  doc.text(`House: ${data.house}`, 20, 62);
   doc.text(`OT Date: ${data.otDate}`, 20, 70);
-  doc.text(`Hours Requested: ${data.hours}`, 20, 78);
+  doc.text(`Hours: ${data.hours}`, 20, 78);
 
   doc.text("Description:", 20, 90);
   doc.text(doc.splitTextToSize(data.description, 170), 20, 98);
@@ -36,81 +33,48 @@ function generatePDFBase64(data) {
 }
 
 // ---------------- MAIN SUBMIT ----------------
-function submitOTRequest() {
+async function submitOT() {
   const btn = document.getElementById("submitBtn");
   btn.disabled = true;
 
-  const ticket = generateTicket();
-  const submittedDate = new Date().toLocaleString();
-
   const requester = document.getElementById("requester").value.trim();
   const email = document.getElementById("contact").value.trim();
-  const department = document.getElementById("department").value;
-  const priority = document.getElementById("priority").value;
+  const house = document.getElementById("house").value;
   const otDate = document.getElementById("otDate").value;
   const hours = document.getElementById("hours").value;
   const description = document.getElementById("description").value.trim();
+  const submittedDate = new Date().toLocaleString();
+  const ticket = generateTicket();
 
-  // Validate required fields
-  if (!requester || !email || !department || !priority || !otDate || !hours || !description) {
+  if (!requester || !email || !house || !otDate || !hours || !description) {
     alert("Please complete all required fields.");
     btn.disabled = false;
     return;
   }
 
-  const payload = {
-    ticket,
-    requester,
-    email,
-    department,
-    priority,
-    otDate,
-    hours,
-    description,
-    submittedDate,
-    type: "OT Requests"
-  };
-
+  const payload = { ticket, requester, email, house, otDate, hours, description, submittedDate };
   payload.pdfBase64 = generatePDFBase64(payload);
 
-  // ---------------- SEND EMAILS ----------------
+  // Email HR
   HR_EMAILS.forEach(hrEmail => {
-    emailjs.send("service_lk56r2m", "template_78v4e8s", {
-      ...payload,
-      to_email: hrEmail,
-      attachment: payload.pdfBase64
-    }).catch(err => console.error("HR Email Error:", err));
+    emailjs.send("service_lk56r2m", "template_ot_request", {
+      ...payload, to_email: hrEmail, attachment: payload.pdfBase64
+    }).then(() => console.log(`Email sent to ${hrEmail}`))
+      .catch(err => console.error("HR Email Error:", err));
   });
 
-  // Auto-reply to requester
-  emailjs.send("service_lk56r2m", "template_foh2u7z", {
-    requester_name: requester,
-    requester_email: email,
-    ticket: ticket,
-    department: department,
-    otDate: otDate,
-    hours: hours,
-    description: description
-  }).catch(err => console.error("Auto-reply Error:", err));
+  // Log to Google Sheet
+  fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
+    .catch(err => console.error("Google Sheet logging error:", err));
 
-  // ---------------- LOG TO GOOGLE SHEET ----------------
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify(payload)
-  }).catch(err => console.error("Google Sheet logging error:", err));
-
-  // ---------------- UI FEEDBACK ----------------
+  // Success UI
   launchConfetti();
-  document.getElementById("ticketDisplay").textContent = ticket;
+  document.getElementById("ticketNum").textContent = ticket;
   document.getElementById("successBox").style.display = "block";
 
-  setTimeout(() => {
-    window.location.href = "index.html";
-  }, 5000);
+  setTimeout(() => { window.location.href = "index.html"; }, 5000);
 }
 
-// ---------------- ATTACH EVENT ----------------
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("submitBtn").addEventListener("click", submitOTRequest);
+  document.getElementById("submitBtn").addEventListener("click", submitOT);
 });
