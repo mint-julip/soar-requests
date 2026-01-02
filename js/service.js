@@ -1,13 +1,13 @@
 // ---------------- CONFIG ----------------
 emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
 
 // Department → email mapping
 const DEPT_EMAILS = {
-  Medical: "soarmedicaldepartment@soartn.org",
-  Program: "programmanagers@soartn.org",
-  Finance: "finance@soartn.org",
-  Compliance: "soarhr@soartn.org",
+  // Medical: "soarmedicaldepartment@soartn.org",
+  // Program: "programmanagers@soartn.org",
+  // Finance: "finance@soartn.org",
+  // Compliance: "soarhr@soartn.org",
   Payroll: "soarhr@soartn.org",
   IT: "soarhr@soartn.org",
   Recruiting: "soarhr@soartn.org",
