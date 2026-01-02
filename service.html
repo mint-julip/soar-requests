@@ -84,12 +84,27 @@
     Ticket #: <span id="ticketNum"></span>
   </div>
 </div>
- 
- <script src="js/service.js"></script>
+
+ <!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<!-- Shared config -->
+<script src="js/config.js"></script>
+
+<!-- Service logic -->
+<script src="js/service.js"></script>
+
+<script>
+  document
+    .getElementById("submitServiceBtn")
+    .addEventListener("click", submitService);
+</script>
+
+ <!-- <script src="js/service.js"></script>
  <script src="js/config.js"></script>
 <script src="js/ot.js"></script>
 <script src="js/maintenance.js"></script>
-<script src="js/expense.js"></script>
+<script src="js/expense.js"></script> -->
 
 
 
