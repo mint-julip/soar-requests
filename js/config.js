@@ -12,6 +12,19 @@ const DEPT_EMAILS = {
   Other: "soarhr@soartn.org"
 };
 
-// Initialize EmailJS once
+// Initialize EmailJS
 emailjs.init(EMAILJS_PUBLIC_KEY);
+
+// Confetti helper (global)
+function launchConfetti() {
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+  }
+}
+
+// Ticket generator helper (global)
+function generateTicket() {
+  return "SOAR-" + Date.now();
+}
+;
 
