@@ -1,16 +1,17 @@
+// ---------------- CONFIG ----------------
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
+const HR_EMAILS = ["soarhr@soartn.org"];
+const EMAILJS_PUBLIC_KEY = "sLNm5JCzwihAuVon0";
 
-const HR_EMAILS = [
-  "soarhr@soartn.org"
-];
-
-const EXPENSE_CC = {
-  default: "sandysmith@soartn.org",
-  "100": "soarhr@soartn.org"
-  // default: "marialaulusa@soartn.org",
-  // "100": "marialaulusa@soartn.org",
-  // "500": "marialaulusa@soartn.org, cherylhintz@soartn.org",
-  // "1000": "marialaulusa@soartn.org, cherylhintz@soartn.org, nikkigoodwin@soartn.org"
+// Department → email mapping for Service Requests
+const DEPT_EMAILS = {
+  Payroll: "soarhr@soartn.org",
+  IT: "soarhr@soartn.org",
+  Recruiting: "soarhr@soartn.org",
+  HR: "soarhr@soartn.org",
+  Other: "soarhr@soartn.org"
 };
 
-// Other shared constants
+// Initialize EmailJS once
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
