@@ -19,39 +19,68 @@ function launchConfetti() {
 
 function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: "pt" });
+  const doc = new jsPDF();
 
+  // ---------------- HEADER ----------------
   doc.setFontSize(18);
-  doc.text("SOAR TN - Maintenance Request", 40, 40);
-
-  doc.setFontSize(12);
-  doc.text(`Ticket #: ${data.ticket}`, 40, 70);
-  doc.text(`Date Submitted: ${data.submittedDate}`, 40, 85);
-  doc.text(`Requested By: ${data.requester}`, 40, 100);
-  doc.text(`Email: ${data.email}`, 40, 115);
-  doc.text(`House / Dept: ${data.house}`, 40, 130);
-  doc.text(`Priority: ${data.priority}`, 40, 145);
-  doc.text(`Expected Completion: ${data.expectedDate}`, 40, 160);
-
+  doc.setTextColor(0, 51, 102);
+  doc.text("SOAR TN", 105, 20, { align: "center" });
   doc.setFontSize(14);
-  doc.text("Description:", 40, 185);
-  doc.setFontSize(12);
-  doc.text(doc.splitTextToSize(data.description, 500), 40, 200);
+  doc.text("Maintenance Request", 105, 28, { align: "center" });
 
-  doc.setFontSize(14);
-  doc.text("Supplies / Parts Needed:", 40, 320);
-  doc.setFontSize(12);
-  doc.text(doc.splitTextToSize(data.supplies || "N/A", 500), 40, 335);
+  doc.setDrawColor(0, 51, 102);
+  doc.setLineWidth(0.8);
+  doc.line(20, 32, 190, 32); // underline
 
-  doc.setFontSize(12);
-  doc.text("----- Maintenance Use Only -----", 40, 400);
-  doc.text("Materials Cost: ____________", 40, 420);
-  doc.text("Mileage: ____________", 40, 440);
-  doc.text("Completed Date: ____________", 40, 460);
-  doc.text("Comments:", 40, 480);
+  // ---------------- TICKET & DATE ----------------
+  doc.setFontSize(11);
+  doc.setTextColor(0);
+  doc.text(`Ticket #: ${data.ticket}`, 20, 42);
+  doc.text(`Submitted: ${data.submittedDate}`, 140, 42);
 
-  return doc.output("datauristring").split(",")[1];
+  // ---------------- REQUESTER INFO ----------------
+  doc.setFontSize(12);
+  doc.text("Requester Information:", 20, 52);
+  doc.setFontSize(11);
+  doc.text(`Name: ${data.requester}`, 25, 60);
+  doc.text(`Email: ${data.email}`, 25, 66);
+  doc.text(`House / Dept: ${data.house}`, 25, 72);
+  doc.text(`Priority: ${data.priority}`, 25, 78);
+  doc.text(`Expected Completion: ${data.expectedDate}`, 25, 84);
+
+  // ---------------- DESCRIPTION ----------------
+  doc.setFontSize(12);
+  doc.text("Description of Issue:", 20, 96);
+  doc.setFontSize(11);
+  const descLines = doc.splitTextToSize(data.description, 170);
+  doc.text(descLines, 20, 104);
+
+  // ---------------- SUPPLIES ----------------
+  doc.setFontSize(12);
+  doc.text("Supplies / Parts Needed:", 20, 140);
+  doc.setFontSize(11);
+  const suppliesLines = doc.splitTextToSize(data.supplies || "N/A", 170);
+  doc.text(suppliesLines, 20, 148);
+
+  // ---------------- MAINTENANCE USE ONLY ----------------
+  doc.setFontSize(12);
+  doc.setTextColor(0, 51, 102);
+  doc.text("----- Maintenance Use Only -----", 20, 180);
+  doc.setTextColor(0);
+  doc.setFontSize(11);
+  doc.text("Materials Cost: ____________________", 20, 190);
+  doc.text("Mileage: ____________________", 20, 200);
+  doc.text("Completed Date: ____________________", 20, 210);
+  doc.text("Comments:", 20, 220);
+  doc.setLineWidth(0.3);
+  doc.line(20, 225, 190, 225); // line for comments
+  doc.line(20, 230, 190, 230);
+  doc.line(20, 235, 190, 235);
+
+  // ---------------- OUTPUT ----------------
+  return doc.output("datauristring").split(",")[1]; // base64 string
 }
+
 
 // ---------------- MAIN SUBMIT ----------------
 function submitMaintenance() {
