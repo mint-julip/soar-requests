@@ -1,4 +1,9 @@
 // ---------------- SUBMIT SERVICE REQUEST ----------------
+// ---------------- HELPERS ----------------
+function generateTicket() {
+  return "SOAR-" + Date.now();
+}
+
 function submitService() {
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
