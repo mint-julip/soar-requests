@@ -1,7 +1,10 @@
 // ---------------- CONFIG ----------------
-emailjs.init("sLNm5JCzwihAuVon0"); // EmailJS public key
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
-const HR_EMAILS = ["soarhr@soartn.org"]; // Add others if needed
+emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";;
+
+const HR_EMAILS = [
+  "soarhr@soartn.org"
+];
 
 // ---------------- HELPERS ----------------
 function generateTicket() {
@@ -10,46 +13,42 @@ function generateTicket() {
 
 function launchConfetti() {
   if (typeof confetti === "function") {
-    confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+    confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
   }
 }
 
-// Polished PDF
 function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const doc = new jsPDF({ unit: "pt" });
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(16);
-  doc.text("SOAR TN - Maintenance Request", 20, 20);
+  doc.setFontSize(18);
+  doc.text("SOAR TN - Maintenance Request", 40, 40);
 
   doc.setFontSize(12);
-  doc.setFont("helvetica", "normal");
-  doc.text(`Ticket #: ${data.ticket}`, 20, 30);
-  doc.text(`Date Submitted: ${data.submittedDate}`, 20, 38);
-  doc.text(`Requested By: ${data.requester}`, 20, 46);
-  doc.text(`Email: ${data.email}`, 20, 54);
-  doc.text(`House / Dept: ${data.house}`, 20, 62);
-  doc.text(`Priority: ${data.priority}`, 20, 70);
-  doc.text(`Expected Completion: ${data.expectedDate || "N/A"}`, 20, 78);
+  doc.text(`Ticket #: ${data.ticket}`, 40, 70);
+  doc.text(`Date Submitted: ${data.submittedDate}`, 40, 85);
+  doc.text(`Requested By: ${data.requester}`, 40, 100);
+  doc.text(`Email: ${data.email}`, 40, 115);
+  doc.text(`House / Dept: ${data.house}`, 40, 130);
+  doc.text(`Priority: ${data.priority}`, 40, 145);
+  doc.text(`Expected Completion: ${data.expectedDate}`, 40, 160);
 
-  doc.setFont("helvetica", "bold");
-  doc.text("Description:", 20, 88);
-  doc.setFont("helvetica", "normal");
-  doc.text(doc.splitTextToSize(data.description, 170), 20, 96);
+  doc.setFontSize(14);
+  doc.text("Description:", 40, 185);
+  doc.setFontSize(12);
+  doc.text(doc.splitTextToSize(data.description, 500), 40, 200);
 
-  doc.setFont("helvetica", "bold");
-  doc.text("Supplies / Parts Needed:", 20, 140);
-  doc.setFont("helvetica", "normal");
-  doc.text(doc.splitTextToSize(data.supplies || "N/A", 170), 20, 148);
+  doc.setFontSize(14);
+  doc.text("Supplies / Parts Needed:", 40, 320);
+  doc.setFontSize(12);
+  doc.text(doc.splitTextToSize(data.supplies || "N/A", 500), 40, 335);
 
-  doc.setFont("helvetica", "bold");
-  doc.text("----- Maintenance Use Only -----", 20, 180);
-  doc.setFont("helvetica", "normal");
-  doc.text("Materials Cost: ____________", 20, 190);
-  doc.text("Mileage: ____________", 20, 200);
-  doc.text("Completed Date: ____________", 20, 210);
-  doc.text("Comments:", 20, 220);
+  doc.setFontSize(12);
+  doc.text("----- Maintenance Use Only -----", 40, 400);
+  doc.text("Materials Cost: ____________", 40, 420);
+  doc.text("Mileage: ____________", 40, 440);
+  doc.text("Completed Date: ____________", 40, 460);
+  doc.text("Comments:", 40, 480);
 
   return doc.output("datauristring").split(",")[1];
 }
@@ -77,6 +76,7 @@ function submitMaintenance() {
   }
 
   const payload = {
+    type: "Maintenance",
     ticket,
     requester,
     email,
@@ -85,8 +85,7 @@ function submitMaintenance() {
     expectedDate,
     description,
     supplies,
-    submittedDate,
-    type: "Maintenance"
+    submittedDate
   };
 
   payload.pdfBase64 = generatePDFBase64(payload);
@@ -101,7 +100,6 @@ function submitMaintenance() {
       .catch(err => console.error("HR Email Error:", err));
   });
 
-  // Auto-reply
   emailjs.send("service_lk56r2m", "template_foh2u7z", {
     requester_name: requester,
     requester_email: email,
@@ -112,7 +110,7 @@ function submitMaintenance() {
   }).then(() => console.log("Auto-reply sent to requester"))
     .catch(err => console.error("Auto-reply Error:", err));
 
-  // ---------------- LOG TO SHEET ----------------
+  // ---------------- LOG TO GOOGLE SHEET ----------------
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
