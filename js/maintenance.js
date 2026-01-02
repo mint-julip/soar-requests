@@ -1,10 +1,10 @@
 // ---------------- CONFIG ----------------
 emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";;
+// const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";;
 
-const HR_EMAILS = [
-  "soarhr@soartn.org"
-];
+// const HR_EMAILS = [
+//   "soarhr@soartn.org"
+// ];
 
 // ---------------- HELPERS ----------------
 function generateTicket() {
