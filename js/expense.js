@@ -37,7 +37,7 @@ function submitExpense() {
     .catch(err => console.error("Google Sheet logging error:", err));
 
   // Send Expense Email
-  emailjs.send("service_lk56r2m", "template_expense_request", {
+  emailjs.send("service_lk56r2m", "template_v09ilue", {
     ticket,
     requester,
     requester_email: email,
