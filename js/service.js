@@ -1,28 +1,35 @@
-// ============================
-// Ticket Generator
-// ============================
+// ---------------- CONFIG ----------------
+emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+// Department → email mapping
+const DEPT_EMAILS = {
+  Medical: "soarmedicaldepartment@soartn.org",
+  Program: "programmanagers@soartn.org",
+  Finance: "finance@soartn.org",
+  Compliance: "soarhr@soartn.org",
+  Payroll: "soarhr@soartn.org",
+  IT: "soarhr@soartn.org",
+  Recruiting: "soarhr@soartn.org",
+  HR: "soarhr@soartn.org",
+  Other: "soarhr@soartn.org"
+};
+
+// ---------------- HELPERS ----------------
 function generateTicket() {
   return "SOAR-" + Date.now();
 }
 
-const ticket = generateTicket();
-
-// ============================
-// Confetti
-// ============================
 function launchConfetti() {
-  confetti({
-    particleCount: 120,
-    spread: 80,
-    origin: { y: 0.6 }
-  });
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+  }
 }
 
-// ============================
-// Submit Service Request
-// ============================
+// ---------------- MAIN SUBMIT ----------------
 function submitService() {
-  const ticket = "SOAR-" + Date.now();
+  const ticket = generateTicket();
+  const submittedDate = new Date().toLocaleString();
 
   const name = document.getElementById("srName").value.trim();
   const email = document.getElementById("srEmail").value.trim();
@@ -34,56 +41,50 @@ function submitService() {
     return;
   }
 
-  // ✅ Department → Email map
-  const deptEmails = {
-    Medical: "soarmedicaldepartment@soartn.org",
-    Program: "programmanagers@soartn.org",
-    Finance: "finance@soartn.org",
-    Compliance: "soarhr@soartn.org",
-    Payroll: "soarhr@soartn.org",
-    IT: "soarhr@soartn.org",
-    Recruiting: "soarhr@soartn.org",
-    HR: "soarhr@soartn.org",
-    Other: "soarhr@soartn.org"
-  };
-  fetch("https://script.google.com/macros/library/d/1ttOv8ZNs2OYaDHy4H3t1bbsy0FpxaYHNZ7fFrUJO47wFDBuaFRKrjifJ/1", {
-  method: "POST",
-  body: JSON.stringify({
-    ticket: ticket,
+  const toEmail = DEPT_EMAILS[dept] || "soarhr@soartn.org";
+
+  const payload = {
+    ticket,
     type: "Service",
-    name: name,
-    email: email,
+    requester: name,
+    email,
     department: dept,
     description: desc,
+    submittedDate,
     status: "Submitted"
-  })
-});
+  };
 
+  // ---------------- LOG TO GOOGLE SHEET ----------------
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(payload)
+  }).catch(err => console.error("Google Sheet logging error:", err));
 
-  // ✅ DEFINE toEmail BEFORE using it
-  const toEmail = deptEmails[dept] || "soarhr@soartn.org";
-
-  // ✅ SEND EMAIL
+  // ---------------- SEND EMAIL ----------------
   emailjs.send("service_lk56r2m", "template_au6bbjp", {
-    ticket: ticket,
+    ticket,
     requester: name,
     requester_email: email,
     department: dept,
     description: desc,
-    submitted_date: new Date().toLocaleString(),
+    submitted_date: submittedDate,
     to_email: toEmail,
     cc_email: "soarhr@soartn.org"
   })
   .then(() => {
-    confetti();
-    alert("Service Request submitted!\nTicket #: " + ticket);
-
-    // Redirect back to landing page
+    launchConfetti();
+    alert(`Service Request submitted!\nTicket #: ${ticket}`);
     window.location.href = "index.html";
   })
   .catch(err => {
     console.error("EmailJS error:", err);
     alert("Failed to send request. Check console.");
   });
-  
 }
+
+// ---------------- ATTACH EVENT ----------------
+document.addEventListener("DOMContentLoaded", () => {
+  const submitBtn = document.querySelector("#requestForm button");
+  if (submitBtn) submitBtn.addEventListener("click", submitService);
+});
