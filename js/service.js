@@ -4,6 +4,23 @@ function generateTicket() {
   return "SOAR-" + Date.now();
 }
 
+// ---------------- CONFIG ----------------
+emailjs.init("sLNm5JCzwihAuVon0");
+
+// Department → email mapping
+const DEPT_EMAILS = {
+  // Medical: "soarmedicaldepartment@soartn.org",
+  // Program: "programmanagers@soartn.org",
+  // Finance: "finance@soartn.org",
+  Compliance: "soarhr@soartn.org",
+  Payroll: "soarhr@soartn.org",
+  IT: "soarhr@soartn.org",
+  Recruiting: "soarhr@soartn.org",
+  HR: "soarhr@soartn.org",
+  Other: "soarhr@soartn.org"
+};
+
+
 function submitService() {
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
