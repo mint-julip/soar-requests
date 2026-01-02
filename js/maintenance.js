@@ -1,54 +1,51 @@
 // ---------------- CONFIG ----------------
-emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
+emailjs.init("sLNm5JCzwihAuVon0"); // EmailJS public key
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-a4gm5kpU1ZCBgQJyxkT3Pw5PeIYb63N0ZbnILJZVlCLIz1SxtxsjDV-aKzwGn5oyLA/exec";
-
-const HR_EMAILS = [
-  "soarhr@soartn.org"
-  // "cherylhintz@soartn.org",
-  // "alishasanders@soartn.org",
-  // "kobypresley@soartn.org"
-];
+const HR_EMAILS = ["soarhr@soartn.org"]; // Add others if needed
 
 // ---------------- HELPERS ----------------
 function generateTicket() {
   return "SOAR-" + Date.now();
 }
 
-// function launchConfetti() {
-//   confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-// }
-
 function launchConfetti() {
   if (typeof confetti === "function") {
     confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-  } else {
-    console.warn("Confetti library not loaded.");
   }
 }
 
+// Polished PDF
 function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
   doc.text("SOAR TN - Maintenance Request", 20, 20);
 
-  doc.setFontSize(11);
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
   doc.text(`Ticket #: ${data.ticket}`, 20, 30);
   doc.text(`Date Submitted: ${data.submittedDate}`, 20, 38);
-  doc.text(`Requested By: ${data.requester}`, 20, 48);
-  doc.text(`Email: ${data.email}`, 20, 56);
-  doc.text(`House / Dept: ${data.house}`, 20, 64);
-  doc.text(`Priority: ${data.priority}`, 20, 72);
-  doc.text(`Expected Completion: ${data.expectedDate}`, 20, 80);
+  doc.text(`Requested By: ${data.requester}`, 20, 46);
+  doc.text(`Email: ${data.email}`, 20, 54);
+  doc.text(`House / Dept: ${data.house}`, 20, 62);
+  doc.text(`Priority: ${data.priority}`, 20, 70);
+  doc.text(`Expected Completion: ${data.expectedDate || "N/A"}`, 20, 78);
 
-  doc.text("Description:", 20, 92);
-  doc.text(doc.splitTextToSize(data.description, 170), 20, 100);
+  doc.setFont("helvetica", "bold");
+  doc.text("Description:", 20, 88);
+  doc.setFont("helvetica", "normal");
+  doc.text(doc.splitTextToSize(data.description, 170), 20, 96);
 
+  doc.setFont("helvetica", "bold");
   doc.text("Supplies / Parts Needed:", 20, 140);
+  doc.setFont("helvetica", "normal");
   doc.text(doc.splitTextToSize(data.supplies || "N/A", 170), 20, 148);
 
+  doc.setFont("helvetica", "bold");
   doc.text("----- Maintenance Use Only -----", 20, 180);
+  doc.setFont("helvetica", "normal");
   doc.text("Materials Cost: ____________", 20, 190);
   doc.text("Mileage: ____________", 20, 200);
   doc.text("Completed Date: ____________", 20, 210);
@@ -73,7 +70,6 @@ function submitMaintenance() {
   const description = document.getElementById("description").value.trim();
   const supplies = document.getElementById("supplies").value.trim();
 
-  // Validate required fields
   if (!requester || !email || !house || !priority || !description) {
     alert("Please complete all required fields.");
     btn.disabled = false;
@@ -89,13 +85,13 @@ function submitMaintenance() {
     expectedDate,
     description,
     supplies,
-    submittedDate
+    submittedDate,
+    type: "Maintenance"
   };
 
   payload.pdfBase64 = generatePDFBase64(payload);
 
   // ---------------- SEND EMAILS ----------------
-  // HR email with PDF attachment
   HR_EMAILS.forEach(hrEmail => {
     emailjs.send("service_lk56r2m", "template_vnfmovs", {
       ...payload,
@@ -105,18 +101,18 @@ function submitMaintenance() {
       .catch(err => console.error("HR Email Error:", err));
   });
 
-  // Auto-reply to requester
+  // Auto-reply
   emailjs.send("service_lk56r2m", "template_foh2u7z", {
     requester_name: requester,
     requester_email: email,
-    ticket: ticket,
-    house: house,
-    description: description,
-    priority: priority
+    ticket,
+    house,
+    description,
+    priority
   }).then(() => console.log("Auto-reply sent to requester"))
     .catch(err => console.error("Auto-reply Error:", err));
 
-  // ---------------- LOG TO GOOGLE SHEET ----------------
+  // ---------------- LOG TO SHEET ----------------
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
@@ -128,7 +124,6 @@ function submitMaintenance() {
   document.getElementById("ticketDisplay").textContent = ticket;
   document.getElementById("successBox").style.display = "block";
 
-  // Reset button after 5 seconds
   setTimeout(() => {
     btn.disabled = false;
     window.location.href = "index.html";
@@ -138,7 +133,5 @@ function submitMaintenance() {
 // ---------------- ATTACH EVENT ----------------
 document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("submitBtn");
-  if (submitBtn) {
-    submitBtn.addEventListener("click", submitMaintenance);
-  }
+  if (submitBtn) submitBtn.addEventListener("click", submitMaintenance);
 });
