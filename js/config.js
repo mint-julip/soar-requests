@@ -5,10 +5,12 @@ const HR_EMAILS = [
 ];
 
 const EXPENSE_CC = {
-  default: "marialaulusa@soartn.org",
-  "100": "marialaulusa@soartn.org",
-  "500": "marialaulusa@soartn.org, cherylhintz@soartn.org",
-  "1000": "marialaulusa@soartn.org, cherylhintz@soartn.org, nikkigoodwin@soartn.org"
+  default: "sandysmith@soartn.org",
+  "100": "soarhr@soartn.org"
+  // default: "marialaulusa@soartn.org",
+  // "100": "marialaulusa@soartn.org",
+  // "500": "marialaulusa@soartn.org, cherylhintz@soartn.org",
+  // "1000": "marialaulusa@soartn.org, cherylhintz@soartn.org, nikkigoodwin@soartn.org"
 };
 
 // Other shared constants
