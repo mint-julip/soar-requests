@@ -1,181 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SOAR TN | OT Approvals</title>
-
-  <!-- EmailJS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>
-    emailjs.init("sLNm5JCzwihAuVon0"); // Replace with your EmailJS public key
-  </script>
-
-  <!-- Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #eef3ff;
-      padding: 20px;
-    }
-
-    h2 {
-      text-align: center;
-      color: #003366;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-      font-size: 14px;
-    }
-
-    th {
-      background-color: #0078d4;
-      color: white;
-    }
-
-    button {
-      padding: 6px 12px;
-      border-radius: 5px;
-      border: none;
-      cursor: pointer;
-      color: #fff;
-      font-size: 13px;
-    }
-
-    .approve-btn {
-      background-color: #28a745;
-    }
-
-    .deny-btn {
-      background-color: #dc3545;
-    }
-
-    .approve-btn:hover { background-color: #218838; }
-    .deny-btn:hover { background-color: #c82333; }
-
-    .success-msg {
-      display: none;
-      padding: 15px;
-      margin-top: 15px;
-      background: #e6f2ff;
-      border-radius: 8px;
-      text-align: center;
-      border: 1px solid #0078d4;
-      color: #003366;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>OT Approval</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init("sLNm5JCzwihAuVon0");
+</script>
+<style>
+body{ font-family:Arial,sans-serif; background:#eef3ff; display:flex; justify-content:center; align-items:center; min-height:100vh;}
+.container{ background:#fff; padding:25px; border-radius:12px; width:400px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+button{ width:48%; margin:1%; padding:10px; font-size:16px; border:none; border-radius:5px; cursor:pointer;}
+.approve{ background:#28a745; color:#fff;}
+.deny{ background:#dc3545; color:#fff;}
+</style>
 </head>
 <body>
+<div class="container">
+<h2>OT Approval</h2>
+<p>Ticket #: <span id="ticket"></span></p>
+<p>Employee: <span id="employee"></span></p>
+<p>Requester: <span id="requester"></span></p>
 
-<h2>Overtime Request Approvals</h2>
-
-<div class="success-msg" id="successMsg">
-  Action completed successfully!
+<button class="approve" id="approveBtn">Approve</button>
+<button class="deny" id="denyBtn">Deny</button>
 </div>
 
-<table id="otTable">
-  <thead>
-    <tr>
-      <th>Ticket #</th>
-      <th>Requester</th>
-      <th>Email</th>
-      <th>Employee</th>
-      <th>OT Dates</th>
-      <th>OT Shifts</th>
-      <th>Hours</th>
-      <th>Reason</th>
-      <th>Call List Exhausted?</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- OT requests dynamically loaded here -->
-    <!-- Example row format:
-    <tr>
-      <td>SOAR-OT-12345</td>
-      <td>Jane Doe</td>
-      <td>jane@example.com</td>
-      <td>John Smith</td>
-      <td>01/03/2026</td>
-      <td>Night</td>
-      <td>4</td>
-      <td>Staff shortage</td>
-      <td>Yes</td>
-      <td>
-        <button class="approve-ot-btn" data-ticket="SOAR-OT-12345">Approve</button>
-        <button class="deny-ot-btn" data-ticket="SOAR-OT-12345">Deny</button>
-      </td>
-    </tr>
-    -->
-  </tbody>
-</table>
-
-<script src="js/ot-approval.js"></script>
-
-<script>
-  // ===============================
-  // Example: Load OT requests dynamically (replace with fetch from Apps Script)
-  // ===============================
-  const otRequests = [
-    {
-      ticket: "SOAR-OT-10001",
-      requester: "Jane Doe",
-      email: "jane@example.com",
-      employee: "John Smith",
-      otDates: "01/03/2026",
-      otShifts: "Night",
-      hours: 4,
-      reason: "Staff shortage",
-      callExhausted: "Yes"
-    },
-    {
-      ticket: "SOAR-OT-10002",
-      requester: "Mark Lee",
-      email: "mark@example.com",
-      employee: "Lisa Green",
-      otDates: "01/04/2026",
-      otShifts: "Day",
-      hours: 3,
-      reason: "High census",
-      callExhausted: "No"
-    }
-  ];
-
-  const tbody = document.querySelector("#otTable tbody");
-  otRequests.forEach(req => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${req.ticket}</td>
-      <td>${req.requester}</td>
-      <td>${req.email}</td>
-      <td>${req.employee}</td>
-      <td>${req.otDates}</td>
-      <td>${req.otShifts}</td>
-      <td>${req.hours}</td>
-      <td>${req.reason}</td>
-      <td>${req.callExhausted}</td>
-      <td>
-        <button class="approve-ot-btn" data-ticket="${req.ticket}">Approve</button>
-        <button class="deny-ot-btn" data-ticket="${req.ticket}">Deny</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-</script>
-
+<script src="./js/ot-approval.js"></script>
 </body>
 </html>
