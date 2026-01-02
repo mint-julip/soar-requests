@@ -1,32 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Expense Request</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/emailjs@4/dist/email.min.js"></script>
+<meta charset="UTF-8">
+<title>SOAR TN | Expense Request</title>
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
+</script>
+
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #eef3ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    width: 500px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  }
+  input, select, textarea, button {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  button {
+    background: #0078D4;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  button:hover { background: #005A9E; }
+  .success {
+    display: none;
+    background: #e6f0fa;
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>
 </head>
+
 <body>
+<div class="container">
+  <h2>Expense Reimbursement / Pre-Approval</h2>
 
-<div class="frame">
-  <h2>Expense Request</h2>
+  <label>Requester Name *</label>
+  <input id="requester" type="text">
 
-  <input id="name" placeholder="Your Name">
-  <input id="email" placeholder="Your Email">
-  <input id="amount" placeholder="Amount Requested">
-  <textarea id="reason" placeholder="Expense Reason"></textarea>
+  <label>Email *</label>
+  <input id="email" type="email">
 
-  <button onclick="submitExpense()">Submit</button>
+  <label>Type of Request *</label>
+  <select id="requestType">
+    <option value="">Select</option>
+    <option value="Pre-Approval">Pre-Approval</option>
+    <option value="Reimbursement">Reimbursement</option>
+  </select>
+
+  <label>Department / House *</label>
+  <select id="department">
+    <option value="">Select</option>
+    <option>Administrative</option>
+    <option>Medical</option>
+    <option>Finance</option>
+    <option>Case Management</option>
+    <option>Transitions</option>
+    <option>Bunbury-Emma</option>
+    <option>Countryside</option>
+    <option>Cusick</option>
+    <option>Dell</option>
+    <option>England</option>
+    <option>Gladstone</option>
+    <option>Glascock</option>
+    <option>Hunt</option>
+    <option>Jett</option>
+    <option>Lee Delia</option>
+    <option>May House</option>
+    <option>Masters</option>
+    <option>Merritt</option>
+    <option>Raulston</option>
+    <option>Ridge</option>
+    <option>Odell-Westside</option>
+    <option>Wright</option>
+    <option>Alcoa-Wright</option>
+    <option>Family Model Services</option>
+  </select>
+
+  <label>Expense Description *</label>
+  <textarea id="description" rows="3"></textarea>
+
+  <label>Amount Requested *</label>
+  <input id="amount" type="number" min="0.01" step="0.01">
+
+  <label>Date of Expense / Anticipated Date *</label>
+  <input id="expenseDate" type="date">
+
+  <label>Upload Receipts / Documents</label>
+  <input id="attachments" type="file" multiple>
+
+  <button id="submitBtn">Submit Expense Request</button>
+
+  <div class="success" id="successBox">
+    <strong>Expense Request Submitted!</strong><br>
+    Ticket #: <span id="ticketDisplay"></span>
+  </div>
 </div>
 
-
-  <script src="js/service.js"></script>
-<script src="js/ot.js"></script>
-<script src="js/maintenance.js"></script>
-<script src="js/expense.js"></script>
-
-
-<script src="js/emailjs-init.js"></script>
-<!-- <script src="js/expense.js"></script> -->
+<script src="./js/expense.js"></script>
 </body>
 </html>
-
