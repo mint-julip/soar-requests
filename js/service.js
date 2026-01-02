@@ -76,18 +76,25 @@ function submitService() {
     submitted_date: submittedDate,
     to_email: toEmail,
     cc_email: "soarhr@soartn.org"
-  })
-  .then(() => {
-    launchConfetti();
-    alert(`Service Request submitted!\nTicket #: ${ticket}`);
-    window.location.href = "index.html";
-  })
-  .catch(err => {
-    console.error("EmailJS error:", err);
-    alert("Failed to submit request.");
+  // })
+  // .then(() => {
+  //   launchConfetti();
+  //   alert(`Service Request submitted!\nTicket #: ${ticket}`);
+  //   window.location.href = "index.html";
+  // })
+  // .catch(err => {
+  //   console.error("EmailJS error:", err);
+  //   alert("Failed to submit request.");
   });
 }
 
+function launchConfetti() {
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+  } else {
+    console.warn("Confetti not loaded");
+  }
+}
 
 
 function submitService() {
