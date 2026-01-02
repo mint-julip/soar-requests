@@ -39,7 +39,7 @@ function submitOT() {
     .catch(err => console.error("Google Sheet logging error:", err));
 
   // Send OT Request Email
-  emailjs.send("service_lk56r2m", "template_ot_request", {
+  emailjs.send("service_lk56r2m", "template_78v4e8s", {
     ticket,
     requester,
     requester_email: email,
