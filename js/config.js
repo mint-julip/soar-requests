@@ -10,3 +10,11 @@ const GOOGLE_SCRIPT_URL =
 const EMAILJS_PUBLIC_KEY = "sLNm5JCzwihAuVon0";
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
+// config.js
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof emailjs !== "undefined") {
+    emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
+  } else {
+    console.warn("EmailJS not loaded; skipping initialization");
+  }
+});
