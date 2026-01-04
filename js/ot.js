@@ -6,7 +6,7 @@ function generateTicket() {
 
 function launchConfetti() {
   if (typeof confetti === "function") {
-    confetti({ particleCount: 150, spread: 90 });
+    confetti({ particleCount: 140, spread: 90 });
   }
 }
 
@@ -17,31 +17,44 @@ function submitOT() {
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
 
-  const employee = document.getElementById("employee").value.trim();
-  const email = document.getElementById("email").value.trim();
+  // Requester
+  const requesterName = document.getElementById("requesterName").value.trim();
+  const requesterEmail = document.getElementById("requesterEmail").value.trim();
+
+  // Employee OT
+  const employeeName = document.getElementById("employeeName").value.trim();
   const shifts = document.getElementById("shifts").value.trim();
   const callExhausted = document.getElementById("callExhausted").value;
   const otDates = document.getElementById("otDates").value.trim();
   const hours = document.getElementById("hours").value.trim();
   const reason = document.getElementById("reason").value.trim();
 
-  if (!employee || !email || !shifts || !callExhausted || !otDates || !hours || !reason) {
+  if (
+    !requesterName || !requesterEmail ||
+    !employeeName || !shifts || !callExhausted ||
+    !otDates || !hours || !reason
+  ) {
     alert("Please complete all required fields.");
     btn.disabled = false;
     return;
   }
 
   const payload = {
-    type: "OT",
+    type: "Overtime",
     ticket,
-    employee,
-    email,
+    submittedDate,
+
+    requesterName,
+    requesterEmail,
+
+    employeeName,
     shifts,
     callExhausted,
     otDates,
     hours,
     reason,
-    submittedDate
+
+    status: "Submitted"
   };
 
   // Send to HR
@@ -52,14 +65,15 @@ function submitOT() {
     });
   });
 
-  // Auto-reply
+  // Auto-reply to requester
   emailjs.send("service_lk56r2m", "template_ot_auto", {
-    employee,
-    employee_email: email,
+    requester_name: requesterName,
+    requester_email: requesterEmail,
+    employee: employeeName,
     ticket
   });
 
-  // Google Sheets
+  // Log to Google Sheets
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
