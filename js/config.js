@@ -9,7 +9,6 @@ const GOOGLE_SCRIPT_URL =
 // EmailJS public key
 const EMAILJS_PUBLIC_KEY = "sLNm5JCzwihAuVon0";
 
-// const HR_EMAILS = ["soarht@soartn.org"]
 
 // Initialize EmailJS ONLY if it exists
 document.addEventListener("DOMContentLoaded", () => {
