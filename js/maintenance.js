@@ -1,3 +1,14 @@
+// Global 
+// ---------------- CONFIG ----------------
+const HR_EMAILS = [
+  "soarhr@soartn.org"
+  // "cherylhintz@soartn.org",
+  // "alishasanders@soartn.org"
+];
+
+
+
+
 // ---------------- PDF GENERATION ----------------
 // ---------------- HELPERS ----------------
 function generateTicket() {
