@@ -47,11 +47,38 @@ input, select, textarea, button { width:100%; margin-bottom:12px; padding:10px; 
 button { background:#0078d4; color:#fff; border:none; cursor:pointer; }
 button:hover { background:#005A9E; }
 .success { display:none; background:#e6f0fa; padding:12px; border-radius:8px; margin-top:10px; text-align:center; }
+  
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #003366;
+  background: #ffffff;
+  border: 1px solid #cfd9e6;
+  border-radius: 20px;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #003366;
+  color: #ffffff;
+  border-color: #003366;
+}
+
 </style>
 </head>
-  
+
 <body>
-  <a href="index.html" class="back-link">← Back to Request Selection</a>
+<header class="page-header">
+  <a href="index.html" class="back-btn" aria-label="Back to landing page">
+    ← Back
+  </a>
+</header>
 
   <header class="soar-header">
  <div style="text-align:center; margin-bottom:20px;">
