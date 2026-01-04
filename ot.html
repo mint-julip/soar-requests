@@ -48,6 +48,13 @@ button { background:#0078d4; color:#fff; border:none; cursor:pointer; }
 button:hover { background:#005A9E; }
 .success { display:none; background:#e6f0fa; padding:12px; border-radius:8px; margin-top:10px; text-align:center; }
   
+  .page-header {
+  position: fixed;       /* FIXED keeps it visible at top-right */
+  top: 20px;
+  right: 20px;
+  z-index: 9999;         /* Above all content */
+}
+
 .back-btn {
   display: inline-flex;
   align-items: center;
@@ -68,6 +75,14 @@ button:hover { background:#005A9E; }
   background: #003366;
   color: #ffffff;
   border-color: #003366;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .back-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
 }
 
 </style>
