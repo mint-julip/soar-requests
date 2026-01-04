@@ -80,10 +80,12 @@
     margin-top: 10px;
     text-align: center;
   }
+  
   .page-header {
-  position: absolute;
+  position: fixed;       /* FIXED keeps it visible at top-right */
   top: 20px;
   right: 20px;
+  z-index: 9999;         /* Above all content */
 }
 
 .back-btn {
@@ -108,12 +110,21 @@
   border-color: #003366;
 }
 
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .back-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+
 </style>
 </head>
 
 <body>
 <header class="page-header">
-  <a href="index.html" class="back-btn" aria-label="Back to landing page">
+  <a href="index.html" class="back-btn" aria-label="Back Landing Page">
     ← Back
   </a>
 </header>
