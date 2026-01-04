@@ -1,25 +1,30 @@
-// Global 
-// ---------------- CONFIG ----------------
-const HR_EMAILS = [
-  "soarhr@soartn.org"
-  // "cherylhintz@soartn.org",
-  // "alishasanders@soartn.org"
-];
+// ============================
+// CONFIG
+// ============================
+emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+const HR_EMAILS = ["soarhr@soartn.org"]; // HR emails for notifications
 
-
-
-
-// ---------------- PDF GENERATION ----------------
-// ---------------- HELPERS ----------------
+// ============================
+// HELPERS
+// ============================
 function generateTicket() {
   return "SOAR-" + Date.now();
 }
 
-function generateMaintenancePDF(data) {
+function launchConfetti() {
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+  } else {
+    console.warn("Confetti not loaded");
+  }
+}
+
+function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  // Header
+  // ---------------- HEADER ----------------
   doc.setFontSize(18);
   doc.setTextColor(0, 51, 102);
   doc.text("SOAR TN", 105, 20, { align: "center" });
@@ -29,13 +34,13 @@ function generateMaintenancePDF(data) {
   doc.setLineWidth(0.8);
   doc.line(20, 32, 190, 32);
 
-  // Ticket & Date
+  // ---------------- TICKET & DATE ----------------
   doc.setFontSize(11);
   doc.setTextColor(0);
   doc.text(`Ticket #: ${data.ticket}`, 20, 42);
   doc.text(`Submitted: ${data.submittedDate}`, 140, 42);
 
-  // Requester Info
+  // ---------------- REQUESTER INFO ----------------
   doc.setFontSize(12);
   doc.text("Requester Information:", 20, 52);
   doc.setFontSize(11);
@@ -45,21 +50,19 @@ function generateMaintenancePDF(data) {
   doc.text(`Priority: ${data.priority}`, 25, 78);
   doc.text(`Expected Completion: ${data.expectedDate}`, 25, 84);
 
-  // Description
+  // ---------------- DESCRIPTION ----------------
   doc.setFontSize(12);
   doc.text("Description of Issue:", 20, 96);
-  const descLines = doc.splitTextToSize(data.description, 170);
   doc.setFontSize(11);
-  doc.text(descLines, 20, 104);
+  doc.text(doc.splitTextToSize(data.description, 170), 20, 104);
 
-  // Supplies
+  // ---------------- SUPPLIES ----------------
   doc.setFontSize(12);
   doc.text("Supplies / Parts Needed:", 20, 140);
-  const suppliesLines = doc.splitTextToSize(data.supplies || "N/A", 170);
   doc.setFontSize(11);
-  doc.text(suppliesLines, 20, 148);
+  doc.text(doc.splitTextToSize(data.supplies || "N/A", 170), 20, 148);
 
-  // Maintenance Use Only
+  // ---------------- MAINTENANCE USE ONLY ----------------
   doc.setFontSize(12);
   doc.setTextColor(0, 51, 102);
   doc.text("----- Maintenance Use Only -----", 20, 180);
@@ -77,7 +80,9 @@ function generateMaintenancePDF(data) {
   return doc.output("datauristring").split(",")[1];
 }
 
-// ---------------- SUBMIT ----------------
+// ============================
+// SUBMIT MAINTENANCE REQUEST
+// ============================
 function submitMaintenance() {
   const btn = document.getElementById("submitBtn");
   btn.disabled = true;
@@ -112,18 +117,20 @@ function submitMaintenance() {
     submittedDate
   };
 
-  payload.pdfBase64 = generateMaintenancePDF(payload);
+  // Generate PDF
+  payload.pdfBase64 = generatePDFBase64(payload);
 
-  // Send to HR
+  // ---------------- SEND EMAILS ----------------
   HR_EMAILS.forEach(hrEmail => {
     emailjs.send("service_lk56r2m", "template_vnfmovs", {
       ...payload,
       to_email: hrEmail,
       attachment: payload.pdfBase64
-    }).catch(err => console.error("HR Email Error:", err));
+    }).then(() => console.log(`Email sent to ${hrEmail}`))
+      .catch(err => console.error("HR Email Error:", err));
   });
 
-  // Auto-reply
+  // Auto-reply to requester
   emailjs.send("service_lk56r2m", "template_foh2u7z", {
     requester_name: requester,
     requester_email: email,
@@ -131,23 +138,31 @@ function submitMaintenance() {
     house,
     description,
     priority
-  }).catch(err => console.error("Auto-reply Error:", err));
+  }).then(() => console.log("Auto-reply sent to requester"))
+    .catch(err => console.error("Auto-reply Error:", err));
 
-  // Log to Google Sheet
-  fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) })
-    .catch(err => console.error("Google Sheet logging error:", err));
+  // ---------------- LOG TO GOOGLE SHEET ----------------
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(payload)
+  }).catch(err => console.error("Google Sheet logging error:", err));
 
+  // ---------------- UI FEEDBACK ----------------
   launchConfetti();
   document.getElementById("ticketDisplay").textContent = ticket;
   document.getElementById("successBox").style.display = "block";
 
+  // Reset button and redirect
   setTimeout(() => {
     btn.disabled = false;
     window.location.href = "index.html";
   }, 5000);
 }
 
-// Attach event
+// ============================
+// ATTACH EVENT
+// ============================
 document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("submitBtn");
   if (submitBtn) submitBtn.addEventListener("click", submitMaintenance);
