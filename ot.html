@@ -24,142 +24,105 @@ body {
   align-items: center;
 }
 
-/* Back Button */
 .page-header {
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 1000;
 }
 
 .back-btn {
-  display: inline-flex;
-  align-items: center;
   padding: 8px 14px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #003366;
   background: #ffffff;
-  border: 1px solid #cfd9e6;
   border-radius: 20px;
+  border: 1px solid #cfd9e6;
+  color: #003366;
   text-decoration: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.back-btn:hover {
-  background: #003366;
-  color: #ffffff;
-}
-
-/* Card */
 .container {
   background: #ffffff;
   width: 420px;
-  max-width: 92%;
   padding: 28px;
   border-radius: 16px;
   box-shadow: 0 12px 28px rgba(0,0,0,0.15);
 }
 
-/* Header */
 .soar-header {
   text-align: center;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
 .soar-header img {
   max-width: 120px;
-  margin-bottom: 6px;
 }
 
-.soar-header h2 {
-  margin: 4px 0;
-  color: #003366;
-}
-
-/* Inputs */
 input, select, textarea, button {
   width: 100%;
   margin-bottom: 14px;
   padding: 11px;
   border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-textarea {
-  resize: vertical;
-  min-height: 90px;
 }
 
 button {
   background: #0078d4;
   color: #ffffff;
-  border: none;
   font-weight: bold;
+  border: none;
   cursor: pointer;
-}
-
-button:hover {
-  background: #005a9e;
 }
 
 .success {
   display: none;
-  margin-top: 14px;
   background: #e6f0fa;
   padding: 14px;
   border-radius: 8px;
   text-align: center;
-  font-weight: 600;
 }
 </style>
 </head>
 
 <body>
 
-<!-- Back Button -->
 <header class="page-header">
   <a href="index.html" class="back-btn">← Back</a>
 </header>
 
-<!-- OT Request Card -->
 <div class="container">
 
   <div class="soar-header">
-    <img src="logo.png" alt="SOAR TN Logo">
+    <img src="logo.png">
     <h2>SOAR Tennessee</h2>
-    <h2>Overtime Request</h2>
+    <h3>Overtime Request</h3>
   </div>
 
-  <!-- REQUIRED FIELDS (MATCH ot.js EXACTLY) -->
   <input id="employee" placeholder="Employee Name *">
   <input id="email" placeholder="Employee Email *">
 
-  <select id="house">
-    <option value="">House / Department *</option>
-    <option>Administration</option>
-    <option>Residential</option>
-    <option>Day Services</option>
-    <option>Supported Living</option>
+  <input id="shifts" placeholder="Shift(s) Requested *">
+
+  <select id="callExhausted">
+    <option value="">Call List Exhausted? *</option>
+    <option>Yes</option>
+    <option>No</option>
   </select>
 
-  <input id="supervisor" placeholder="Supervisor Name *">
   <input id="otDates" placeholder="OT Date(s) *">
   <input id="hours" type="number" min="0" placeholder="Hours Requested *">
 
-  <textarea id="reason" placeholder="Reason for Overtime *"></textarea>
+  <textarea id="reason" placeholder="Reason for OT *"></textarea>
 
   <button id="submitBtn">Submit OT Request</button>
 
   <div class="success" id="successBox">
-    ✅ Request Submitted<br>
+    Request submitted!<br>
     Ticket #: <span id="ticketDisplay"></span>
   </div>
 
 </div>
 
-<!-- Scripts -->
 <script src="js/config.js"></script>
 <script src="js/ot.js"></script>
 
