@@ -1,9 +1,7 @@
 // ============================
-// CONFIG
+// CONFIG from config.js file
 // ============================
-emailjs.init("sLNm5JCzwihAuVon0"); // Your EmailJS public key
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
-const HR_EMAILS = ["soarhr@soartn.org"]; // HR emails for notifications
+
 
 // ============================
 // HELPERS
