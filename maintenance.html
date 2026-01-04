@@ -114,7 +114,14 @@
       border-radius: 10px;
       text-align: center;
     }
-    .back-btn {
+    .page-header {
+  position: fixed;       /* FIXED keeps it visible at top-right */
+  top: 20px;
+  right: 20px;
+  z-index: 9999;         /* Above all content */
+}
+
+.back-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -134,6 +141,14 @@
   background: #003366;
   color: #ffffff;
   border-color: #003366;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .back-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
 }
 
 </style>
