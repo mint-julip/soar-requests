@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SOAR TN | OT Request</title>
+<title>SOAR TN | Overtime Request</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -14,6 +16,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
+/* ---------- Page ---------- */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -24,31 +27,45 @@ body {
   align-items: center;
 }
 
+/* ---------- Back Button ---------- */
 .page-header {
   position: fixed;
   top: 20px;
   right: 20px;
+  z-index: 1000;
 }
 
 .back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 8px 14px;
   font-size: 0.85rem;
   font-weight: 600;
-  background: #ffffff;
-  border-radius: 20px;
-  border: 1px solid #cfd9e6;
   color: #003366;
+  background: #ffffff;
+  border: 1px solid #cfd9e6;
+  border-radius: 20px;
   text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
+.back-btn:hover {
+  background: #003366;
+  color: #ffffff;
+}
+
+/* ---------- Card ---------- */
 .container {
   background: #ffffff;
   width: 420px;
+  max-width: 92%;
   padding: 28px;
   border-radius: 16px;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 }
 
+/* ---------- Header ---------- */
 .soar-header {
   text-align: center;
   margin-bottom: 20px;
@@ -56,52 +73,90 @@ body {
 
 .soar-header img {
   max-width: 120px;
+  margin-bottom: 8px;
 }
 
+.soar-header h2 {
+  margin: 4px 0;
+  color: #003366;
+}
+
+/* ---------- Section Titles ---------- */
+.section-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #003366;
+  margin: 18px 0 8px;
+  border-bottom: 1px solid #e0e6f0;
+  padding-bottom: 4px;
+}
+
+/* ---------- Inputs ---------- */
 input, select, textarea, button {
   width: 100%;
-  margin-bottom: 14px;
-  padding: 11px;
+  margin-bottom: 12px;
+  padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
 }
 
 button {
   background: #0078d4;
   color: #ffffff;
-  font-weight: bold;
   border: none;
+  font-weight: bold;
   cursor: pointer;
 }
 
+button:hover {
+  background: #005a9e;
+}
+
+/* ---------- Success ---------- */
 .success {
   display: none;
+  margin-top: 14px;
   background: #e6f0fa;
   padding: 14px;
-  border-radius: 8px;
+  border-radius: 10px;
   text-align: center;
+  font-size: 14px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- Back Button -->
 <header class="page-header">
   <a href="index.html" class="back-btn">← Back</a>
 </header>
 
+<!-- OT Request Card -->
 <div class="container">
 
+  <!-- Logo + Title -->
   <div class="soar-header">
-    <img src="logo.png">
+    <img src="logo.png" alt="SOAR TN Logo">
     <h2>SOAR Tennessee</h2>
-    <h3>Overtime Request</h3>
+    <h2>Overtime Request</h2>
   </div>
 
-  <input id="employee" placeholder="Employee Name *">
-  <input id="email" placeholder="Employee Email *">
+  <!-- Requester Section -->
+  <div class="section-title">Requester Information</div>
+  <input id="requesterName" placeholder="Requester Name *">
+  <input id="requesterEmail" placeholder="Requester Email *">
 
-  <input id="shifts" placeholder="Shift(s) Requested *">
+  <!-- Employee OT Section -->
+  <div class="section-title">Employee Working Overtime</div>
+  <input id="employeeName" placeholder="Employee Name *">
+  <input id="shifts" placeholder="Shift(s) *">
 
   <select id="callExhausted">
     <option value="">Call List Exhausted? *</option>
@@ -112,17 +167,19 @@ button {
   <input id="otDates" placeholder="OT Date(s) *">
   <input id="hours" type="number" min="0" placeholder="Hours Requested *">
 
-  <textarea id="reason" placeholder="Reason for OT *"></textarea>
+  <textarea id="reason" placeholder="Reason for OT Request *"></textarea>
 
   <button id="submitBtn">Submit OT Request</button>
 
+  <!-- Success -->
   <div class="success" id="successBox">
-    Request submitted!<br>
+    <strong>Request Submitted!</strong><br>
     Ticket #: <span id="ticketDisplay"></span>
   </div>
 
 </div>
 
+<!-- Scripts -->
 <script src="js/config.js"></script>
 <script src="js/ot.js"></script>
 
