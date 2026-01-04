@@ -3,7 +3,7 @@
 // ============================
 // CONFIG
 // ============================
-emailjs.init("sLNm5JCzwihAuVon0");
+// emailjs.init("sLNm5JCzwihAuVon0");
 
 // MUST be global
 const DEPT_EMAILS = {
