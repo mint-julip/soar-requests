@@ -17,11 +17,8 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #eef3ff;
+  background: linear-gradient(135deg, #eef3ff, #fdfbfb);
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* Back button */
@@ -33,9 +30,7 @@ body {
 }
 
 .back-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 14px;
+  padding: 8px 16px;
   font-size: 0.85rem;
   font-weight: 600;
   color: #003366;
@@ -51,20 +46,27 @@ body {
   color: #ffffff;
 }
 
+/* Center wrapper */
+.wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 80px 15px 40px;
+}
+
 /* Card */
 .container {
   background: #ffffff;
-  width: 400px;
-  max-width: 90%;
-  padding: 25px;
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  width: 100%;
+  max-width: 520px;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
 }
 
-/* Header inside card */
+/* Header */
 .soar-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .soar-header img {
@@ -76,20 +78,35 @@ body {
   color: #003366;
 }
 
+/* Form */
+label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
 input, select, textarea, button {
   width: 100%;
-  margin-bottom: 12px;
-  padding: 10px;
-  border-radius: 6px;
+  margin-bottom: 14px;
+  padding: 12px;
+  border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
 }
 
 button {
   background: #0078d4;
   color: #fff;
   border: none;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
+  padding: 14px;
 }
 
 button:hover {
@@ -98,10 +115,10 @@ button:hover {
 
 .success {
   display: none;
-  margin-top: 12px;
-  background: #e6f0fa;
-  padding: 12px;
-  border-radius: 8px;
+  margin-top: 15px;
+  background: #e6f2ff;
+  padding: 15px;
+  border-radius: 10px;
   text-align: center;
 }
 </style>
@@ -109,44 +126,57 @@ button:hover {
 
 <body>
 
-<!-- Back Button -->
 <header class="page-header">
   <a href="index.html" class="back-btn">← Back</a>
 </header>
 
-<!-- OT Form Card -->
-<div class="container">
+<div class="wrapper">
+  <div class="container">
 
-  <div class="soar-header">
-    <img src="logo.png" alt="SOAR TN Logo">
-    <h2>SOAR Tennessee</h2>
-    <h2>OT Request</h2>
+    <div class="soar-header">
+      <img src="logo.png" alt="SOAR TN Logo">
+      <h2>SOAR Tennessee</h2>
+      <h2>OT Request</h2>
+    </div>
+
+    <label>Requester Name *</label>
+    <input id="requester">
+
+    <label>Your Email *</label>
+    <input id="email">
+
+    <label>Employee Working OT *</label>
+    <input id="employee">
+
+    <label>OT Date(s) *</label>
+    <input id="otDates">
+
+    <label>OT Shift(s) *</label>
+    <input id="otShifts">
+
+    <label>Total Hours *</label>
+    <input id="hours" type="number" min="0">
+
+    <label>Reason for OT *</label>
+    <textarea id="reason"></textarea>
+
+    <label>Has Call List Been Exhausted? *</label>
+    <select id="callExhausted">
+      <option value="">Select</option>
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+
+    <button id="submitBtn">Submit OT Request</button>
+
+    <div class="success" id="successBox">
+      <strong>Request submitted!</strong><br>
+      Ticket #: <span id="ticketDisplay"></span>
+    </div>
+
   </div>
-
-  <input id="requester" placeholder="Requester Name *">
-  <input id="email" placeholder="Your Email *">
-  <input id="employee" placeholder="Employee Working OT *">
-  <input id="otDates" placeholder="OT Date(s) *">
-  <input id="otShifts" placeholder="OT Shift(s) *">
-  <input id="hours" type="number" min="0" placeholder="Hours *">
-  <textarea id="reason" placeholder="Reason for OT *"></textarea>
-
-  <select id="callExhausted">
-    <option value="">Has Call List Been Exhausted? *</option>
-    <option>Yes</option>
-    <option>No</option>
-  </select>
-
-  <button id="submitBtn">Submit OT Request</button>
-
-  <div class="success" id="successBox">
-    <strong>Request submitted!</strong><br>
-    Ticket #: <span id="ticketDisplay"></span>
-  </div>
-
 </div>
 
-<!-- Scripts -->
 <script src="js/config.js"></script>
 <script src="js/ot.js"></script>
 
