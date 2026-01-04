@@ -114,11 +114,37 @@
       border-radius: 10px;
       text-align: center;
     }
-  </style>
+    .back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #003366;
+  background: #ffffff;
+  border: 1px solid #cfd9e6;
+  border-radius: 20px;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #003366;
+  color: #ffffff;
+  border-color: #003366;
+}
+
+</style>
 </head>
 
 <body>
-  <a href="index.html" class="back-link">← Back to Request Selection</a>
+<header class="page-header">
+  <a href="index.html" class="back-btn" aria-label="Back to landing page">
+    ← Back
+  </a>
+</header>
 
 <header class="soar-header">
   <img src="assets/soar-logo.png" alt="SOAR TN Logo" class="soar-logo" />
