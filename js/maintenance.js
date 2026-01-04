@@ -1,11 +1,8 @@
 // ============================
-// CONFIG from config.js file
+// Maintenance Request JS
 // ============================
 
-
-// ============================
-// HELPERS
-// ============================
+// ---------------- HELPERS ----------------
 function generateTicket() {
   return "SOAR-" + Date.now();
 }
@@ -22,23 +19,24 @@ function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  // ---------------- HEADER ----------------
+  // Header
   doc.setFontSize(18);
   doc.setTextColor(0, 51, 102);
   doc.text("SOAR TN", 105, 20, { align: "center" });
   doc.setFontSize(14);
   doc.text("Maintenance Request", 105, 28, { align: "center" });
+
   doc.setDrawColor(0, 51, 102);
   doc.setLineWidth(0.8);
-  doc.line(20, 32, 190, 32);
+  doc.line(20, 32, 190, 32); // underline
 
-  // ---------------- TICKET & DATE ----------------
+  // Ticket & Date
   doc.setFontSize(11);
   doc.setTextColor(0);
   doc.text(`Ticket #: ${data.ticket}`, 20, 42);
   doc.text(`Submitted: ${data.submittedDate}`, 140, 42);
 
-  // ---------------- REQUESTER INFO ----------------
+  // Requester Info
   doc.setFontSize(12);
   doc.text("Requester Information:", 20, 52);
   doc.setFontSize(11);
@@ -48,19 +46,21 @@ function generatePDFBase64(data) {
   doc.text(`Priority: ${data.priority}`, 25, 78);
   doc.text(`Expected Completion: ${data.expectedDate}`, 25, 84);
 
-  // ---------------- DESCRIPTION ----------------
+  // Description
   doc.setFontSize(12);
   doc.text("Description of Issue:", 20, 96);
   doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(data.description, 170), 20, 104);
+  const descLines = doc.splitTextToSize(data.description, 170);
+  doc.text(descLines, 20, 104);
 
-  // ---------------- SUPPLIES ----------------
+  // Supplies / Parts
   doc.setFontSize(12);
   doc.text("Supplies / Parts Needed:", 20, 140);
   doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(data.supplies || "N/A", 170), 20, 148);
+  const suppliesLines = doc.splitTextToSize(data.supplies || "N/A", 170);
+  doc.text(suppliesLines, 20, 148);
 
-  // ---------------- MAINTENANCE USE ONLY ----------------
+  // Maintenance Only Section
   doc.setFontSize(12);
   doc.setTextColor(0, 51, 102);
   doc.text("----- Maintenance Use Only -----", 20, 180);
@@ -75,14 +75,14 @@ function generatePDFBase64(data) {
   doc.line(20, 230, 190, 230);
   doc.line(20, 235, 190, 235);
 
-  return doc.output("datauristring").split(",")[1];
+  return doc.output("datauristring").split(",")[1]; // base64
 }
 
-// ============================
-// SUBMIT MAINTENANCE REQUEST
-// ============================
+// ---------------- MAIN SUBMIT ----------------
 function submitMaintenance() {
   const btn = document.getElementById("submitBtn");
+  if (!btn) return;
+
   btn.disabled = true;
 
   const ticket = generateTicket();
@@ -115,18 +115,21 @@ function submitMaintenance() {
     submittedDate
   };
 
-  // Generate PDF
   payload.pdfBase64 = generatePDFBase64(payload);
 
   // ---------------- SEND EMAILS ----------------
-  HR_EMAILS.forEach(hrEmail => {
-    emailjs.send("service_lk56r2m", "template_vnfmovs", {
-      ...payload,
-      to_email: hrEmail,
-      attachment: payload.pdfBase64
-    }).then(() => console.log(`Email sent to ${hrEmail}`))
-      .catch(err => console.error("HR Email Error:", err));
-  });
+  if (typeof HR_EMAILS !== "undefined" && HR_EMAILS.length) {
+    HR_EMAILS.forEach(hrEmail => {
+      emailjs.send("service_lk56r2m", "template_vnfmovs", {
+        ...payload,
+        to_email: hrEmail,
+        attachment: payload.pdfBase64
+      }).then(() => console.log(`Email sent to ${hrEmail}`))
+        .catch(err => console.error("HR Email Error:", err));
+    });
+  } else {
+    console.warn("HR_EMAILS not defined in config.js");
+  }
 
   // Auto-reply to requester
   emailjs.send("service_lk56r2m", "template_foh2u7z", {
@@ -140,27 +143,31 @@ function submitMaintenance() {
     .catch(err => console.error("Auto-reply Error:", err));
 
   // ---------------- LOG TO GOOGLE SHEET ----------------
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify(payload)
-  }).catch(err => console.error("Google Sheet logging error:", err));
+  if (typeof GOOGLE_SCRIPT_URL !== "undefined") {
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(payload)
+    }).catch(err => console.error("Google Sheet logging error:", err));
+  } else {
+    console.warn("GOOGLE_SCRIPT_URL not defined in config.js");
+  }
 
   // ---------------- UI FEEDBACK ----------------
   launchConfetti();
-  document.getElementById("ticketDisplay").textContent = ticket;
-  document.getElementById("successBox").style.display = "block";
+  const ticketDisplay = document.getElementById("ticketDisplay");
+  const successBox = document.getElementById("successBox");
+  if (ticketDisplay) ticketDisplay.textContent = ticket;
+  if (successBox) successBox.style.display = "block";
 
-  // Reset button and redirect
+  // Reset button and redirect after 5 seconds
   setTimeout(() => {
     btn.disabled = false;
     window.location.href = "index.html";
   }, 5000);
 }
 
-// ============================
-// ATTACH EVENT
-// ============================
+// ---------------- ATTACH EVENT ----------------
 document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("submitBtn");
   if (submitBtn) submitBtn.addEventListener("click", submitMaintenance);
