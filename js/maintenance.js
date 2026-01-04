@@ -1,4 +1,9 @@
 // ---------------- PDF GENERATION ----------------
+// ---------------- HELPERS ----------------
+function generateTicket() {
+  return "SOAR-" + Date.now();
+}
+
 function generateMaintenancePDF(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
