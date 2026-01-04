@@ -1,11 +1,11 @@
-// ---------------- SUBMIT SERVICE REQUEST ----------------
-
 // ============================
-// CONFIG
+// CONFIG (GLOBAL)
 // ============================
-// emailjs.init("sLNm5JCzwihAuVon0");
 
-// MUST be global
+// EmailJS must be initialized ONCE
+emailjs.init("sLNm5JCzwihAuVon0");
+
+// Department → email mapping (Admin removed as requested)
 const DEPT_EMAILS = {
   Medical: "soarhr@soartn.org",
   Program: "soarhr@soartn.org",
@@ -27,7 +27,11 @@ function generateTicket() {
 
 function launchConfetti() {
   if (typeof confetti === "function") {
-    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+    confetti({
+      particleCount: 120,
+      spread: 80,
+      origin: { y: 0.6 }
+    });
   }
 }
 
@@ -38,76 +42,13 @@ function submitService() {
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
 
-  const name = document.getElementById("srName").value.trim();
-  const email = document.getElementById("srEmail").value.trim();
-  const dept = document.getElementById("srDept").value;
-  const desc = document.getElementById("srDesc").value.trim();
+  const name = document.getElementById("srName")?.value.trim();
+  const email = document.getElementById("srEmail")?.value.trim();
+  const dept = document.getElementById("srDept")?.value;
+  const desc = document.getElementById("srDesc")?.value.trim();
 
   if (!name || !email || !dept || !desc) {
-    alert("Please fill in all fields.");
-    return;
-  }
-
-  const toEmail = DEPT_EMAILS[dept] || "soarhr@soartn.org";
-
-  // Log to Google Sheets
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify({
-      type: "Service",
-      ticket,
-      requester: name,
-      email,
-      department: dept,
-      description: desc,
-      submittedDate,
-      status: "Submitted"
-    })
-  });
-
-  // Send email
-  emailjs.send("service_lk56r2m", "template_au6bbjp", {
-    ticket,
-    requester: name,
-    requester_email: email,
-    department: dept,
-    description: desc,
-    submitted_date: submittedDate,
-    to_email: toEmail,
-    cc_email: "soarhr@soartn.org"
-  // })
-  // .then(() => {
-  //   launchConfetti();
-  //   alert(`Service Request submitted!\nTicket #: ${ticket}`);
-  //   window.location.href = "index.html";
-  // })
-  // .catch(err => {
-  //   console.error("EmailJS error:", err);
-  //   alert("Failed to submit request.");
-  });
-}
-
-function launchConfetti() {
-  if (typeof confetti === "function") {
-    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-  } else {
-    console.warn("Confetti not loaded");
-  }
-}
-
-
-function submitService() {
-  const ticket = generateTicket();
-  const submittedDate = new Date().toLocaleString();
-
-  const name = document.getElementById("srName").value.trim();
-  const email = document.getElementById("srEmail").value.trim();
-  const dept = document.getElementById("srDept").value;
-  const desc = document.getElementById("srDesc").value.trim();
-
-  if (!name || !email || !dept || !desc) {
-    alert("Please fill in all fields.");
+    alert("Please fill in all required fields.");
     return;
   }
 
@@ -124,37 +65,42 @@ function submitService() {
     status: "Submitted"
   };
 
-  // Log to Google Sheet
+  // ---------------- LOG TO GOOGLE SHEETS ----------------
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
     body: JSON.stringify(payload)
-  }).catch(err => console.error("Google Sheet logging error:", err));
+  }).catch(err => console.error("Google Sheet error:", err));
 
-  // Send Email
-  emailjs.send("service_lk56r2m", "template_au6bbjp", {
-    ticket,
-    requester: name,
-    requester_email: email,
-    department: dept,
-    description: desc,
-    submitted_date: submittedDate,
-    to_email: toEmail,
-    cc_email: "soarhr@soartn.org"
-  })
-  .then(() => {
-    launchConfetti();
-    alert(`Service Request submitted!\nTicket #: ${ticket}`);
-    window.location.href = "index.html";
-  })
-  .catch(err => {
-    console.error("EmailJS error:", err);
-    alert("Failed to send request. Check console.");
-  });
+  // ---------------- SEND EMAIL ----------------
+  emailjs
+    .send("service_lk56r2m", "template_au6bbjp", {
+      ticket,
+      requester: name,
+      requester_email: email,
+      department: dept,
+      description: desc,
+      submitted_date: submittedDate,
+      to_email: toEmail,
+      cc_email: "soarhr@soartn.org"
+    })
+    .then(() => {
+      launchConfetti();
+      alert(`Service Request Submitted!\nTicket #: ${ticket}`);
+      window.location.href = "index.html";
+    })
+    .catch(err => {
+      console.error("EmailJS error:", err);
+      alert("Failed to submit service request.");
+    });
 }
 
-// Attach event
+// ============================
+// EVENT BINDING (SAFE)
+// ============================
 document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.querySelector("#requestForm button");
-  if (submitBtn) submitBtn.addEventListener("click", submitService);
+  if (submitBtn) {
+    submitBtn.addEventListener("click", submitService);
+  }
 });
