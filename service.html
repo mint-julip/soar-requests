@@ -61,6 +61,13 @@
     background: #005A9E;
   }
   
+  .page-header {
+  position: fixed;       /* FIXED keeps it visible at top-right */
+  top: 20px;
+  right: 20px;
+  z-index: 9999;         /* Above all content */
+}
+
 .back-btn {
   display: inline-flex;
   align-items: center;
@@ -81,6 +88,14 @@
   background: #003366;
   color: #ffffff;
   border-color: #003366;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .back-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
 }
 
 </style>
