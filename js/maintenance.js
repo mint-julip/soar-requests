@@ -1,6 +1,4 @@
-// ============================
-// Maintenance Request JS
-// ============================
+// ---------------- MAINTENANCE.JS ----------------
 
 // ---------------- HELPERS ----------------
 function generateTicket() {
@@ -11,7 +9,7 @@ function launchConfetti() {
   if (typeof confetti === "function") {
     confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
   } else {
-    console.warn("Confetti not loaded");
+    console.warn("Confetti library not loaded");
   }
 }
 
@@ -19,7 +17,7 @@ function generatePDFBase64(data) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  // Header
+  // ---------------- HEADER ----------------
   doc.setFontSize(18);
   doc.setTextColor(0, 51, 102);
   doc.text("SOAR TN", 105, 20, { align: "center" });
@@ -30,13 +28,13 @@ function generatePDFBase64(data) {
   doc.setLineWidth(0.8);
   doc.line(20, 32, 190, 32); // underline
 
-  // Ticket & Date
+  // ---------------- TICKET & DATE ----------------
   doc.setFontSize(11);
   doc.setTextColor(0);
   doc.text(`Ticket #: ${data.ticket}`, 20, 42);
   doc.text(`Submitted: ${data.submittedDate}`, 140, 42);
 
-  // Requester Info
+  // ---------------- REQUESTER INFO ----------------
   doc.setFontSize(12);
   doc.text("Requester Information:", 20, 52);
   doc.setFontSize(11);
@@ -46,21 +44,21 @@ function generatePDFBase64(data) {
   doc.text(`Priority: ${data.priority}`, 25, 78);
   doc.text(`Expected Completion: ${data.expectedDate}`, 25, 84);
 
-  // Description
+  // ---------------- DESCRIPTION ----------------
   doc.setFontSize(12);
   doc.text("Description of Issue:", 20, 96);
   doc.setFontSize(11);
   const descLines = doc.splitTextToSize(data.description, 170);
   doc.text(descLines, 20, 104);
 
-  // Supplies / Parts
+  // ---------------- SUPPLIES ----------------
   doc.setFontSize(12);
   doc.text("Supplies / Parts Needed:", 20, 140);
   doc.setFontSize(11);
   const suppliesLines = doc.splitTextToSize(data.supplies || "N/A", 170);
   doc.text(suppliesLines, 20, 148);
 
-  // Maintenance Only Section
+  // ---------------- MAINTENANCE USE ONLY ----------------
   doc.setFontSize(12);
   doc.setTextColor(0, 51, 102);
   doc.text("----- Maintenance Use Only -----", 20, 180);
@@ -118,17 +116,16 @@ function submitMaintenance() {
   payload.pdfBase64 = generatePDFBase64(payload);
 
   // ---------------- SEND EMAILS ----------------
-  if (typeof HR_EMAILS !== "undefined" && HR_EMAILS.length) {
+  if (typeof HR_EMAILS !== "undefined" && Array.isArray(HR_EMAILS)) {
     HR_EMAILS.forEach(hrEmail => {
       emailjs.send("service_lk56r2m", "template_vnfmovs", {
         ...payload,
         to_email: hrEmail,
         attachment: payload.pdfBase64
-      }).then(() => console.log(`Email sent to ${hrEmail}`))
-        .catch(err => console.error("HR Email Error:", err));
+      })
+      .then(() => console.log(`HR email sent to ${hrEmail}`))
+      .catch(err => console.error("HR Email Error:", err));
     });
-  } else {
-    console.warn("HR_EMAILS not defined in config.js");
   }
 
   // Auto-reply to requester
@@ -139,8 +136,9 @@ function submitMaintenance() {
     house,
     description,
     priority
-  }).then(() => console.log("Auto-reply sent to requester"))
-    .catch(err => console.error("Auto-reply Error:", err));
+  })
+  .then(() => console.log("Auto-reply sent to requester"))
+  .catch(err => console.error("Auto-reply Error:", err));
 
   // ---------------- LOG TO GOOGLE SHEET ----------------
   if (typeof GOOGLE_SCRIPT_URL !== "undefined") {
@@ -149,8 +147,6 @@ function submitMaintenance() {
       mode: "no-cors",
       body: JSON.stringify(payload)
     }).catch(err => console.error("Google Sheet logging error:", err));
-  } else {
-    console.warn("GOOGLE_SCRIPT_URL not defined in config.js");
   }
 
   // ---------------- UI FEEDBACK ----------------
@@ -160,7 +156,6 @@ function submitMaintenance() {
   if (ticketDisplay) ticketDisplay.textContent = ticket;
   if (successBox) successBox.style.display = "block";
 
-  // Reset button and redirect after 5 seconds
   setTimeout(() => {
     btn.disabled = false;
     window.location.href = "index.html";
