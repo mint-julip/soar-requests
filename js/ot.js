@@ -1,16 +1,5 @@
 // ---------------- OT.JS ----------------
 
-// ---------------- CONFIG ----------------
-const HR_EMAILS = ["soarhr@soartn.org"]; // HR emails to notify
-const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE"; // Replace with your Google Script URL
-
-// Initialize EmailJS (make sure config.js already initialized EmailJS)
-if (typeof emailjs !== "undefined") {
-  console.log("EmailJS ready");
-} else {
-  console.warn("EmailJS not loaded");
-}
-
 // ---------------- HELPERS ----------------
 function generateTicket() {
   return "SOAR-" + Date.now();
@@ -45,37 +34,43 @@ function generatePDFBase64(data) {
   doc.text(`Ticket #: ${data.ticket}`, 20, 42);
   doc.text(`Submitted: ${data.submittedDate}`, 140, 42);
 
-  // Requester Info
+  // Requester & Employee Info
   doc.setFontSize(12);
-  doc.text("Requester Info:", 20, 54);
+  doc.text("Requester & Employee Info:", 20, 54);
   doc.setFontSize(11);
-  doc.text(`Name: ${data.requester}`, 25, 62);
-  doc.text(`Email: ${data.requesterEmail}`, 25, 68);
-
-  // Employee Info
-  doc.setFontSize(12);
-  doc.text("Employee Info:", 20, 78);
-  doc.setFontSize(11);
-  doc.text(`Name: ${data.employee}`, 25, 86);
-  doc.text(`Email: ${data.email}`, 25, 92);
-  doc.text(`House / Dept: ${data.house}`, 25, 98);
-  doc.text(`Supervisor: ${data.supervisor}`, 25, 104);
+  doc.text(`Requester: ${data.requester}`, 25, 62);
+  doc.text(`Employee: ${data.employee}`, 25, 68);
+  doc.text(`Email: ${data.email}`, 25, 74);
+  doc.text(`House/Dept: ${data.house}`, 25, 80);
+  doc.text(`Supervisor: ${data.supervisor}`, 25, 86);
 
   // OT Details
   doc.setFontSize(12);
-  doc.text("OT Details:", 20, 114);
+  doc.text("Overtime Details:", 20, 98);
   doc.setFontSize(11);
-  doc.text(`Date(s): ${data.otDates}`, 25, 122);
-  doc.text(`Shift(s): ${data.shifts}`, 25, 128);
-  doc.text(`Hours: ${data.hours}`, 25, 134);
-  doc.text(`Call List Exhausted: ${data.callExhausted}`, 25, 140);
+  doc.text(`Date(s): ${data.otDates}`, 25, 106);
+  doc.text(`Shift(s): ${data.otShifts}`, 25, 112);
+  doc.text(`Hours: ${data.hours}`, 25, 118);
+  doc.text(`Call List Exhausted: ${data.callExhausted}`, 25, 124);
 
   // Reason
   doc.setFontSize(12);
-  doc.text("Reason for OT:", 20, 150);
+  doc.text("Reason for OT:", 20, 136);
   doc.setFontSize(11);
   const reasonLines = doc.splitTextToSize(data.reason, 170);
-  doc.text(reasonLines, 20, 158);
+  doc.text(reasonLines, 20, 144);
+
+  // Approval Section
+  doc.setFontSize(12);
+  doc.setTextColor(0, 51, 102);
+  doc.text("----- Management Approval -----", 20, 180);
+  doc.setTextColor(0);
+  doc.setFontSize(11);
+  doc.text("Approved By: ____________________", 20, 192);
+  doc.text("Approval Date: ____________________", 20, 202);
+  doc.text("Comments:", 20, 212);
+  doc.line(20, 217, 190, 217);
+  doc.line(20, 222, 190, 222);
 
   return doc.output("datauristring").split(",")[1]; // base64
 }
@@ -84,25 +79,25 @@ function generatePDFBase64(data) {
 function submitOT() {
   const btn = document.getElementById("submitBtn");
   if (!btn) return;
-
   btn.disabled = true;
 
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
 
-  const requester = document.getElementById("requester").value.trim();
-  const requesterEmail = document.getElementById("requesterEmail").value.trim();
-  const employee = document.getElementById("employee").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const house = document.getElementById("house").value.trim();
-  const supervisor = document.getElementById("supervisor").value.trim();
-  const otDates = document.getElementById("otDates").value.trim();
-  const shifts = document.getElementById("shifts").value.trim();
-  const hours = document.getElementById("hours").value.trim();
-  const reason = document.getElementById("reason").value.trim();
-  const callExhausted = document.getElementById("callExhausted").value;
+  // Grab form values
+  const requester = document.getElementById("requester")?.value.trim();
+  const employee = document.getElementById("employee")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
+  const house = document.getElementById("house")?.value.trim();
+  const supervisor = document.getElementById("supervisor")?.value.trim();
+  const otDates = document.getElementById("otDates")?.value.trim();
+  const otShifts = document.getElementById("otShifts")?.value.trim();
+  const hours = document.getElementById("hours")?.value.trim();
+  const reason = document.getElementById("reason")?.value.trim();
+  const callExhausted = document.getElementById("callExhausted")?.value;
 
-  if (!requester || !requesterEmail || !employee || !email || !house || !supervisor || !otDates || !shifts || !hours || !reason || !callExhausted) {
+  // Validate
+  if (!requester || !employee || !email || !house || !supervisor || !otDates || !otShifts || !hours || !reason || !callExhausted) {
     alert("Please complete all required fields.");
     btn.disabled = false;
     return;
@@ -112,13 +107,12 @@ function submitOT() {
     type: "Overtime",
     ticket,
     requester,
-    requesterEmail,
     employee,
     email,
     house,
     supervisor,
     otDates,
-    shifts,
+    otShifts,
     hours,
     reason,
     callExhausted,
@@ -127,30 +121,33 @@ function submitOT() {
 
   payload.pdfBase64 = generatePDFBase64(payload);
 
-  // ---------------- SEND EMAIL TO HR ----------------
-  HR_EMAILS.forEach(hrEmail => {
-    emailjs.send("service_lk56r2m", "template_ot_request", {
-      ...payload,
-      to_email: hrEmail,
-      attachment: payload.pdfBase64
-    }).then(() => console.log(`OT request sent to ${hrEmail}`))
+  // ---------------- SEND TO HR ----------------
+  if (Array.isArray(HR_EMAILS)) {
+    HR_EMAILS.forEach(hrEmail => {
+      emailjs.send("service_lk56r2m", "template_ot_request", {
+        ...payload,
+        to_email: hrEmail,
+        attachment: payload.pdfBase64
+      })
+      .then(() => console.log(`OT sent to ${hrEmail}`))
       .catch(err => console.error("HR Email Error:", err));
-  });
+    });
+  }
 
-  // ---------------- AUTO-REPLY TO EMPLOYEE ----------------
+  // ---------------- AUTO REPLY TO REQUESTER ----------------
   emailjs.send("service_lk56r2m", "template_ot_auto", {
-    requester,
-    requester_email: requesterEmail,
-    employee,
-    employee_email: email,
+    requester_name: requester,
+    requester_email: email,
     ticket,
+    employee,
     otDates,
-    shifts,
+    otShifts,
     hours
-  }).then(() => console.log("OT auto-reply sent"))
-    .catch(err => console.error("Auto-reply Error:", err));
+  })
+  .then(() => console.log("OT auto-reply sent"))
+  .catch(err => console.error("Auto-reply Error:", err));
 
-  // ---------------- LOG TO GOOGLE SHEET ----------------
+  // ---------------- LOG TO GOOGLE SHEETS ----------------
   if (typeof GOOGLE_SCRIPT_URL !== "undefined") {
     fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
@@ -163,6 +160,7 @@ function submitOT() {
   launchConfetti();
   const ticketDisplay = document.getElementById("ticketDisplay");
   const successBox = document.getElementById("successBox");
+
   if (ticketDisplay) ticketDisplay.textContent = ticket;
   if (successBox) successBox.style.display = "block";
 
