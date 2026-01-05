@@ -1,15 +1,17 @@
 // ---------------- OT.JS ----------------
 
+// ---------------- HELPERS ----------------
 function generateTicket() {
   return "SOAR-" + Date.now();
 }
 
 function launchConfetti() {
   if (typeof confetti === "function") {
-    confetti({ particleCount: 140, spread: 90 });
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
   }
 }
 
+// ---------------- MAIN SUBMIT ----------------
 function submitOT() {
   const btn = document.getElementById("submitBtn");
   btn.disabled = true;
@@ -17,22 +19,18 @@ function submitOT() {
   const ticket = generateTicket();
   const submittedDate = new Date().toLocaleString();
 
-  // Requester
-  const requesterName = document.getElementById("requesterName").value.trim();
-  const requesterEmail = document.getElementById("requesterEmail").value.trim();
-
-  // Employee OT
-  const employeeName = document.getElementById("employeeName").value.trim();
-  const shifts = document.getElementById("shifts").value.trim();
-  const callExhausted = document.getElementById("callExhausted").value;
+  const requester = document.getElementById("requester").value.trim();
+  const requesterEmail = document.getElementById("email").value.trim();
+  const employee = document.getElementById("employee").value.trim();
   const otDates = document.getElementById("otDates").value.trim();
+  const otShifts = document.getElementById("otShifts").value.trim();
   const hours = document.getElementById("hours").value.trim();
+  const callExhausted = document.getElementById("callExhausted").value;
   const reason = document.getElementById("reason").value.trim();
 
   if (
-    !requesterName || !requesterEmail ||
-    !employeeName || !shifts || !callExhausted ||
-    !otDates || !hours || !reason
+    !requester || !requesterEmail || !employee ||
+    !otDates || !otShifts || !hours || !callExhausted || !reason
   ) {
     alert("Please complete all required fields.");
     btn.disabled = false;
@@ -40,56 +38,48 @@ function submitOT() {
   }
 
   const payload = {
-    type: "Overtime",
+    type: "OT Request",
     ticket,
-    submittedDate,
-
-    requesterName,
-    requesterEmail,
-
-    employeeName,
-    shifts,
-    callExhausted,
-    otDates,
+    requester,
+    requester_email: requesterEmail,
+    employee,
+    ot_dates: otDates,
+    ot_shifts: otShifts,
     hours,
+    call_exhausted: callExhausted,
     reason,
-
-    status: "Submitted"
+    submittedDate
   };
 
-  // Send to HR
-  HR_EMAILS.forEach(hr => {
-    emailjs.send("service_lk56r2m", "template_ot_hr", {
-      ...payload,
-      to_email: hr
-    });
+  // ---------------- SEND TO HR ----------------
+  emailjs.send("service_lk56r2m", "template_78v4e8s", {
+    ...payload,
+    to_email: HR_EMAILS[0]
+  })
+  .then(() => {
+    launchConfetti();
+    document.getElementById("ticketDisplay").textContent = ticket;
+    document.getElementById("successBox").style.display = "block";
+  })
+  .catch(err => {
+    console.error("OT submission error:", err);
+    alert("Failed to submit OT request.");
+    btn.disabled = false;
   });
 
-  // Auto-reply to requester
-  emailjs.send("service_lk56r2m", "template_ot_auto", {
-    requester_name: requesterName,
-    requester_email: requesterEmail,
-    employee: employeeName,
-    ticket
-  });
-
-  // Log to Google Sheets
+  // ---------------- LOG TO SHEET ----------------
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
     body: JSON.stringify(payload)
   });
 
-  launchConfetti();
-
-  document.getElementById("ticketDisplay").textContent = ticket;
-  document.getElementById("successBox").style.display = "block";
-
   setTimeout(() => {
     window.location.href = "index.html";
   }, 5000);
 }
 
+// ---------------- ATTACH EVENT ----------------
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("submitBtn").addEventListener("click", submitOT);
 });
