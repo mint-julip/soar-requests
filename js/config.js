@@ -19,7 +19,7 @@ const EMAILJS_PUBLIC_KEY = "sLNm5JCzwihAuVon0";
 // HR email distribution list
 const HR_EMAILS = [
   "soarhr@soartn.org",
-  "alishasanders@soartn.org"
+  "sandysmith@soartn.org"
 ];
 
 // Safety log
