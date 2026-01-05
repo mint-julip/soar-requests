@@ -1,5 +1,5 @@
 // ---------------- INIT ----------------
-emailjs.init(EMAILJS_PUBLIC_KEY);
+// emailjs.init(EMAILJS_PUBLIC_KEY);
 
 // ---------------- HELPERS ----------------
 function generateTicket() {
@@ -43,7 +43,7 @@ function submitOT() {
   // ---------- EMAIL: OT REQUEST ----------
   emailjs.send(
     EMAILJS_SERVICE_ID,
-    OT_REQUEST_TEMPLATE,
+    template_78v4e8s,
     {
       ...payload,
       to_email: HR_EMAILS.join(",")
