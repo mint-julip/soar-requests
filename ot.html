@@ -24,7 +24,7 @@ body {
   align-items: center;
 }
 
-/* Back Button */
+/* Back button */
 .page-header {
   position: fixed;
   top: 20px;
@@ -51,7 +51,7 @@ body {
   color: #ffffff;
 }
 
-/* Card Layout */
+/* Card */
 .container {
   background: #ffffff;
   width: 450px;
@@ -61,7 +61,7 @@ body {
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* Card Header */
+/* Header inside card */
 .soar-header {
   text-align: center;
   margin-bottom: 25px;
@@ -72,11 +72,11 @@ body {
 }
 
 .soar-header h2 {
-  margin: 5px 0;
+  margin: 6px 0;
   color: #003366;
 }
 
-/* Form fields */
+/* Form Inputs */
 input, select, textarea, button {
   width: 100%;
   margin-bottom: 12px;
@@ -86,26 +86,17 @@ input, select, textarea, button {
   font-size: 14px;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 60px;
-}
-
-/* Buttons */
 button {
   background: #0078d4;
   color: #fff;
   border: none;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 15px;
 }
 
 button:hover {
   background: #005a9e;
 }
 
-/* Success message */
 .success {
   display: none;
   margin-top: 12px;
@@ -115,16 +106,6 @@ button:hover {
   text-align: center;
 }
 
-/* Mobile adjustments */
-@media (max-width: 480px) {
-  .container {
-    padding: 20px;
-  }
-  .back-btn {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-  }
-}
 </style>
 </head>
 
@@ -135,32 +116,25 @@ button:hover {
   <a href="index.html" class="back-btn">← Back</a>
 </header>
 
-<!-- OT Form Card -->
+<!-- OT Request Card -->
 <div class="container">
 
   <div class="soar-header">
     <img src="logo.png" alt="SOAR TN Logo">
     <h2>SOAR Tennessee</h2>
-    <h2>Overtime Request</h2>
+    <h2>OT Request</h2>
   </div>
 
-  <!-- Requester Information -->
   <input id="requester" placeholder="Requester Name *">
-  <input id="requesterEmail" placeholder="Requester Email *">
-
-  <!-- Employee Information -->
-  <input id="employee" placeholder="Employee Name *">
+  <input id="employee" placeholder="Employee Working OT *">
   <input id="email" placeholder="Employee Email *">
-  <input id="house" placeholder="House / Department *">
+  <input id="house" placeholder="House / Dept *">
   <input id="supervisor" placeholder="Supervisor *">
-
-  <!-- OT Details -->
   <input id="otDates" placeholder="OT Date(s) *">
-  <input id="shifts" placeholder="OT Shift(s) *">
+  <input id="otShifts" placeholder="OT Shift(s) *">
   <input id="hours" type="number" min="0" placeholder="Hours *">
   <textarea id="reason" placeholder="Reason for OT *"></textarea>
 
-  <!-- Call List Exhausted -->
   <select id="callExhausted">
     <option value="">Has Call List Been Exhausted? *</option>
     <option>Yes</option>
@@ -176,9 +150,7 @@ button:hover {
 
 </div>
 
-<!-- Scripts -->
 <script src="js/config.js"></script>
 <script src="js/ot.js"></script>
-
 </body>
 </html>
