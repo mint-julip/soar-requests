@@ -1,11 +1,11 @@
 // ---------------- OT.JS ----------------
 
 // Initialize EmailJS
-if (typeof emailjs !== "undefined") {
-    emailjs.init("YOUR_PUBLIC_KEY_HERE"); // <-- replace with your actual EmailJS public key
-} else {
-    console.error("EmailJS not loaded");
-}
+// if (typeof emailjs !== "undefined") {
+//     emailjs.init("YOUR_PUBLIC_KEY_HERE"); // <-- replace with your actual EmailJS public key
+// } else {
+//     console.error("EmailJS not loaded");
+// }
 
 // Global HR emails
 // const HR_EMAILS = ["soarhr@soartn.org"]; // add more if needed
