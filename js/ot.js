@@ -124,7 +124,7 @@ function submitOT() {
     });
 
     // Auto-reply to requester/employee
-    emailjs.send("service_lk56r2m", "template_vmptxm6", {
+    emailjs.send("service_lk56r2m", "template_d8dsexn", {
         requester,
         employee,
         employee_email: email,
