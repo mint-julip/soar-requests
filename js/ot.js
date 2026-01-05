@@ -8,7 +8,7 @@ if (typeof emailjs !== "undefined") {
 }
 
 // Global HR emails
-const HR_EMAILS = ["soarhr@soartn.org"]; // add more if needed
+// const HR_EMAILS = ["soarhr@soartn.org"]; // add more if needed
 
 // ---------------- HELPERS ----------------
 function generateTicket() {
