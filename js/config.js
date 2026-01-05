@@ -9,6 +9,14 @@ const GOOGLE_SCRIPT_URL =
 // EmailJS public key
 const EMAILJS_PUBLIC_KEY = "sLNm5JCzwihAuVon0";
 
+// HR email distribution list
+const HR_EMAILS = [
+  "soarhr@soartn.org",
+  "alishasanders@soartn.org"
+];
+
+// Safety log
+console.log("Config loaded: HR_EMAILS & GOOGLE_SCRIPT_URL");
 
 // Initialize EmailJS ONLY if it exists
 document.addEventListener("DOMContentLoaded", () => {
@@ -19,3 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("EmailJS not loaded on this page");
   }
 });
+
+
+
+
