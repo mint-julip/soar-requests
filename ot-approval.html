@@ -3,30 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <title>OT Approval</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  emailjs.init("sLNm5JCzwihAuVon0");
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<link rel="stylesheet" href="css/shared.css">
+
 <style>
-body{ font-family:Arial,sans-serif; background:#eef3ff; display:flex; justify-content:center; align-items:center; min-height:100vh;}
-.container{ background:#fff; padding:25px; border-radius:12px; width:400px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-button{ width:48%; margin:1%; padding:10px; font-size:16px; border:none; border-radius:5px; cursor:pointer;}
-.approve{ background:#28a745; color:#fff;}
-.deny{ background:#dc3545; color:#fff;}
+body {
+  font-family: Arial, sans-serif;
+  background: #eef3ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+.container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  width: 420px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+}
+h2 {
+  text-align: center;
+  color: #003366;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
 </style>
 </head>
-<body>
-<div class="container">
-<h2>OT Approval</h2>
-<p>Ticket #: <span id="ticket"></span></p>
-<p>Employee: <span id="employee"></span></p>
-<p>Requester: <span id="requester"></span></p>
 
-<button class="approve" id="approveBtn">Approve</button>
-<button class="deny" id="denyBtn">Deny</button>
+<body>
+
+<div class="container">
+  <h2>Approve OT Request</h2>
+
+  <p><strong>Ticket:</strong> <span id="ticketDisplay"></span></p>
+
+  <input id="approvedBy" placeholder="Approved By *">
+
+  <button onclick="submitDecision('Approved')">Approve OT</button>
 </div>
 
-  <script src="js/config.js"></script>
-<script src="./js/ot-approval.js"></script>
+<script src="js/config.js"></script>
+<script src="js/ot-decision.js"></script>
 </body>
 </html>
