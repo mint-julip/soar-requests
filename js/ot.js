@@ -1,26 +1,16 @@
-// ---------------- OT.JS ----------------
+// ---------------- INIT ----------------
+emailjs.init(EMAILJS_PUBLIC_KEY);
 
 // ---------------- HELPERS ----------------
 function generateTicket() {
-  return "SOAR-" + Date.now();
+  return "OT-" + Date.now();
 }
 
-function launchConfetti() {
-  if (typeof confetti === "function") {
-    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-  }
-}
-
-// ---------------- MAIN SUBMIT ----------------
+// ---------------- SUBMIT ----------------
 function submitOT() {
-  const btn = document.getElementById("submitBtn");
-  btn.disabled = true;
-
-  const ticket = generateTicket();
-  const submittedDate = new Date().toLocaleString();
 
   const requester = document.getElementById("requester").value.trim();
-  const requesterEmail = document.getElementById("email").value.trim();
+  const requesterEmail = document.getElementById("requesterEmail").value.trim();
   const employee = document.getElementById("employee").value.trim();
   const otDates = document.getElementById("otDates").value.trim();
   const otShifts = document.getElementById("otShifts").value.trim();
@@ -32,13 +22,13 @@ function submitOT() {
     !requester || !requesterEmail || !employee ||
     !otDates || !otShifts || !hours || !callExhausted || !reason
   ) {
-    alert("Please complete all required fields.");
-    btn.disabled = false;
+    alert("Please complete all fields.");
     return;
   }
 
+  const ticket = generateTicket();
+
   const payload = {
-    type: "OT Request",
     ticket,
     requester,
     requester_email: requesterEmail,
@@ -47,39 +37,39 @@ function submitOT() {
     ot_shifts: otShifts,
     hours,
     call_exhausted: callExhausted,
-    reason,
-    submittedDate
+    reason
   };
 
-  // ---------------- SEND TO HR ----------------
-  emailjs.send("service_lk56r2m", "template_78v4e8s", {
-    ...payload,
-    to_email: HR_EMAILS[0]
-  })
-  .then(() => {
-    launchConfetti();
+  // ---------- EMAIL: OT REQUEST ----------
+  emailjs.send(
+    EMAILJS_SERVICE_ID,
+    OT_REQUEST_TEMPLATE,
+    {
+      ...payload,
+      to_email: HR_EMAILS.join(",")
+    }
+  ).then(() => {
+
     document.getElementById("ticketDisplay").textContent = ticket;
     document.getElementById("successBox").style.display = "block";
-  })
-  .catch(err => {
-    console.error("OT submission error:", err);
+    document.getElementById("otForm").reset();
+
+  }).catch(err => {
+    console.error("OT Error:", err);
     alert("Failed to submit OT request.");
-    btn.disabled = false;
   });
 
-  // ---------------- LOG TO SHEET ----------------
+  // ---------- LOG TO SHEET ----------
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
-    body: JSON.stringify(payload)
+    body: JSON.stringify({
+      type: "OT Request",
+      ticket,
+      ...payload
+    })
   });
-
-  setTimeout(() => {
-    window.location.href = "index.html";
-  }, 5000);
 }
 
-// ---------------- ATTACH EVENT ----------------
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("submitBtn").addEventListener("click", submitOT);
-});
+// ---------------- EVENT ----------------
+document.getElementById("submitBtn").addEventListener("click", submitOT);
