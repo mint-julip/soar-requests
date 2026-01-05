@@ -1,15 +1,5 @@
 // ---------------- OT.JS ----------------
 
-// Initialize EmailJS
-// if (typeof emailjs !== "undefined") {
-//     emailjs.init("YOUR_PUBLIC_KEY_HERE"); // <-- replace with your actual EmailJS public key
-// } else {
-//     console.error("EmailJS not loaded");
-// }
-
-// Global HR emails
-// const HR_EMAILS = ["soarhr@soartn.org"]; // add more if needed
-
 // ---------------- HELPERS ----------------
 function generateTicket() {
     return "SOAR-" + Date.now();
@@ -124,7 +114,7 @@ function submitOT() {
 
     // HR Notification
     HR_EMAILS.forEach(hrEmail => {
-        emailjs.send("service_lk56r2m", "template_ot_request", {
+        emailjs.send("service_lk56r2m", "template_78v4e8s", {
             ...payload,
             to_email: hrEmail,
             attachment: payload.pdfBase64
@@ -134,7 +124,7 @@ function submitOT() {
     });
 
     // Auto-reply to requester/employee
-    emailjs.send("service_lk56r2m", "template_ot_auto", {
+    emailjs.send("service_lk56r2m", "template_vmptxm6", {
         requester,
         employee,
         employee_email: email,
