@@ -106,24 +106,57 @@ function submitOT() {
     };
 
     // Send HR Emails (update template IDs in config.js)
-    if (Array.isArray(HR_EMAILS)) {
-        HR_EMAILS.forEach(hrEmail => {
-            emailjs.send("service_lk56r2m", "template_ot_request", {
-                ...payload,
-                to_email: hrEmail,
-                attachment: payload.pdfBase64
-            })
-            .then(() => console.log(`OT request sent to ${hrEmail}`))
-            .catch(err => console.error("HR Email Error:", err));
-        });
+// Replace hardcoded template with config constant
+HR_EMAILS.forEach(hrEmail => {
+  emailjs.send(
+    EMAILJS_SERVICE_ID,     // service ID from config
+    OT_REQUEST_TEMPLATE,    // template constant from config
+    {
+      ...payload,
+      to_email: hrEmail,
+      attachment: payload.pdfBase64
     }
+  )
+  .then(() => console.log(`OT request sent to ${hrEmail}`))
+  .catch(err => console.error("HR Email Error:", err));
+});
 
-    // Auto-reply to requester/employee
-    emailjs.send("service_lk56r2m", "template_ot_auto", {
-        requester, employee, employee_email: email, ticket, otDates, otShifts, hours
-    })
-    .then(() => console.log("OT auto-reply sent"))
-    .catch(err => console.error("Auto-reply Error:", err));
+// Auto-reply using config constant
+emailjs.send(
+  EMAILJS_SERVICE_ID,
+  OT_REQUEST_TEMPLATE, // or OT_AUTO_TEMPLATE if separate
+  {
+    requester,
+    employee,
+    employee_email: email,
+    ticket,
+    otDates,
+    otShifts,
+    hours
+  }
+)
+.then(() => console.log("OT auto-reply sent"))
+.catch(err => console.error("Auto-reply Error:", err));
+
+    
+    // if (Array.isArray(HR_EMAILS)) {
+    //     HR_EMAILS.forEach(hrEmail => {
+    //         emailjs.send("service_lk56r2m", "template_ot_request", {
+    //             ...payload,
+    //             to_email: hrEmail,
+    //             attachment: payload.pdfBase64
+    //         })
+    //         .then(() => console.log(`OT request sent to ${hrEmail}`))
+    //         .catch(err => console.error("HR Email Error:", err));
+    //     });
+    // }
+
+    // // Auto-reply to requester/employee
+    // emailjs.send("service_lk56r2m", "template_ot_auto", {
+    //     requester, employee, employee_email: email, ticket, otDates, otShifts, hours
+    // })
+    // .then(() => console.log("OT auto-reply sent"))
+    // .catch(err => console.error("Auto-reply Error:", err));
 
     launchConfetti();
     document.getElementById("ticketDisplay").textContent = ticket;
