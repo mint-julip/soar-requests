@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OT Denial</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #fff3f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+.container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  width: 420px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+}
+h2 {
+  text-align: center;
+  color: #a40000;
+}
+textarea, input, button {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+}
+button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Deny OT Request</h2>
+
+  <p><strong>Ticket:</strong> <span id="ticketDisplay"></span></p>
+
+  <input id="approvedBy" placeholder="Denied By *">
+  <textarea id="denyReason" placeholder="Reason for Denial *"></textarea>
+
+  <button onclick="submitDecision('Denied')">Deny OT</button>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/ot-decision.js"></script>
+</body>
+</html>
