@@ -1,61 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Overtime Request</title>
+<meta charset="UTF-8" />
+<title>SOAR TN | Overtime Request</title>
 
-  <link rel="stylesheet" href="css/style.css">
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-  <!-- Config -->
-  <script src="js/config.js"></script>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef3ff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Back Button */
+.page-header {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+}
+
+.back-btn {
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #cfd9e6;
+  background: #fff;
+  color: #003366;
+  font-weight: 600;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.back-btn:hover {
+  background: #003366;
+  color: #fff;
+}
+
+/* Card */
+.container {
+  background: #ffffff;
+  width: 420px;
+  max-width: 92%;
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+/* Header */
+.soar-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.soar-header img {
+  max-width: 120px;
+  margin-bottom: 8px;
+}
+
+.soar-header h2 {
+  margin: 4px 0;
+  color: #003366;
+}
+
+/* Form */
+input, select, textarea, button {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+button {
+  background: #0078d4;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #005fa3;
+}
+
+/* Success */
+.success {
+  display: none;
+  margin-top: 16px;
+  background: #e6f0fa;
+  padding: 14px;
+  border-radius: 10px;
+  text-align: center;
+  color: #003366;
+}
+</style>
 </head>
 
 <body>
 
-<h2>Overtime Request Form</h2>
+<!-- Back Button -->
+<header class="page-header">
+  <a href="index.html" class="back-btn">← Back</a>
+</header>
 
-<form id="otForm">
+<!-- Card -->
+<div class="container">
 
-  <label>Requester Name</label>
-  <input type="text" id="requester" required>
+  <div class="soar-header">
+    <img src="logo.png" alt="SOAR TN Logo">
+    <h2>SOAR Tennessee</h2>
+    <h3>Overtime Request</h3>
+  </div>
 
-  <label>Requester Email</label>
-  <input type="email" id="requesterEmail" required>
+  <!-- Requester -->
+  <input id="requester" placeholder="Requester Name *">
+  <input id="requesterEmail" placeholder="Requester Email *">
 
-  <label>Employee Working OT</label>
-  <input type="text" id="employee" required>
+  <!-- Employee -->
+  <input id="employee" placeholder="Employee Working OT *">
 
-  <label>OT Date(s)</label>
-  <input type="text" id="otDates" placeholder="MM/DD/YYYY" required>
+  <!-- OT Details -->
+  <input id="otDates" placeholder="OT Date(s) *">
+  <input id="shifts" placeholder="Shift(s) *">
+  <input id="hours" type="number" min="0" placeholder="Total Hours *">
 
-  <label>Shift(s)</label>
-  <input type="text" id="otShifts" placeholder="Example: 2nd shift" required>
-
-  <label>Total OT Hours</label>
-  <input type="number" id="hours" required>
-
-  <label>Call List Exhausted?</label>
-  <select id="callExhausted" required>
-    <option value="">Select</option>
+  <select id="callExhausted">
+    <option value="">Was the Call List Exhausted? *</option>
     <option value="Yes">Yes</option>
     <option value="No">No</option>
   </select>
 
-  <label>Reason for OT</label>
-  <textarea id="reason" required></textarea>
+  <textarea id="reason" placeholder="Reason for Overtime *"></textarea>
 
-  <button type="button" id="submitBtn">Submit OT Request</button>
+  <button id="submitBtn">Submit OT Request</button>
 
-</form>
+  <div class="success" id="successBox">
+    <strong>OT Request Submitted</strong><br>
+    Ticket #: <span id="ticketDisplay"></span>
+  </div>
 
-<div id="successBox" style="display:none;">
-  <h3>OT Request Submitted</h3>
-  <p>Ticket #: <strong id="ticketDisplay"></strong></p>
 </div>
+
+<!-- Scripts (LOAD ONCE) -->
 <script src="js/config.js"></script>
 <script src="js/ot.js"></script>
+
 </body>
 </html>
