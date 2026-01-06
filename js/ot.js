@@ -130,26 +130,6 @@ HR_EMAILS.forEach(hrEmail => {
 
 
 
-    
-    // if (Array.isArray(HR_EMAILS)) {
-    //     HR_EMAILS.forEach(hrEmail => {
-    //         emailjs.send("service_lk56r2m", "template_ot_request", {
-    //             ...payload,
-    //             to_email: hrEmail,
-    //             attachment: payload.pdfBase64
-    //         })
-    //         .then(() => console.log(`OT request sent to ${hrEmail}`))
-    //         .catch(err => console.error("HR Email Error:", err));
-    //     });
-    // }
-
-    // // Auto-reply to requester/employee
-    // emailjs.send("service_lk56r2m", "template_ot_auto", {
-    //     requester, employee, employee_email: email, ticket, otDates, otShifts, hours
-    // })
-    // .then(() => console.log("OT auto-reply sent"))
-    // .catch(err => console.error("Auto-reply Error:", err));
-
     launchConfetti();
     document.getElementById("ticketDisplay").textContent = ticket;
     document.getElementById("successBox").style.display = "block";
