@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SOAR TN | OT Approval / Deny</title>
+
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#eef3ff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+.container {
+  background:#fff;
+  padding:30px;
+  border-radius:14px;
+  width:400px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+input, textarea, button { width:100%; margin-bottom:12px; padding:10px; border-radius:6px; border:1px solid #ccc; }
+button { background:#0078d4; color:#fff; border:none; cursor:pointer; }
+button:hover { background:#005a9e; }
+
+#denyReason { display:none; }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h2>OT Request Decision</h2>
+  <p>Ticket #: <span id="ticketDisplay"></span></p>
+
+  <input id="approvedBy" placeholder="Approver Name *">
+  <textarea id="denyReason" placeholder="Reason for Denial *"></textarea>
+
+  <button id="approveBtn">Approve</button>
+  <button id="denyBtn">Deny</button>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/ot-decision.js"></script>
+</body>
+</html>
